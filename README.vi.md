@@ -1,5 +1,10 @@
 # GBA Duo Companion Builder
 
+[Danh sách game được hỗ trợ](https://levi-soft.github.io/gba-duo-companion-builder/supported-games.html?lang=vi)
+có trang riêng, hiển thị phiên bản companion và thông tin ROM chính xác. Danh sách
+lấy từ cùng `site/profiles.js` mà Builder sử dụng; khi thêm profile, danh sách tự
+cập nhật theo, không cần sửa nội dung màn hình chọn ROM.
+
 [English](README.md)
 
 Tạo companion từ ROM được hỗ trợ ngay trên máy của bạn. Website tạo ZIP để nhập thủ công; GBA Duo Plus có thể dùng cùng bộ tạo để tự tạo, cài và gán companion trong giả lập.

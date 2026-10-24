@@ -10,6 +10,11 @@ This project is maintained by [levi-soft](https://github.com/levi-soft). Automat
 
 ## Use the website
 
+The separate [Supported games page](https://levi-soft.github.io/gba-duo-companion-builder/supported-games.html)
+lists the profiles, companion versions and exact ROM details in English or Vietnamese.
+It reads the same `site/profiles.js` registry as the builder, so adding a profile
+also updates the list without editing the ROM-selection screen.
+
 1. Open the website in a current Chrome or Edge browser.
 2. Choose English or Vietnamese, then select your `.gba` file or a ZIP containing exactly one `.gba`.
 3. Select **Build companion** and wait for local generation.

@@ -13,10 +13,13 @@ test('file picker follows website language and preserves the selected filename',
  vm.runInNewContext(fs.readFileSync('site/app.js','utf8'),{document});
  assert.equal(element('pickRom').textContent,'Choose file');
  assert.equal(element('fileName').textContent,'No file selected');
+ assert.equal(element('supportedGames').href,'supported-games.html?lang=en');
  element('pickRom').events.click();assert.equal(element('rom').clicked,true);
  element('language').value='vi';element('language').events.change();
  assert.equal(element('pickRom').textContent,'Chọn tệp');
  assert.equal(element('fileName').textContent,'Chưa chọn tệp');
+ assert.equal(element('supportedGames').textContent,'Game được hỗ trợ');
+ assert.equal(element('supportedGames').href,'supported-games.html?lang=vi');
  element('rom').files=[{name:'ROM Việt hóa.gba'}];element('rom').events.change();
  assert.equal(element('fileName').textContent,'ROM Việt hóa.gba');
  assert.equal(element('build').disabled,false);
