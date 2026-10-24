@@ -50,7 +50,7 @@ async function prepare(input,template,runtimeTemplate,options={}){
  D.growthCharacters={};D.growthClasses={};if(!options.renderRadar)throw Error('Radar renderer required');
  for(const[a,c]of Object.entries(characters)){const at=+a-BASE,growth=Array.from(bytes.subarray(at+28,at+35)),radars=[0,5].map(b=>'asset:images/growth/'+growth.join('-')+'-'+b+'.png');D.growthCharacters[a]={growth,radars};for(const b of [0,5]){const name='assets/'+radars[b?1:0].slice(6);if(!files[name])files[name]=b64(await options.renderRadar(growth,b,100,files));}}
  for(const[a,c]of Object.entries(classes)){const at=+a-BASE;D.growthClasses[a]={attributes:c.attributes,caps:[60,...bytes.subarray(at+20,at+25),30],id:c.id};}
- await progress('Packing FE8 local companion');files[p.manifest.script]=b64(encoder.encode(runtimeTemplate.replace('__ROM_DATA__',luaValue(D))));p.manifest.match={gameCode:[code],crc32:['3CD932D7']};p.preparedLocally=true;
+ await progress('Packing FE8 local companion');root.CompanionRuntime.install(p,'fe8-vietnamese',luaValue(D));p.manifest.match={gameCode:[code],crc32:['3CD932D7']};p.preparedLocally=true;
  return{project:p,data:D,report:{gameCode:code,crc32:'3CD932D7',characters:Object.keys(characters).length,classes:Object.keys(classes).length,images:work,files:Object.keys(files).length,localOnly:true}};
 }
 
