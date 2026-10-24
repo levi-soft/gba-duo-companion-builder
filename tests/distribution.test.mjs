@@ -22,7 +22,7 @@ test('web and Plus use the same core and every HTML dependency is local',()=>{
   const html=fs.readFileSync(path.join(site,name),'utf8');assert(html.includes('builder-core.js'));
   for(const m of html.matchAll(/(?:src|href)="([^"]+)"/g)){
    if(m[1].startsWith('#')||m[1].startsWith('https://github.com/'))continue;
-   assert(!/^https?:|\/\//.test(m[1]),name+' external asset');assert(fs.existsSync(path.join(site,m[1])),name+' missing '+m[1]);
+   assert(!/^https?:|\/\//.test(m[1]),name+' external asset');assert(fs.existsSync(path.join(site,m[1].split(/[?#]/,1)[0])),name+' missing '+m[1]);
   }
   assert(html.includes('object-src \'none\''));assert(html.includes('base-uri \'none\''));
   assert(html.includes('frame-src \'none\''));assert(html.includes('form-action \'none\''));
