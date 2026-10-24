@@ -17,6 +17,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Install development test dependencies
+        run: npm ci
       - name: Build catalog and verified offline bundle
         run: npm run build
       - name: Test distribution contracts and privacy boundaries

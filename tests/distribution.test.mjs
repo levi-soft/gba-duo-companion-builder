@@ -8,10 +8,10 @@ const site=path.resolve('site');
 
 test('catalog declares the three exact ROM profiles and Plus runner protocol',()=>{
  const catalog=JSON.parse(fs.readFileSync(path.join(site,'catalog.json')));
- assert.equal(catalog.schemaVersion,1);assert.equal(catalog.runnerProtocol,1);assert.equal(catalog.builderVersion,'0.9.6');
+ assert.equal(catalog.schemaVersion,1);assert.equal(catalog.runnerProtocol,1);assert.equal(catalog.builderVersion,'0.9.7');
  assert.equal(catalog.builder.entrypoint,'plus-runner.html');
  assert.deepEqual(catalog.profiles.map(x=>[x.id,x.version,x.gameCode,x.crc32]),[
-  ['fe7-vietnamese','0.7.14','AE7E','32CD990D'],['fe6-remastered','0.4.15','BE8E','BD53D5F3'],['fe8-vietnamese','0.6.6','BE8E','3CD932D7']]);
+  ['fe7-vietnamese','0.7.15','AE7E','32CD990D'],['fe6-remastered','0.4.16','BE8E','BD53D5F3'],['fe8-vietnamese','0.6.7','BE8E','3CD932D7']]);
  const zip=fs.readFileSync(path.join(site,catalog.builder.url));assert.equal(zip.length,catalog.builder.bytes);
  assert.equal(crypto.createHash('sha256').update(zip).digest('hex'),catalog.builder.sha256);
  assert(catalog.builder.unpackedBytes>catalog.builder.bytes);
@@ -56,11 +56,13 @@ test('all hidden controls stay hidden despite component display rules',()=>{
 
 test('pack templates ship no prepared game assets and no generated table contents',()=>{
  const context={structuredClone};context.globalThis=context;
+ vm.runInNewContext(fs.readFileSync(path.join(site,'runtime-modules.js'),'utf8'),context);
  vm.runInNewContext(fs.readFileSync(path.join(site,'theme.js'),'utf8'),context);
  vm.runInNewContext(fs.readFileSync(path.join(site,'profiles.js'),'utf8'),context);
  for(const profile of context.COMPANION_PROFILES){
   vm.runInNewContext(fs.readFileSync(path.join(site,'profiles',profile.id,'template.js'),'utf8'),context);
-  assert.equal(Object.keys(context[profile.template].files).length,0);assert(context[profile.runtime].includes('__ROM_DATA__'));
+  assert.equal(Object.keys(context[profile.template].files).length,0);assert(context[profile.runtime].includes('data.rom_tables'));
+  assert(!Object.hasOwn(context.COMPANION_RUNTIME_MODULES[profile.id],'data.rom_tables.lua'));
  }
  const files=[];function visit(dir){for(const e of fs.readdirSync(dir,{withFileTypes:true})){const p=path.join(dir,e.name);if(e.isDirectory())visit(p);else files.push(p);}}visit(site);
  for(const file of files)assert(!/\.gba$|\.gbastudio\.json$|Local\.zip$|capture.*\.json$|\.sav$|\.ss$/i.test(file),file);

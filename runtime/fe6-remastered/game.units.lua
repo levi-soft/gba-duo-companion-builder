@@ -1,0 +1,146 @@
+-- Selected unit and forecast bindings, defaults and UI pulse state.
+-- Authored runtime module. Generated ROM tables live in data.rom_tables.lua.
+
+local profile = pack.require("game.profile")
+
+return function(D, map, values, abilities)
+  local truth = values.truth
+  local state = { pulseTick = 0, lastIdentity = nil }
+  local applyMap = map.apply
+  local chars, classes, slots = D.chars, D.classes, D.slots
+  local applyModSkills = abilities.apply
+  local emptyUnitValues = pack.require("presentation.defaults")(D, map, values, abilities, state)
+  local bindFields = pack.require("game.bindings")(D, values, state)
+  local readItems = pack.require("game.items")(D, map)
+  local readBattle = pack.require("game.battle")(D)
+  return function()
+    local v = {}
+    local unit = nil
+
+    local playerPc, forecastProc, aiPc = 0, 0, 0
+    for n = 0, 63 do
+      local q = profile.processPool + n * 108
+      local s = mem.u32(q)
+      if s == profile.playerProcess then
+        playerPc = mem.u32(q + 4)
+      elseif s == profile.forecastProcess then
+        forecastProc = q
+      elseif s == profile.enemyProcess then
+        aiPc = mem.u32(q + 4)
+      end
+    end
+    local active = mem.u32(profile.activeUnit)
+    v.unitLocked = false
+    v.forecastActive = false
+    local phase = mem.u8(profile.phase)
+    local playerOwns = playerPc >= profile.playerPcStart and playerPc <= profile.playerPcEnd and phase == 0
+    local aiOwns = aiPc >= profile.enemyPcStart
+      and aiPc <= profile.enemyPcEnd
+      and (phase == 0x80 or phase == 0x40)
+    if playerOwns or aiOwns then
+      local id = active >= 0x02000000 and active < 0x02040000 and mem.u8(active + 11) or 0
+      if
+        slots[id] == active
+        and (id & 0xc0) == phase
+        and chars[mem.u32(active)]
+        and classes[mem.u32(active + 4)]
+        and (mem.u32(active + 12) & 0x1000c) == 0
+      then
+        unit = active
+        v.unitLocked = true
+        v.forecastActive = playerOwns and forecastProc ~= 0
+      end
+    end
+
+    if not unit then
+      local cursorX, cursorY = mem.u16(profile.cursorX), mem.u16(profile.cursorY)
+      local width, height = mem.u16(profile.mapWidth), mem.u16(profile.mapHeight)
+      if
+        width == 0
+        or height == 0
+        or width > 512
+        or height > 512
+        or cursorX >= width
+        or cursorY >= height
+      then
+        return emptyUnitValues()
+      end
+      local rows = mem.u32(profile.unitRows)
+      if rows < 0x02000000 or rows + height * 4 > 0x02040000 then
+        return emptyUnitValues()
+      end
+      local row = mem.u32(rows + cursorY * 4)
+      if row < 0x02000000 or row + width > 0x02040000 then
+        return emptyUnitValues()
+      end
+      unit = slots[mem.u8(row + cursorX)]
+      if not unit then
+        return emptyUnitValues()
+      end
+    end
+    v.unitPresent, v.unitAbsent = true, false
+    v["hp"] = mem.u8((unit + 19))
+    v["maxHp"] = mem.u8((unit + 18))
+    v["level"] = mem.u8((unit + 8))
+    v["exp"] = mem.u8((unit + 9))
+    v["str"] = mem.u8((unit + 20))
+    v["skill"] = mem.u8((unit + 21))
+    v["spd"] = mem.u8((unit + 22))
+    v["def"] = mem.u8((unit + 23))
+    v["res"] = mem.u8((unit + 24))
+    v["luck"] = mem.u8((unit + 25))
+    v["characterPointer"] = mem.u32((unit + 0))
+    v["classPointer"] = mem.u32((unit + 4))
+    v["conBonus"] = mem.s8((unit + 26))
+    v["movBonus"] = mem.s8((unit + 29))
+    v["rescueId"] = mem.u8((unit + 27))
+    v["statusByte"] = mem.u8((unit + 48))
+    v["deployment"] = mem.u8((unit + 11))
+    v["unitState"] = mem.u32((unit + 12))
+    v["unitX"] = mem.u8((unit + 16))
+    v["unitY"] = mem.u8((unit + 17))
+    v["rankSwordRaw"] = mem.u8((unit + 40))
+    v["rankLanceRaw"] = mem.u8((unit + 41))
+    v["rankAxeRaw"] = mem.u8((unit + 42))
+    v["rankBowRaw"] = mem.u8((unit + 43))
+    v["rankStaffRaw"] = mem.u8((unit + 44))
+    v["rankAnimaRaw"] = mem.u8((unit + 45))
+    v["rankLightRaw"] = mem.u8((unit + 46))
+    v["rankDarkRaw"] = mem.u8((unit + 47))
+    v["support1Exp"] = mem.u8((unit + 50))
+    v["support2Exp"] = mem.u8((unit + 51))
+    v["support3Exp"] = mem.u8((unit + 52))
+    v["support4Exp"] = mem.u8((unit + 53))
+    v["support5Exp"] = mem.u8((unit + 54))
+    v["item1"] = mem.u16((unit + 30))
+    v["item2"] = mem.u16((unit + 32))
+    v["item3"] = mem.u16((unit + 34))
+    v["item4"] = mem.u16((unit + 36))
+    v["item5"] = mem.u16((unit + 38))
+    local bound = bindFields(v, unit)
+    if bound ~= v then
+      return bound
+    end
+    readItems(v, unit)
+    readBattle(v)
+    applyMap(v, v.unitLocked and unit or nil)
+    state.pulseTick = state.pulseTick + 1
+    local studioPulseOn = ((state.pulseTick * 200) % 1000) < 500
+    v.item1DropFlash = truth(v.item1Droppable) and studioPulseOn
+    v.item2DropFlash = truth(v.item2Droppable) and studioPulseOn
+    v.item3DropFlash = truth(v.item3Droppable) and studioPulseOn
+    v.item4DropFlash = truth(v.item4Droppable) and studioPulseOn
+    v.item5DropFlash = truth(v.item5Droppable) and studioPulseOn
+    v.travelerFlash = truth(v.travelerPresent) and studioPulseOn
+    v.conditionFlash = truth(v.conditionActive) and studioPulseOn
+    v.forecastactorMultiFlash = truth(v.forecastactorHasMulti) and studioPulseOn
+    v.forecastactorHpFlash = truth(v.forecastactorHasLoss) and studioPulseOn
+    v.forecastactorTriangleFlash = truth(v.forecastactorTriangle) and studioPulseOn
+    v.forecasttargetMultiFlash = truth(v.forecasttargetHasMulti) and studioPulseOn
+    v.forecasttargetHpFlash = truth(v.forecasttargetHasLoss) and studioPulseOn
+    v.forecasttargetTriangleFlash = truth(v.forecasttargetTriangle) and studioPulseOn
+    v.mapDropFlash = truth(v.mapHasDrops) and studioPulseOn
+    applyModSkills(v, unit)
+    return v
+  end
+end

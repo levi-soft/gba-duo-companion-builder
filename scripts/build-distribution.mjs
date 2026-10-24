@@ -1,6 +1,7 @@
 import fs from'node:fs';import path from'node:path';import crypto from'node:crypto';import vm from'node:vm';import{fileURLToPath}from'node:url';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..'),site=path.join(root,'site');
 const config=JSON.parse(fs.readFileSync(path.join(root,'package.json'))),version=config.version;
+await import('./build-runtime-modules.mjs');
 await import('../site/jszip.min.js');
 const ctx={};ctx.globalThis=ctx;vm.runInNewContext(fs.readFileSync(path.join(site,'profiles.js'),'utf8'),ctx);
 const zip=new globalThis.JSZip(),entries=[];

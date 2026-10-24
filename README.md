@@ -17,13 +17,13 @@ This project is maintained by [levi-soft](https://github.com/levi-soft). Automat
 
 The website downloads its HTML, JavaScript and authored UI resources. ROM processing happens locally: ROM bytes, extracted artwork and game text are not uploaded. The ROM itself is not changed. Generated files contain assets from your ROM and should remain private; share this builder website instead.
 
-## Exact profiles in builder 0.9.6
+## Exact profiles in builder 0.9.7
 
 | Profile | Game code | ROM CRC32 | Companion version |
 | --- | --- | --- | --- |
-| FE7 Vietnamese | AE7E | 32CD990D | 0.7.14 |
-| FE6 Vietnamese Remastered, built on FE8 | BE8E | BD53D5F3 | 0.4.15 |
-| FE8 Vietnamese | BE8E | 3CD932D7 | 0.6.6 |
+| FE7 Vietnamese | AE7E | 32CD990D | 0.7.15 |
+| FE6 Vietnamese Remastered, built on FE8 | BE8E | BD53D5F3 | 0.4.16 |
+| FE8 Vietnamese | BE8E | 3CD932D7 | 0.6.7 |
 
 Other revisions are rejected. The FE6 profile is not original FE6. This is a profile-driven builder; it does not discover arbitrary game memory layouts automatically. See the website's [feature contract](site/FEATURE-CONTRACT.md) for prediction scope, device evidence and limitations.
 
@@ -35,16 +35,19 @@ The browser and Plus use **the same `builder-core.js`, preparation profiles, UI 
 
 ## Build and test
 
-Requires Node.js 20 or newer. There are no package-install steps or external build dependencies.
+Requires Node.js 20 or newer. `npm ci` installs the pinned development-only Lua test engine. It is not shipped to the website or Plus.
 
 ```sh
+npm ci
 npm run build
 npm test
 ```
 
-`site/` is the static website. The build generates `site/catalog.json` and `site/releases/builder-0.9.6.zip` deterministically from the files in `site/`. It does not read a ROM, regenerate the private companion projects or change the frozen 0.9.6 kit source.
+`site/` is the static website. The build generates `site/catalog.json` and `site/releases/builder-0.9.7.zip` deterministically from the files in `site/`. It does not read a ROM, regenerate the private companion projects or change the frozen 0.9.6 kit source.
 
 Tests cover catalog hashes and exact profile identities, local-only assets, empty public game-data templates, shared generation, actual format-2 ZIP output from a synthetic producer, cancellation and bounded native streaming. They do not replace real-browser file-selection tests or real-device Plus acceptance. The source profile evidence is documented separately in `site/FEATURE-CONTRACT.md`.
+
+The readable Lua sources are in `runtime/<profile>/` and `runtime/shared/`. Start with the profile's `main.lua`, not the generated JavaScript registry. See [Lua runtime organization and validation](docs/runtime-modules.md) for module responsibilities, native filenames and private regression checks. Both `npm test` and `npm run build` regenerate the registry from these sources.
 
 ## Publish on GitHub Pages
 

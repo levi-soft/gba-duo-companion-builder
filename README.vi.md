@@ -17,13 +17,13 @@ Tạo companion từ ROM được hỗ trợ ngay trên máy của bạn. Websit
 
 Website tải mã và chất liệu UI của công cụ. ROM được xử lý cục bộ: không tải ROM, ảnh hay văn bản game lên máy chủ và không sửa ROM. Tệp vừa tạo chứa asset từ ROM, nên giữ riêng để sử dụng cá nhân. Hãy chia sẻ website builder.
 
-## Profile chính xác trong builder 0.9.6
+## Profile chính xác trong builder 0.9.7
 
 | Profile | Mã game | CRC32 ROM | Phiên bản companion |
 | --- | --- | --- | --- |
-| FE7 Việt hóa | AE7E | 32CD990D | 0.7.14 |
-| FE6 Việt hóa Remastered, trên nền FE8 | BE8E | BD53D5F3 | 0.4.15 |
-| FE8 Việt hóa | BE8E | 3CD932D7 | 0.6.6 |
+| FE7 Việt hóa | AE7E | 32CD990D | 0.7.15 |
+| FE6 Việt hóa Remastered, trên nền FE8 | BE8E | BD53D5F3 | 0.4.16 |
+| FE8 Việt hóa | BE8E | 3CD932D7 | 0.6.7 |
 
 Các bản ROM khác bị từ chối. Profile FE6 này không dành cho FE6 gốc. Builder hoạt động theo profile đã có, chưa tự dò cấu trúc RAM cho mọi game. Phạm vi kiểm chứng dự đoán và giới hạn thiết bị nằm trong [FEATURE-CONTRACT.md](site/FEATURE-CONTRACT.md).
 
@@ -35,16 +35,19 @@ Website và Plus dùng chung `builder-core.js`, profile đọc ROM, chất liệ
 
 ## Build và kiểm tra
 
-Cần Node.js 20 trở lên, không cần tải thư viện build ngoài.
+Cần Node.js 20 trở lên. `npm ci` cài bộ máy Lua đã ghim phiên bản để kiểm thử trên máy tính; thư viện này không được đưa vào website hoặc Plus.
 
 ```sh
+npm ci
 npm run build
 npm test
 ```
 
-`site/` chứa website tĩnh. Build tạo `site/catalog.json` và `site/releases/builder-0.9.6.zip` từ mã trong `site/`, không đọc ROM hay sửa các gói 0.9.6 đã chốt trước đây.
+`site/` chứa website tĩnh. Build tạo `site/catalog.json` và `site/releases/builder-0.9.7.zip` từ mã trong `site/`, không đọc ROM hay sửa các gói 0.9.6 đã chốt trước đây.
 
 Kiểm tra tự động bao gồm hash catalog, phiên bản ROM, nguồn asset cục bộ, template không chứa dữ liệu game đã xuất, đóng ZIP format 2 với dữ liệu giả lập phục vụ kiểm thử, hủy tác vụ và truyền ZIP theo khối. Các kiểm tra này không thay thế việc thử chọn tệp trên trình duyệt và chạy Plus trên máy thật.
+
+Mã Lua dễ đọc nằm trong `runtime/<profile>/` và `runtime/shared/`. Bắt đầu từ `main.lua` của profile; không chỉnh trực tiếp chuỗi Lua trong JavaScript được sinh ra. Xem [cấu trúc Lua và cách đối chiếu](docs/runtime-modules.vi.md). Cả `npm test` và `npm run build` đều tạo lại bộ module từ các file nguồn này.
 
 ## Đưa lên GitHub Pages
 
