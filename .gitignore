@@ -1,0 +1,12 @@
+node_modules/
+reports/
+site/releases/
+site/catalog.json
+*.gba
+*.sav
+*.ss
+*.gbastudio.json
+*-Local.zip
+*.log
+.DS_Store
+desktop.ini

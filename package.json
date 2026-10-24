@@ -1,0 +1,14 @@
+{
+  "name": "gba-duo-companion-builder",
+  "version": "0.9.6",
+  "private": true,
+  "type": "module",
+  "description": "Local-ROM companion builder website and GBA Duo Plus distribution catalog",
+  "license": "GPL-3.0-only",
+  "engines": {"node": ">=20"},
+  "scripts": {
+    "build": "node scripts/build-distribution.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "check": "npm run build && npm test"
+  }
+}

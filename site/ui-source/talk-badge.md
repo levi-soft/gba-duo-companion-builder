@@ -1,0 +1,1 @@
+Authored 16x16 pixel badge. Black rectangles: (5,0,6,10), (6,10,4,1), (5,12,6,4). Gold #ffd926 rectangles: (6,1,4,8), (6,13,4,2). Other pixels transparent.
