@@ -92,3 +92,17 @@ Keep ROMs, captures, old/new prepared projects, generated assets and full output
 The local characterization covers all three profiles. For each profile it compares every returned field and the action/log trace across a 106-tick sequence with near-level EXP, completed analysis, a map focus action and Units/Map/Growth changes; a separate nine-tick sequence leaves and re-enters Forecast. It explicitly checks level-analysis availability/completion, actual focus input, Forecast transitions and unchanged fixture RAM: **345 compared ticks in total**.
 
 This establishes behavior equivalence for those captured states. It is not a guarantee for every chapter, skill or item combination. The offline Lua engine does not establish Android instruction-budget usage, frame timing, cache pressure or the final rendered layout; those require separate native/device checks. This change improves code organization, not a claimed runtime speedup.
+
+### Isolated native validation on Thor (2026-10-24)
+
+The ARM native Lua harness on Thor also ran the frozen and modular packs against the same copied ROM/RAM fixtures. It used the native `pack.require` loader and script budgets, in a separate process from the running emulator. No APK, game state or save was changed.
+
+All three profiles passed four cases (completed near-level analysis, Units, Map and Growth), each for both old and new code: **24 successful runs / 708 update calls**. The final returned values matched for every old/new pair; analysis availability and completion were asserted, and the harness reported unchanged fixture RAM in every run.
+
+| Modular profile | Slowest observed update | Highest charged update budget |
+| --- | ---: | ---: |
+| FE7 Vietnamese | 2.803 ms | 189,600 |
+| FE6 Remastered | 5.845 ms | 397,786 |
+| FE8 Vietnamese | 3.089 ms | 377,186 |
+
+No load or update budget error occurred. These are observations from isolated captured-state tests, not an FPS benchmark or proof of the Android companion's final rendered UI. Native input dispatch, live gameplay and rendering acceptance remain separate checks.

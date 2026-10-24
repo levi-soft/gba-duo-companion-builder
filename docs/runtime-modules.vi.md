@@ -67,3 +67,17 @@ Giữ riêng ROM, bản chụp RAM, project đã chuẩn bị, asset game và b�
 Đối chiếu cục bộ đã thực hiện trên cả ba profile. Mỗi profile so sánh toàn bộ trường trả về và các lệnh input/log trong chuỗi 106 tick: EXP gần lên cấp, phân tích hoàn tất, chọn unit trên Map và chuyển Units/Map/Growth. Chuỗi khác gồm chín tick thoát rồi vào lại Forecast. Có kiểm tra rõ phân tích khả dụng/hoàn tất, phát lệnh chọn unit, trạng thái Forecast và RAM fixture không bị sửa: **tổng cộng 345 tick được đối chiếu**.
 
 Kết quả xác nhận hành vi tương đương trong các trạng thái đã chụp, không bảo đảm mọi chapter, skill hoặc trang bị. Engine Lua cục bộ không đo được instruction budget của Android, thời gian khung hình, áp lực cache hay bố cục hiển thị cuối cùng; các phần đó cần kiểm tra native/thiết bị riêng. Đợt này cải thiện tổ chức code, chưa tuyên bố tăng tốc chạy.
+
+### Kiểm tra native độc lập trên Thor (24/10/2026)
+
+Chương trình kiểm thử Lua ARM trên Thor đã chạy cả bản cũ và bản chia module với cùng ROM/RAM sao chép. Nó dùng bộ nạp `pack.require` và ngân sách script native, chạy thành tiến trình riêng với giả lập đang chơi. Không cập nhật APK, thay trạng thái game hay sửa save.
+
+Cả ba profile đều qua bốn tình huống (phân tích gần lên cấp hoàn tất, Units, Map và Growth), chạy cho cả code cũ/mới: **24 lượt thành công / 708 lần cập nhật**. Giá trị cuối mỗi cặp cũ/mới khớp nhau; phân tích khả dụng/hoàn tất được xác nhận và RAM kiểm thử giữ nguyên trong mọi lượt.
+
+| Profile chia module | Lần cập nhật lâu nhất ghi nhận | Ngân sách cập nhật cao nhất |
+| --- | ---: | ---: |
+| FE7 Việt hóa | 2,803 ms | 189.600 |
+| FE6 Remastered | 5,845 ms | 397.786 |
+| FE8 Việt hóa | 3,089 ms | 377.186 |
+
+Không có lỗi vượt ngân sách nạp hay cập nhật. Đây là số đo trên trạng thái chụp trong chương trình kiểm thử độc lập, chưa phải phép đo FPS hoặc xác nhận giao diện Android đã hiển thị đúng. Phát input native, chơi trực tiếp và hiển thị vẫn cần kiểm tra riêng.
