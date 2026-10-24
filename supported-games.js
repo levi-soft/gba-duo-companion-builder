@@ -5,7 +5,7 @@ const copy={
   vi:{title:'Game được hỗ trợ',back:'← Companion Builder',intro:'Xem phiên bản ROM được hỗ trợ của từng game bên dưới. Builder tự nhận diện profile phù hợp khi bạn chọn ROM.',exactNote:'Chỉ phiên bản ROM được liệt kê cho từng game mới được hỗ trợ. Bản dịch, bản mod và phiên bản ROM khác cần profile riêng.',start:'Tạo companion',count:n=>`${n} game được hỗ trợ`,version:'Companion',rom:'Chi tiết ROM',code:'Game code',checksum:'CRC32'}
 };
 const requested=new URLSearchParams(globalThis.location?.search||'').get('lang');
-if(copy[requested])$('language').value=requested;
+if(Object.hasOwn(copy,requested))$('language').value=requested;
 function textElement(tag,text,className){
   const element=document.createElement(tag);
   element.textContent=text;
