@@ -4,9 +4,9 @@
   "builderVersion": "0.9.6",
   "builder": {
     "url": "releases/builder-0.9.6.zip",
-    "sha256": "75661d9887dec602a4243dee4b7ff9a4f05df423d157ee36ff9f83d293a447b1",
-    "bytes": 2567610,
-    "unpackedBytes": 5885858,
+    "sha256": "e99b45f42d2ceaa5f28ffeff44d5d5b15ab8f497db7d3bd7e51c4ed337c40493",
+    "bytes": 2567624,
+    "unpackedBytes": 5885892,
     "entrypoint": "plus-runner.html"
   },
   "profiles": [
