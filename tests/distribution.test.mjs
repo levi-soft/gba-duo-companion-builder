@@ -45,6 +45,15 @@ test('English defaults and Vietnamese selection remain available',()=>{
  const app=fs.readFileSync(path.join(site,'app.js'),'utf8');assert(app.includes('GBA Duo Plus'));assert(app.includes('Tạo companion'));
 });
 
+test('all hidden controls stay hidden despite component display rules',()=>{
+ const css=fs.readFileSync(path.join(site,'app.css'),'utf8');
+ const rule=css.match(/(?:^|\})\s*\[hidden\]\s*\{([^}]*)\}/);
+ assert(rule,'A global [hidden] rule is required, not just progress[hidden]');
+ assert(/display\s*:\s*none\s*!important\s*;?/.test(rule[1]));
+ const html=fs.readFileSync(path.join(site,'index.html'),'utf8');
+ for(const id of ['cancel','progress','result'])assert(new RegExp('id="'+id+'"[^>]*\\bhidden\\b').test(html),id+' starts hidden');
+});
+
 test('pack templates ship no prepared game assets and no generated table contents',()=>{
  const context={structuredClone};context.globalThis=context;
  vm.runInNewContext(fs.readFileSync(path.join(site,'theme.js'),'utf8'),context);
