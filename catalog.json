@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "runnerProtocol": 1,
+  "builderVersion": "0.9.6",
+  "builder": {
+    "url": "releases/builder-0.9.6.zip",
+    "sha256": "75661d9887dec602a4243dee4b7ff9a4f05df423d157ee36ff9f83d293a447b1",
+    "bytes": 2567610,
+    "unpackedBytes": 5885858,
+    "entrypoint": "plus-runner.html"
+  },
+  "profiles": [
+    {
+      "id": "fe7-vietnamese",
+      "name": "FE7 Vietnamese",
+      "version": "0.7.14",
+      "gameCode": "AE7E",
+      "crc32": "32CD990D"
+    },
+    {
+      "id": "fe6-remastered",
+      "name": "FE6 Vietnamese",
+      "version": "0.4.15",
+      "gameCode": "BE8E",
+      "crc32": "BD53D5F3"
+    },
+    {
+      "id": "fe8-vietnamese",
+      "name": "FE8 Vietnamese",
+      "version": "0.6.6",
+      "gameCode": "BE8E",
+      "crc32": "3CD932D7"
+    }
+  ]
+}
