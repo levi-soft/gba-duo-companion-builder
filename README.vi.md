@@ -1,4 +1,6 @@
-# Fire Emblem Companion Builder 0.9.8
+# Fire Emblem Companion Builder 1.0.0
+
+Builder chỉ tăng phiên bản khi thêm profile mới. Các bản sửa companion có phiên bản riêng. Xem [quy tắc phiên bản](https://github.com/levi-soft/gba-duo-companion-builder/blob/main/docs/VERSIONING.md) và [báo cáo rà soát 1.0.0](https://github.com/levi-soft/gba-duo-companion-builder/blob/main/docs/STABLE-1.0.0-AUDIT.md).
 
 [English — mặc định](README.md)
 
@@ -6,9 +8,9 @@ Một kit ngoại tuyến cho ba ROM Việt hóa chính xác. Mặc định ti�
 
 | Profile | Mã game / CRC32 | Companion |
 | --- | --- | --- |
-| FE6 Việt hóa Remastered trên nền FE8 | BE8E / BD53D5F3 | 0.4.18 |
-| FE7 Việt hóa | AE7E / 32CD990D | 0.7.17 |
-| FE8 Việt hóa | BE8E / 3CD932D7 | 0.6.9 |
+| FE6 Việt hóa Remastered trên nền FE8 | BE8E / BD53D5F3 | 1.0.0 |
+| FE7 Việt hóa | AE7E / 32CD990D | 1.0.0 |
+| FE8 Việt hóa | BE8E / 3CD932D7 | 1.0.0 |
 
 Kit từ chối ROM khác. FE6 ở đây là mod Remastered, không phải FE6 gốc.
 

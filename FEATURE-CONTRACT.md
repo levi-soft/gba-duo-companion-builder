@@ -1,5 +1,11 @@
 # Shared companion contract
 
+## Stable 1.0.0
+
+Builder and all three Vietnamese companions start at 1.0.0. The audit fixes map memory bounds, invalid unit fallback, fog marker disclosure, duplicate FE6 stat IDs and native CSS parsing. Readable Lua remains organized by profile and shared module; UI sources are in ui/. See the [audit](https://github.com/levi-soft/gba-duo-companion-builder/blob/main/docs/STABLE-1.0.0-AUDIT.md) and [version policy](https://github.com/levi-soft/gba-duo-companion-builder/blob/main/docs/VERSIONING.md).
+
+Historical validation records follow.
+
 ## Item-description layout in builder 0.9.9
 
 The shared item panel reserves the remaining 60% of its height for non-weapon
