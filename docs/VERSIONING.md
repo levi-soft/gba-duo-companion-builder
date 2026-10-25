@@ -35,6 +35,11 @@ Script và CSS trên web cũng dùng checksum nội dung làm cache key. Ngườ
 không bị giữ lại Lua/UI cũ chỉ vì phiên bản builder không đổi. Plus hiện tại đã
 lưu cache bundle theo SHA-256, nên quy tắc này không cần thay APK.
 
+Riêng `plus-runner.html` giữ đường dẫn script/CSS **không có query** để tương
+thích bộ chặn tài nguyên của Plus protocol 1. WebView này đã tắt cache; bundle
+được kiểm tra SHA-256 và giải nén vào thư mục riêng cho từng lượt chạy. Cache key
+`?v=...` chỉ dùng cho các trang web thông thường.
+
 Website và Plus lấy bản hiện tại theo catalogue. Tag/release GitHub là snapshot
 đã công bố; không di chuyển tag cũ để đưa một bản sửa companion mới vào cùng tag.
 

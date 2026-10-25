@@ -6,6 +6,21 @@ import crypto from 'node:crypto';
 import vm from 'node:vm';
 const site=path.resolve('site');
 
+test('Plus runner dependencies satisfy the shipped protocol-1 query-free interceptor',()=>{
+ const html=fs.readFileSync(path.join(site,'plus-runner.html'),'utf8');
+ const origin='https://builder.gbaduo.local/';
+ const dependencies=[...html.matchAll(/<(?:script|link)\b[^>]*(?:src|href)="([^"]+)"/g)].map(match=>match[1]);
+ assert(dependencies.length>10,'Check the actual runner dependency graph');
+ for(const dependency of dependencies){
+  const url=new URL(dependency,origin);
+  assert.equal(url.origin,new URL(origin).origin);
+  assert.equal(url.search,'','Plus 0.1.7-plus.2 blocks query strings: '+dependency);
+  assert.equal(url.hash,'');
+  assert(!url.pathname.includes('%'),'Plus blocks encoded paths');
+  assert(fs.statSync(path.join(site,url.pathname.slice(1))).isFile());
+ }
+});
+
 test('catalog declares the three exact ROM profiles and Plus runner protocol',()=>{
  const catalog=JSON.parse(fs.readFileSync(path.join(site,'catalog.json')));
  assert.equal(catalog.schemaVersion,1);assert.equal(catalog.runnerProtocol,1);assert.equal(catalog.builderVersion,'1.0.0');

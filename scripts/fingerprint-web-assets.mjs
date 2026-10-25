@@ -13,6 +13,11 @@ export function fingerprintWebAssets(site) {
         if (/^(?:[a-z]+:|\/|\\)/i.test(name) || name.split('/').includes('..')) {
           throw Error('Web asset must use a local path: ' + name);
         }
+        // Protocol 1's native interceptor rejects any query. Its WebView uses
+        // LOAD_NO_CACHE and the extracted bundle is already keyed by SHA-256.
+        if (file === 'plus-runner.html') {
+          return tag.replace(/((?:src|href)=")[^"]+"/, `$1${name}"`);
+        }
         const bytes = fs.readFileSync(path.join(site, name));
         const revision = crypto.createHash('sha256').update(bytes).digest('hex').slice(0, 16);
         return tag.replace(/((?:src|href)=")[^"]+"/, `$1${name}?v=${revision}"`);

@@ -45,12 +45,17 @@ test('web cache keys change with companion assets while navigation and language 
     fs.writeFileSync(path.join(directory, 'profiles.js'), 'old profiles');
     fingerprintWebAssets(directory);
     const before = fs.readFileSync(path.join(directory, 'index.html'), 'utf8');
+    const runner = fs.readFileSync(path.join(directory, 'plus-runner.html'), 'utf8');
+    assert(runner.includes('src="profiles.js"'));
+    assert(runner.includes('href="app.css"'));
+    assert(runner.includes('supported-games.html?lang=vi'));
     assert(before.includes('supported-games.html?lang=vi'));
     fingerprintWebAssets(directory);
     assert.equal(fs.readFileSync(path.join(directory, 'index.html'), 'utf8'), before);
     fs.writeFileSync(path.join(directory, 'profiles.js'), 'fixed companion');
     fingerprintWebAssets(directory);
     const after = fs.readFileSync(path.join(directory, 'index.html'), 'utf8');
+    assert.equal(fs.readFileSync(path.join(directory, 'plus-runner.html'), 'utf8'), runner);
     assert.notEqual(after, before);
     assert.equal(after.match(/app.css\?v=[a-f0-9]+/)[0], before.match(/app.css\?v=[a-f0-9]+/)[0]);
   } finally {

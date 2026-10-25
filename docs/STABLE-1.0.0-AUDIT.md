@@ -3,6 +3,21 @@
 Phạm vi: builder, Lua, giao diện chung và ba profile ROM chính xác FE7 Việt,
 FE6 Việt Remastered dựa trên FE8, FE8 Việt. APK GBA Duo Plus không thuộc phần sửa.
 
+## Sửa tương thích Plus sau phát hành
+
+Gói 1.0.0 đầu tiên thêm cache query `?v=...` vào cả trang runner. Bộ chặn nội bộ
+của Plus 0.1.7-plus.2 từ chối mọi query, khiến script không chạy và màn hình dừng
+ở “Creating companion from your local ROM…”. Tải catalog/ZIP vẫn thành công.
+Đây là lỗi tích hợp bị bỏ sót trong các gate ban đầu.
+
+Trang runner đã được sửa để dùng đường dẫn không query; các trang web thông
+thường vẫn có cache key theo nội dung. Plus tắt WebView cache và tải bundle theo
+SHA-256 nên không cần đổi APK, phiên bản builder hoặc phiên bản companion.
+Đã thêm regression kiểm tra toàn bộ script/CSS của runner theo bộ chặn protocol 1:
+thất bại với gói đầu tiên và đạt sau sửa. Tổng số test hiện tại là 43.
+Kiểm tra HTTP từ Thor xác nhận catalog và ZIP tải được; điều này không tự thay
+thế việc chạy trọn luồng tạo/cài trong ứng dụng.
+
 ## Lỗi đã phát hiện và sửa
 
 | Phần | Lỗi có bằng chứng | Cách sửa |
