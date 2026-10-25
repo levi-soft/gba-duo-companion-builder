@@ -1,4 +1,4 @@
-# Fire Emblem Companion Builder 0.9.7
+# Fire Emblem Companion Builder 0.9.8
 
 [Tiếng Việt](README.vi.md)
 
@@ -6,9 +6,9 @@ One offline kit for three exact Vietnamese ROMs. English is the default interfac
 
 | Profile | Game code / CRC32 | Companion |
 | --- | --- | --- |
-| FE6 Vietnamese Remastered, built on FE8 | BE8E / BD53D5F3 | 0.4.16 |
-| FE7 Vietnamese | AE7E / 32CD990D | 0.7.15 |
-| FE8 Vietnamese | BE8E / 3CD932D7 | 0.6.7 |
+| FE6 Vietnamese Remastered, built on FE8 | BE8E / BD53D5F3 | 0.4.17 |
+| FE7 Vietnamese | AE7E / 32CD990D | 0.7.16 |
+| FE8 Vietnamese | BE8E / 3CD932D7 | 0.6.8 |
 
 Other ROM revisions are rejected. The FE6 profile is not original FE6.
 
