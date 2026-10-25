@@ -30,13 +30,19 @@ nằm trong module Lua riêng, địa chỉ của từng game đặt trong profi
 lại/nhập companion để nhận bản sửa; pack đã cài không bị thay đổi ngầm.
 Xem [kiểm chứng và giới hạn](https://github.com/levi-soft/gba-duo-companion-builder/blob/main/site/FEATURE-CONTRACT.md).
 
-## Profile chính xác trong builder 0.9.8
+## Sửa khung mô tả vật phẩm trong bản 0.9.9
+
+Mô tả dài giữ chiều cao dòng và có thể cuộn trong khung thông tin, không bị ép
+hoặc mất phần cuối. Tạo lại/nhập companion để cập nhật giao diện. Không cần
+cập nhật APK Plus.
+
+## Profile chính xác trong builder 0.9.9
 
 | Profile | Mã game | CRC32 ROM | Phiên bản companion |
 | --- | --- | --- | --- |
-| FE7 Việt hóa | AE7E | 32CD990D | 0.7.16 |
-| FE6 Việt hóa Remastered, trên nền FE8 | BE8E | BD53D5F3 | 0.4.17 |
-| FE8 Việt hóa | BE8E | 3CD932D7 | 0.6.8 |
+| FE7 Việt hóa | AE7E | 32CD990D | 0.7.17 |
+| FE6 Việt hóa Remastered, trên nền FE8 | BE8E | BD53D5F3 | 0.4.18 |
+| FE8 Việt hóa | BE8E | 3CD932D7 | 0.6.9 |
 
 Các bản ROM khác bị từ chối. Profile FE6 này không dành cho FE6 gốc. Builder hoạt động theo profile đã có, chưa tự dò cấu trúc RAM cho mọi game. Phạm vi kiểm chứng dự đoán và giới hạn thiết bị nằm trong [FEATURE-CONTRACT.md](site/FEATURE-CONTRACT.md).
 
@@ -56,7 +62,7 @@ npm run build
 npm test
 ```
 
-`site/` chứa website tĩnh. Build tạo `site/catalog.json` và `site/releases/builder-0.9.8.zip` từ mã trong `site/`, không đọc ROM hay sửa các gói 0.9.6 đã chốt trước đây.
+`site/` chứa website tĩnh. Build tạo `site/catalog.json` và `site/releases/builder-0.9.9.zip` từ mã trong `site/`, không đọc ROM hay sửa các gói 0.9.6 đã chốt trước đây.
 
 Kiểm tra tự động bao gồm hash catalog, phiên bản ROM, nguồn asset cục bộ, template không chứa dữ liệu game đã xuất, đóng ZIP format 2 với dữ liệu giả lập phục vụ kiểm thử, hủy tác vụ và truyền ZIP theo khối. Các kiểm tra này không thay thế việc thử chọn tệp trên trình duyệt và chạy Plus trên máy thật.
 

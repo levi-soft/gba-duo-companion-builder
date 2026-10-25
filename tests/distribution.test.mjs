@@ -8,10 +8,10 @@ const site=path.resolve('site');
 
 test('catalog declares the three exact ROM profiles and Plus runner protocol',()=>{
  const catalog=JSON.parse(fs.readFileSync(path.join(site,'catalog.json')));
- assert.equal(catalog.schemaVersion,1);assert.equal(catalog.runnerProtocol,1);assert.equal(catalog.builderVersion,'0.9.8');
+ assert.equal(catalog.schemaVersion,1);assert.equal(catalog.runnerProtocol,1);assert.equal(catalog.builderVersion,'0.9.9');
  assert.equal(catalog.builder.entrypoint,'plus-runner.html');
  assert.deepEqual(catalog.profiles.map(x=>[x.id,x.version,x.gameCode,x.crc32]),[
-  ['fe7-vietnamese','0.7.16','AE7E','32CD990D'],['fe6-remastered','0.4.17','BE8E','BD53D5F3'],['fe8-vietnamese','0.6.8','BE8E','3CD932D7']]);
+  ['fe7-vietnamese','0.7.17','AE7E','32CD990D'],['fe6-remastered','0.4.18','BE8E','BD53D5F3'],['fe8-vietnamese','0.6.9','BE8E','3CD932D7']]);
  const zip=fs.readFileSync(path.join(site,catalog.builder.url));assert.equal(zip.length,catalog.builder.bytes);
  assert.equal(crypto.createHash('sha256').update(zip).digest('hex'),catalog.builder.sha256);
  assert(catalog.builder.unpackedBytes>catalog.builder.bytes);

@@ -1,5 +1,21 @@
 # Shared companion contract
 
+## Item-description layout in builder 0.9.9
+
+The shared item panel reserves the remaining 60% of its height for non-weapon
+descriptions instead of a fixed 50%. Description and item-type/rank text retain
+their natural height, with explicit line spacing and no flex shrinking. Long
+descriptions scroll vertically inside that panel instead of losing their tail.
+The change is shared by all five inventory slots and all three profiles.
+
+The companion CSS/layout is the only rendering change; the Plus application,
+Lua modules, ROM-derived strings and game data are unchanged. An isolated test
+using the current Plus Android renderer reproduced the old clipping with long
+Vietnamese text. The new layout retained more than 100 pixels of measured text
+height and successfully scrolled to the final Staff/Rank line. Both before/after
+render cases passed; this host-renderer check is separate from live Thor visual
+acceptance. Rebuild/import the companion to update an existing installed pack.
+
 ## Preparations selection in builder 0.9.8
 
 FE7 companion 0.7.16, FE6 Remastered 0.4.17 and FE8 0.6.8 read the highlighted
