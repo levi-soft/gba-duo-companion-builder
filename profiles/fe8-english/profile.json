@@ -1,0 +1,14 @@
+{
+  "id": "fe8-english",
+  "name": "FE8 English - USA/Australia",
+  "nameVi": "FE8 tiếng Anh - Mỹ/Úc",
+  "code": "BE8E",
+  "crc32": "A47246AE",
+  "api": "FE8EnglishPrep",
+  "template": "FE8_ENGLISH_TEMPLATE",
+  "runtime": "FE8_RUNTIME_TEMPLATE",
+  "native": "FE8_NATIVE_DESIGN",
+  "output": "FE8-English-Companion-1.0.0",
+  "language": "en",
+  "status": "stable"
+}

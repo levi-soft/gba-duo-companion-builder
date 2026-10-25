@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "runnerProtocol": 1,
-  "builderVersion": "1.0.0",
+  "builderVersion": "1.1.0",
   "builder": {
-    "sha256": "aebc021c89f5dc2630d0cfc3ee492f19000a67fe0991f0626a3974966e705e16",
-    "url": "releases/builder-1.0.0-aebc021c89f5dc2630d0cfc3ee492f19000a67fe0991f0626a3974966e705e16.zip",
-    "bytes": 2513488,
-    "unpackedBytes": 5554602,
+    "sha256": "9606bc948886f022b827b857befe49c976ebf0f30409fa56a85b9430e7dadaed",
+    "url": "releases/builder-1.1.0-9606bc948886f022b827b857befe49c976ebf0f30409fa56a85b9430e7dadaed.zip",
+    "bytes": 2708998,
+    "unpackedBytes": 6419533,
     "entrypoint": "plus-runner.html"
   },
   "profiles": [
@@ -30,6 +30,55 @@
       "version": "1.0.0",
       "gameCode": "BE8E",
       "crc32": "3CD932D7"
+    },
+    {
+      "id": "fe7-english",
+      "name": "FE7 English",
+      "version": "1.0.0",
+      "gameCode": "AE7E",
+      "crc32": "2A524221"
+    },
+    {
+      "id": "fe8-europe",
+      "name": "FE8 Europe",
+      "version": "1.0.0",
+      "gameCode": "BE8P",
+      "crc32": "B3005195"
+    },
+    {
+      "id": "fe8-english",
+      "name": "FE8 English - USA/Australia",
+      "version": "1.0.0",
+      "gameCode": "BE8E",
+      "crc32": "A47246AE"
+    },
+    {
+      "id": "fe6-english",
+      "name": "FE6 T-EN",
+      "version": "1.0.0",
+      "gameCode": "AFEJ",
+      "crc32": "197DE10B"
+    },
+    {
+      "id": "fe6-project-ember",
+      "name": "Project Ember",
+      "version": "1.0.0",
+      "gameCode": "AFEJ",
+      "crc32": "636F7B05"
+    },
+    {
+      "id": "fe6-project-ember-rr",
+      "name": "Project Ember Reverse Recruitment",
+      "version": "1.0.0",
+      "gameCode": "AFEJ",
+      "crc32": "29BC2257"
+    },
+    {
+      "id": "voids-blitzarre",
+      "name": "Void's Blitzarre Adventure",
+      "version": "1.0.0",
+      "gameCode": "BE8E",
+      "crc32": "9D22107C"
     }
   ]
 }

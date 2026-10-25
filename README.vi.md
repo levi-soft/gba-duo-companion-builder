@@ -1,18 +1,23 @@
-# Fire Emblem Companion Builder 1.0.0
+# Fire Emblem Companion Builder 1.1.0
 
-Builder chỉ tăng phiên bản khi thêm profile mới. Các bản sửa companion có phiên bản riêng. Xem [quy tắc phiên bản](https://github.com/levi-soft/gba-duo-companion-builder/blob/main/docs/VERSIONING.md) và [báo cáo rà soát 1.0.0](https://github.com/levi-soft/gba-duo-companion-builder/blob/main/docs/STABLE-1.0.0-AUDIT.md).
+## Builder 1.1.0 — mười profile ROM chính xác
 
-[English — mặc định](README.md)
+Bảy companion tiếng Anh được chốt **1.0.0**, cùng ba companion Việt hóa **1.0.0**. Builder **1.1.0** bổ sung bảy profile cho website và chức năng tạo tự động trong Plus. Sau này chỉ tăng Builder khi thêm profile; sửa companion dùng phiên bản riêng.
 
-Một kit ngoại tuyến cho ba ROM Việt hóa chính xác. Mặc định tiếng Anh, có thể đổi sang tiếng Việt. Kit tự chọn profile theo CRC32, không tải ROM lên mạng và không sửa ROM.
+| Profile | Game code | CRC32 | Companion |
+|---|---|---|---|
+| FE7 Vietnamese | `AE7E` | `32CD990D` | 1.0.0 |
+| FE6 Vietnamese | `BE8E` | `BD53D5F3` | 1.0.0 |
+| FE8 Vietnamese | `BE8E` | `3CD932D7` | 1.0.0 |
+| FE7 English | `AE7E` | `2A524221` | 1.0.0 |
+| FE8 Europe | `BE8P` | `B3005195` | 1.0.0 |
+| FE8 English - USA/Australia | `BE8E` | `A47246AE` | 1.0.0 |
+| FE6 T-EN | `AFEJ` | `197DE10B` | 1.0.0 |
+| Project Ember | `AFEJ` | `636F7B05` | 1.0.0 |
+| Project Ember Reverse Recruitment | `AFEJ` | `29BC2257` | 1.0.0 |
+| Void's Blitzarre Adventure | `BE8E` | `9D22107C` | 1.0.0 |
 
-| Profile | Mã game / CRC32 | Companion |
-| --- | --- | --- |
-| FE6 Việt hóa Remastered trên nền FE8 | BE8E / BD53D5F3 | 1.0.0 |
-| FE7 Việt hóa | AE7E / 32CD990D | 1.0.0 |
-| FE8 Việt hóa | BE8E / 3CD932D7 | 1.0.0 |
-
-Kit từ chối ROM khác. FE6 ở đây là mod Remastered, không phải FE6 gốc.
+FE6 T-EN là FE6 gốc; FE6 Việt hóa Remastered là ROM hack trên nền FE8. ROM khác hoặc bản vá khác cần profile riêng. Các profile tiếng Anh dùng UI, Growth và Analysis tiếng Anh. Void hỗ trợ sáu ô skill và Talk; lớp phủ phạm vi trên Map hiện chưa tính skill thay đổi tầm/di chuyển. Xem [phạm vi và kiểm chứng](https://github.com/levi-soft/gba-duo-companion-builder/blob/main/docs/RELEASE-1.1.0.md).
 
 ## Cách sử dụng
 

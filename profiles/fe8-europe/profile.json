@@ -1,0 +1,14 @@
+{
+  "id": "fe8-europe",
+  "name": "FE8 Europe",
+  "nameVi": "FE8 châu Âu",
+  "code": "BE8P",
+  "crc32": "B3005195",
+  "api": "FE8EuropePrep",
+  "template": "FE8_EUROPE_TEMPLATE",
+  "runtime": "FE8_RUNTIME_TEMPLATE",
+  "native": "FE8_NATIVE_DESIGN",
+  "output": "FE8-Europe-Companion-1.0.0",
+  "language": "en",
+  "status": "stable"
+}

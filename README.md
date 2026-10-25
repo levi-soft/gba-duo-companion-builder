@@ -1,18 +1,23 @@
-# Fire Emblem Companion Builder 1.0.0
+# Fire Emblem Companion Builder 1.1.0
 
-Builder versions increase only when a new profile is added. Companion fixes have independent versions. See [version policy](https://github.com/levi-soft/gba-duo-companion-builder/blob/main/docs/VERSIONING.md) and [1.0.0 audit](https://github.com/levi-soft/gba-duo-companion-builder/blob/main/docs/STABLE-1.0.0-AUDIT.md).
+## Builder 1.1.0 — ten exact ROM profiles
 
-[Tiếng Việt](README.vi.md)
+Seven English companions are now finalized at **1.0.0**, alongside the three Vietnamese companions at **1.0.0**. Builder **1.1.0** adds the seven profiles to both the website and Plus automatic creation. Future companion fixes keep the builder version; only adding profiles advances it.
 
-One offline kit for three exact Vietnamese ROMs. English is the default interface language; Vietnamese is available. The kit reads your local ROM, selects its profile by CRC32 and builds a companion ZIP. It uploads nothing and does not modify the ROM.
+| Profile | Game code | CRC32 | Companion |
+|---|---|---|---|
+| FE7 Vietnamese | `AE7E` | `32CD990D` | 1.0.0 |
+| FE6 Vietnamese | `BE8E` | `BD53D5F3` | 1.0.0 |
+| FE8 Vietnamese | `BE8E` | `3CD932D7` | 1.0.0 |
+| FE7 English | `AE7E` | `2A524221` | 1.0.0 |
+| FE8 Europe | `BE8P` | `B3005195` | 1.0.0 |
+| FE8 English - USA/Australia | `BE8E` | `A47246AE` | 1.0.0 |
+| FE6 T-EN | `AFEJ` | `197DE10B` | 1.0.0 |
+| Project Ember | `AFEJ` | `636F7B05` | 1.0.0 |
+| Project Ember Reverse Recruitment | `AFEJ` | `29BC2257` | 1.0.0 |
+| Void's Blitzarre Adventure | `BE8E` | `9D22107C` | 1.0.0 |
 
-| Profile | Game code / CRC32 | Companion |
-| --- | --- | --- |
-| FE6 Vietnamese Remastered, built on FE8 | BE8E / BD53D5F3 | 1.0.0 |
-| FE7 Vietnamese | AE7E / 32CD990D | 1.0.0 |
-| FE8 Vietnamese | BE8E / 3CD932D7 | 1.0.0 |
-
-Other ROM revisions are rejected. The FE6 profile is not original FE6.
+FE6 T-EN is original FE6; Vietnamese Remastered is an FE8-based hack. Other ROM revisions and patches need independent profiles. English profiles use English Growth/Analysis and shared UI. Void includes six skill slots and Talk; its Map range overlays still use base movement/weapon ranges and do not include range-changing skills. See [release scope and validation](https://github.com/levi-soft/gba-duo-companion-builder/blob/main/docs/RELEASE-1.1.0.md).
 
 ## Build and install
 
@@ -38,7 +43,7 @@ This kit contains authored UI resources, licensed fonts, readers and code. It co
 
 Images are prepared once and cached in the Local ZIP. Gameplay does not repeatedly decode portraits or sprites. Common layout/CSS lives in `theme.js`; profile extensions add only game-specific controls. Shared compiler source and UI source are included. The kit does not automatically discover layouts for unknown games.
 
-Generated ZIPs use companion APIs available in GBA Duo. Plus is the primary device test target; official-app acceptance of these new profiles remains unverified. Cursor navigation needs emulator support. No APK change is required for this kit update.
+Generated ZIPs use companion APIs available in GBA Duo. Plus is the primary device test target; official-app acceptance of these new profiles remains unverified. Cursor navigation needs emulator support. Pack-owned cursor navigation requires GBA Duo Plus 0.1.7-plus.4 or newer; older hosts may recognize only some legacy ROMs.
 
 [GBA Duo Plus](https://github.com/levi-soft/gba-duo-plus) ? [GBA Duo Studio](https://github.com/levi-soft/gba-duo-studio)
 

@@ -105,10 +105,10 @@
     }));
   }
 
-  async function renderRadar(growth, bonus) {
+  async function renderRadar(growth, bonus, language = 'vi') {
     await fonts();
     const canvas = document.createElement('canvas');
-    root.CompanionRadar.draw(canvas, growth, bonus);
+    root.CompanionRadar.draw(canvas, growth, bonus, language);
     const blob = await new Promise((resolve, reject) => {
       canvas.toBlob(result => result
         ? resolve(result)
@@ -122,10 +122,13 @@
     const profile = profileFor(rom, options);
     const api = root[profile.api];
     const template = clone(root[profile.template]);
+    // Producers may start from a generic public template. Navigation packaging
+    // must receive the exact identity already verified by profileFor().
+    template.manifest.match = { gameCode: [profile.code], crc32: [profile.crc32] };
     template.files = clone(root.COMPANION_UI_FILES);
     const result = await api.prepare(rom, template, root[profile.runtime], {
       signal: options.signal,
-      renderRadar: options.renderRadar || renderRadar,
+      renderRadar: options.renderRadar || ((growth, bonus) => renderRadar(growth, bonus, profile.language || 'vi')),
       onProgress: options.onProgress,
       yieldControl: options.yieldControl || (() => new Promise(resolve => setTimeout(resolve, 0))),
     });

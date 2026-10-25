@@ -1,0 +1,13 @@
+{
+  "id": "fe6-english",
+  "name": "FE6 T-EN",
+  "nameVi": "FE6 T-EN",
+  "code": "AFEJ",
+  "crc32": "197DE10B",
+  "api": "FE6EnglishPrep",
+  "template": "FE6_ENGLISH_TEMPLATE",
+  "runtime": "FE7_RUNTIME_TEMPLATE",
+  "output": "FE6-T-EN-Companion-1.0.0",
+  "language": "en",
+  "status": "stable"
+}

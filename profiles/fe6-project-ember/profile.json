@@ -1,0 +1,13 @@
+{
+  "id": "fe6-project-ember",
+  "name": "Project Ember",
+  "nameVi": "Project Ember",
+  "code": "AFEJ",
+  "crc32": "636F7B05",
+  "api": "FE6ProjectEmberPrep",
+  "template": "FE6_PROJECT_EMBER_TEMPLATE",
+  "runtime": "FE7_RUNTIME_TEMPLATE",
+  "output": "Project-Ember-Companion-1.0.0",
+  "language": "en",
+  "status": "stable"
+}

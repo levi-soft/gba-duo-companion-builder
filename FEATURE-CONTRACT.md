@@ -1,3 +1,20 @@
+# Public scope — Builder 1.1.0
+
+| Profile | Game code | CRC32 | Companion |
+|---|---|---|---|
+| FE7 Vietnamese | `AE7E` | `32CD990D` | 1.0.0 |
+| FE6 Vietnamese | `BE8E` | `BD53D5F3` | 1.0.0 |
+| FE8 Vietnamese | `BE8E` | `3CD932D7` | 1.0.0 |
+| FE7 English | `AE7E` | `2A524221` | 1.0.0 |
+| FE8 Europe | `BE8P` | `B3005195` | 1.0.0 |
+| FE8 English - USA/Australia | `BE8E` | `A47246AE` | 1.0.0 |
+| FE6 T-EN | `AFEJ` | `197DE10B` | 1.0.0 |
+| Project Ember | `AFEJ` | `636F7B05` | 1.0.0 |
+| Project Ember Reverse Recruitment | `AFEJ` | `29BC2257` | 1.0.0 |
+| Void's Blitzarre Adventure | `BE8E` | `9D22107C` | 1.0.0 |
+
+English profiles are finalized at companion 1.0.0. See [current release evidence and limits](https://github.com/levi-soft/gba-duo-companion-builder/blob/main/docs/RELEASE-1.1.0.md). Void supports six skill slots and pending Talk; its Map range overlays do not include range-changing skills. The older sections below preserve the Vietnamese profiles' development evidence and do not establish complete-game accuracy for the seven English profiles.
+
 # Shared companion contract
 
 ## Stable 1.0.0

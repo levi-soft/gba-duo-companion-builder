@@ -1,0 +1,13 @@
+{
+  "id": "fe6-project-ember-rr",
+  "name": "Project Ember Reverse Recruitment",
+  "nameVi": "Project Ember Reverse Recruitment",
+  "code": "AFEJ",
+  "crc32": "29BC2257",
+  "api": "FE6ProjectEmberRRPrep",
+  "template": "FE6_PROJECT_EMBER_RR_TEMPLATE",
+  "runtime": "FE7_RUNTIME_TEMPLATE",
+  "output": "Project-Ember-Reverse-Recruitment-Companion-1.0.0",
+  "language": "en",
+  "status": "stable"
+}
