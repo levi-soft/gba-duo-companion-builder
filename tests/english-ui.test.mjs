@@ -56,7 +56,7 @@ test('English Lua presentation translates statuses and dynamic numbers without c
       '[' + JSON.stringify(key) + ']=' + JSON.stringify(value)).join(',') + '}';
     engine.global.set('stringsSource', literal);
     engine.global.set('localeSource', fs.readFileSync('runtime/shared/presentation.locale.lua','utf8'));
-    engine.global.set('englishSource', fs.readFileSync('runtime/fe7-english/presentation.english.lua','utf8'));
+    engine.global.set('englishSource', fs.readFileSync('runtime/shared/presentation.english.lua','utf8'));
     const result = await engine.doString(`
       pack={require=function(name) assert(name=='presentation.locale');return assert(load(localeSource))() end}
       local strings=assert(load('return '..stringsSource))()

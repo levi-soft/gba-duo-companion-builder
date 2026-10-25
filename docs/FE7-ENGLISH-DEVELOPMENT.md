@@ -13,7 +13,7 @@ remain stable at 1.0.0.
   The default remains Vietnamese; no Vietnamese layout or text is overwritten.
 - `site/profiles/fe7-english/template.js` creates a **UI prototype** with version
   0.1.0 only when given an exact ROM identity. It is not in the public catalogue.
-- `runtime/fe7-english/presentation.english.lua` localizes explicit presentation
+- `runtime/shared/presentation.english.lua` localizes explicit presentation
   fields through the shared locale helper. It does not translate ROM text or
   change numerical calculation results.
 

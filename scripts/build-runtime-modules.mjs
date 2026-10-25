@@ -3,10 +3,10 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
-// English is a development runtime, not yet advertised in the public catalogue.
-// Inherit the FE7 implementation; override only authored English-specific modules.
-const profiles=['fe7-vietnamese','fe6-remastered','fe8-vietnamese','fe7-english'];
-const inherited={'fe7-english':'fe7-vietnamese'};
+// Original English profiles are development runtimes outside the public catalogue.
+// Inherit each game's implementation; override only region/presentation contracts.
+const profiles=['fe7-vietnamese','fe6-remastered','fe8-vietnamese','fe7-english','fe8-europe'];
+const inherited={'fe7-english':'fe7-vietnamese','fe8-europe':'fe8-vietnamese'};
 const readModules=directory=>Object.fromEntries(fs.readdirSync(directory).filter(name=>name.endsWith('.lua')).sort().map(name=>[
  name,fs.readFileSync(path.join(directory,name),'utf8').replace(/\r\n/g,'\n')
 ]));

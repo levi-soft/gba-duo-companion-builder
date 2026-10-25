@@ -59,7 +59,18 @@
     "Chưa có kết quả": "No result yet",
     "Dữ liệu giao chiến chưa sẵn sàng": "Battle data is not ready",
     "Trận theo kịch bản: chưa hỗ trợ dự đoán": "Scripted battle: prediction unavailable",
-    "Đấu trường: chưa hỗ trợ dự đoán": "Arena: prediction unavailable"
+    "Đấu trường: chưa hỗ trợ dự đoán": "Arena: prediction unavailable",
+    "Đã cộng 5% từ Metis’s Tome.": "Includes +5% from Metis's Tome.",
+    "Đang tính EXP nếu nhân vật còn sống…": "Calculating EXP if the unit survives…",
+    "Hiện tại ": "Current ",
+    " · Gây sát thương: ": " · Damage: ",
+    " · Hạ đối thủ: ": " · Defeat: ",
+    "Gây sát thương: đủ EXP lên cấp.": "Damage EXP: enough for a level.",
+    "Gây sát thương: chưa đủ EXP lên cấp.": "Damage EXP: not enough for a level.",
+    "Hạ đối thủ: đủ EXP lên cấp.": "Defeat EXP: enough for a level.",
+    "Hạ đối thủ: chưa đủ EXP lên cấp.": "Defeat EXP: not enough for a level.",
+    "Đang phân tích chỉ số nếu lên cấp…": "Analyzing conditional level-up stats…",
+    "Chưa hỗ trợ dự đoán tình huống này": "Prediction unavailable for this situation"
   },
   "radar": {
     "scale": "Shared scale: 0–{scale}%",

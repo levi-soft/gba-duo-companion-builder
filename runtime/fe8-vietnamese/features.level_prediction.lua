@@ -4,6 +4,7 @@
 local modThumbStart = pack.require("features.thumb").start
 local modCaptureRam = pack.require("game.snapshot")
 local function modLevelPredictionStart(sharedRam, profileOptions)
+  local entries = profileOptions and profileOptions.entries or {}
   local actor, target = 0x0203A4EC, 0x0203A56C
   local config = mem.u16(0x0203A4D4)
   if config ~= 1 and config ~= 2 then
@@ -41,23 +42,26 @@ local function modLevelPredictionStart(sharedRam, profileOptions)
   for n = 0, 5 do
     initial[0x03000000 + n] = input(0x03000000 + n)
   end
-  local unitLookup = mem.u32(0x08019440)
+  local unitLookup = entries.unitLookup or mem.u32(0x08019440)
   local actorUnit = input(unitLookup + input(actor + 11) * 4, 4)
   local targetUnit = input(unitLookup + input(target + 11) * 4, 4)
   -- Match the ROM's post-calculation call order, including restoring rune
   -- visibility, target equipment and the EXP routine before level-up.
   local phases = {
-    { entry = 0x0802EB10, args = {}, limit = 200000 },
+    { entry = entries.prepareBattle or 0x0802EB10, args = {}, limit = 200000 },
     {
-      entry = profileOptions and profileOptions.scriptedBattle and input(0x0203A970, 4) ~= 0 and 0x0802CF4C
-        or 0x0802AED0,
+      entry = profileOptions
+          and profileOptions.scriptedBattle
+          and input(0x0203A970, 4) ~= 0
+          and (entries.scriptedBattle or 0x0802CF4C)
+        or (entries.normalBattle or 0x0802AED0),
       args = {},
       limit = 1000000,
     },
-    { entry = 0x0802EB50, args = {}, limit = 200000 },
-    { entry = 0x0802C740, args = { target }, limit = 100000 },
-    { entry = 0x0802C6EC, args = { target }, limit = 100000 },
-    { entry = 0x0802B92C, args = {}, limit = 200000 },
+    { entry = entries.finishBattle or 0x0802EB50, args = {}, limit = 200000 },
+    { entry = entries.expClear or 0x0802C740, args = { target }, limit = 100000 },
+    { entry = entries.restoreWeapon or 0x0802C6EC, args = { target }, limit = 100000 },
+    { entry = entries.expApply or 0x0802B92C, args = {}, limit = 200000 },
   }
   local stage, previousSteps = 1, 0
   local function begin(shadow)
@@ -73,7 +77,7 @@ local function modLevelPredictionStart(sharedRam, profileOptions)
       -- Hypothetical level-up only. The actual fight's hit/miss and EXP
       -- outcome are not exposed. No combat, skill or RNG call is skipped.
       options.beforeEntry = {
-        [0x0802B92C] = function(registers, read, write)
+        [entries.expApply or 0x0802B92C] = function(registers, read, write)
           -- Conditional results assume the actor survives. Restore only this
           -- private post-combat HP after every combat/RNG call has completed;
           -- otherwise a simulated death silently bypasses the level-up hook.
@@ -81,7 +85,7 @@ local function modLevelPredictionStart(sharedRam, profileOptions)
             write(actor + 19, 1, 1)
           end
         end,
-        [0x0802BA28] = function(registers, read, write)
+        [entries.levelUp or 0x0802BA28] = function(registers, read, write)
           if registers[0] == actor and read(actor + 9, 1) < 100 then
             write(actor + 9, 100, 1)
           end
@@ -129,7 +133,7 @@ end
 
 -- FE8 routes tutorial/scripted battles through its actual scripted unwind.
 local fe8LevelPredictionBase = modLevelPredictionStart
-local function modLevelPredictionStart(sharedRam)
-  return fe8LevelPredictionBase(sharedRam, { scriptedBattle = true })
+local function modLevelPredictionStart(sharedRam, entries)
+  return fe8LevelPredictionBase(sharedRam, { scriptedBattle = true, entries = entries })
 end
 return modLevelPredictionStart

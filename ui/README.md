@@ -12,8 +12,8 @@ serialized layout or CSS directly. Profile metadata and extension payloads remai
 in `site/profiles/<profile>/template.js`.
 
 English uses `makeCompanionLayout(null, 'en')`; the default call preserves the
-Vietnamese tree. No second Growth/Analysis layout is maintained. The FE7 English
-Lua presentation adapter translates only named UI fields, preserving ROM text
+Vietnamese tree. No second Growth/Analysis layout is maintained. The English Lua
+presentation adapter shared by FE7 USA and FE8 Europe translates only named UI fields, preserving ROM text
 and calculations. The build also regenerates `site/radar.js` from its UI source.
 
 Keep ROM-derived data and images out of this directory. UI assets and their

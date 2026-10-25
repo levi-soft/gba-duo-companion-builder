@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {executeProject} from '../scripts/runtime-validation-engine.mjs';
 
-for(const id of ['fe7-vietnamese','fe6-remastered','fe8-vietnamese']){
+for(const id of ['fe7-vietnamese','fe6-remastered','fe8-vietnamese','fe8-europe']){
   test(id+': Preparations follows roster, items and stat selection without stale units',async()=>{
     const profile=fs.readFileSync(`runtime/${id}/game.profile.lua`,'utf8');
     const address=key=>Number(profile.match(new RegExp(key+' = (0x[0-9A-Fa-f]+)'))[1]);

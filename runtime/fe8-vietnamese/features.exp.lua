@@ -2,7 +2,8 @@
 -- Authored runtime module. Generated ROM tables live in data.rom_tables.lua.
 
 local modThumbStart = pack.require("features.thumb").start
-local function modExpQueryStart(kill, ramByte)
+local function modExpQueryStart(kill, ramByte, entries)
+  entries = entries or {}
   local actor, target = 0x0203A4EC, 0x0203A56C
   -- These cards describe EXP if the unit survives, never the selected
   -- fight's hidden hit/miss/death outcome from the simulation buffers.
@@ -13,7 +14,11 @@ local function modExpQueryStart(kill, ramByte)
     [0x0203A4D4] = 1,
     [0x0203A4D5] = 0,
   }
-  local phases = { { 0x0802C740, { target } }, { 0x0802C6EC, { target } }, { 0x0802B92C, {} } }
+  local phases = {
+    { entries.expClear or 0x0802C740, { target } },
+    { entries.restoreWeapon or 0x0802C6EC, { target } },
+    { entries.expApply or 0x0802B92C, {} },
+  }
   local stage, run = 1, nil
   local function begin(shadow)
     return modThumbStart(

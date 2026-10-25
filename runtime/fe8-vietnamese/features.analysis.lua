@@ -3,8 +3,15 @@
 
 return function(D)
   local modCaptureRam = pack.require("game.snapshot")
-  local modExpQueryStart = pack.require("features.exp")
-  local modLevelPredictionStart = pack.require("features.level_prediction")
+  local expQueryStart = pack.require("features.exp")
+  local levelPredictionStart = pack.require("features.level_prediction")
+  local profile = pack.require("game.profile")
+  local function modExpQueryStart(kill, ram)
+    return expQueryStart(kill, ram, D.execution)
+  end
+  local function modLevelPredictionStart(ram)
+    return levelPredictionStart(ram, D.execution)
+  end
   local modRngAnchor = nil
   local modAnalysisCache = { key = nil }
   local modAnalysisTick = 0
@@ -47,7 +54,7 @@ return function(D)
     -- Learned skills and nearby units may change without changing the two
     -- battle buffers (for example after loading a different save state).
     signature = signature
-      .. mem.read(0x03004E50, 4)
+      .. mem.read(profile.activeUnit, 4)
       .. mem.read(0x0203A958, 0x20)
       .. mem.read(0x0203A4D4, 0x18)
       .. mem.read(0x0202BE4C, 0x2688)

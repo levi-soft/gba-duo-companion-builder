@@ -1,4 +1,4 @@
--- English-only presentation adapter. Shared FE7 calculations remain unchanged.
+-- English-only presentation adapter shared by the original FE profiles.
 -- Deliberately excludes unit/item/class names and ROM-derived descriptions.
 return function(strings)
   local translate = pack.require("presentation.locale")(strings)
@@ -8,6 +8,7 @@ return function(strings)
     "growthTier",
     "growthExpText",
     "growthExpMatch",
+    "growthCalculationNote",
     "rngStatus",
     "rngNote",
     "rngContext",
@@ -20,6 +21,9 @@ return function(strings)
     "predictionProgressText",
     "predictionFailureReason",
     "analysisPredictionError",
+    "analysisPredictionContext",
+    "analysisExpSummary",
+    "analysisLevelSummary",
   }
   return function(values)
     for _, key in ipairs(fields) do
