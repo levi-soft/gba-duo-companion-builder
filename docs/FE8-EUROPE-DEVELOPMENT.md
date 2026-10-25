@@ -1,5 +1,8 @@
 # FE8 Europe development — 0.1.0
 
+> Release status: finalized as companion **1.0.0** in public Builder **1.1.0**. The notes below preserve the earlier 0.1.0 development evidence and its historical registration/version status. See [current release scope](RELEASE-1.1.0.md).
+
+
 Exact supported development ROM: **BE8P / B3005195**, 32 MiB, identified through
 the read-only Studio connection on Thor. The companion uses English text from
 the European cartridge's English table and the shared English UI. It remains
@@ -55,6 +58,9 @@ modes, support/skills and real Preparations navigation need separate checks befo
 CPU paths continue to report unavailable rather than inventing a result.
 
 ## Distribution
+
+Forecast popup dismissal is checked and shared across the six profiles; see
+[the popup lifecycle audit](FORECAST-POPUPS.md) for evidence and device-test limits.
 
 The private Local ZIP is built from the player's own ROM, with version **0.1.0**
 and ID `fe8-europe-local-cache`. It is imported manually during development.

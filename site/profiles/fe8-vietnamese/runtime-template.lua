@@ -9,10 +9,11 @@ local read = pack.require("game.units")(D, map, values, abilities)
 local growth = pack.require("features.growth")(D)
 local analyze = pack.require("features.analysis")(D)
 local present = pack.require("presentation.prediction")()
+local forecast = pack.require("presentation.forecast")()
 
 function update()
   local v = read()
   v = growth(v)
   v = analyze(v)
-  return present(v)
+  return forecast(present(v))
 end

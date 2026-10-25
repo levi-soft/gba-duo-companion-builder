@@ -1,14 +1,14 @@
 {
   "id": "fe7-english",
-  "name": "FE7 English (development)",
-  "nameVi": "FE7 tiếng Anh (đang phát triển)",
+  "name": "FE7 English",
+  "nameVi": "FE7 tiếng Anh",
   "code": "AE7E",
   "crc32": "2A524221",
   "api": "FE7EnglishPrep",
   "template": "FE7_ENGLISH_TEMPLATE",
   "runtime": "FE7_RUNTIME_TEMPLATE",
   "native": "FE7_NATIVE_DESIGN",
-  "output": "FE7-English-Companion-0.1.0",
+  "output": "FE7-English-Companion-1.0.0",
   "language": "en",
-  "status": "development"
+  "status": "stable"
 }

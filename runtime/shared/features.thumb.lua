@@ -139,7 +139,17 @@ local function modThumbStart(entry, args, initial, options)
         return true, r[0], shadow, steps
       end
       if options.beforeEntry and options.beforeEntry[pc] then
-        options.beforeEntry[pc](r, read, write)
+        local redirect = options.beforeEntry[pc](r, read, write)
+        if redirect ~= nil then
+          assert(
+            type(redirect) == "number"
+              and redirect >= 0x08000000
+              and redirect < 0x0A000000
+              and redirect % 2 == 0,
+            "Invalid private CPU entry redirect"
+          )
+          pc = redirect
+        end
       end
       steps = steps + 1
       if steps > (options.maxSteps or 6000) then

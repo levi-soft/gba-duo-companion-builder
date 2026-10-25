@@ -3,7 +3,8 @@
 
 local profile = pack.require("game.profile")
 
-return function(D)
+return function(D, memory)
+  local mem = memory or mem
   local fc, fk, fi = D.forecastChars, D.forecastClasses, D.forecastItems
   return function(v)
     -- Immutable fc, fk, fi metadata is initialized once above update().
@@ -85,7 +86,8 @@ return function(D)
           brave = (attrs & 0x20) ~= 0,
           uses = weapon >> 8,
           unbreakable = (attrs & 8) ~= 0,
-          drain = weapon % 256 == 17 or weapon % 256 == 70,
+          drain = D.drainItems and D.drainItems[weapon % 256]
+            or (D.drainItems == nil and (weapon % 256 == 17 or weapon % 256 == 70)),
         }
       end
       local totals = {}

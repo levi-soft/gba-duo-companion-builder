@@ -1,0 +1,13 @@
+{
+  "id": "voids-blitzarre",
+  "name": "Void's Blitzarre Adventure",
+  "nameVi": "Void's Blitzarre Adventure",
+  "code": "BE8E",
+  "crc32": "9D22107C",
+  "api": "VoidsBlitzarrePrep",
+  "template": "VOIDS_BLITZARRE_TEMPLATE",
+  "runtime": "FE8_RUNTIME_TEMPLATE",
+  "output": "Voids-Blitzarre-Adventure-Companion-1.0.0",
+  "language": "en",
+  "status": "stable"
+}

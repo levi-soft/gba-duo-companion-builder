@@ -8,13 +8,24 @@ Create a companion from a supported ROM on your own device. The website builds a
 
 This project is maintained by [levi-soft](https://github.com/levi-soft). Automatic discovery/build/install is a **GBA Duo Plus extension**, not an official GBA Duo feature. The standard manual ZIP workflow remains available. If official GBA Duo later provides the complete feature, Plus can replace its provider integration while preserving this public catalog and pack format.
 
-## Stable 1.0.0 and independent versions
+## Builder 1.1.0 — ten exact ROM profiles
 
-Builder and all three Vietnamese companions are now **1.0.0**. The builder
-version advances **only when adding profiles**; fixes to existing companions
-advance their own versions. Content-addressed bundles and web asset fingerprints
-handle updates without bumping the builder.
-[Version policy](https://github.com/levi-soft/gba-duo-companion-builder/blob/main/docs/VERSIONING.md) · [Audit and validation limits](https://github.com/levi-soft/gba-duo-companion-builder/blob/main/docs/STABLE-1.0.0-AUDIT.md).
+Seven English companions are now finalized at **1.0.0**, alongside the three Vietnamese companions at **1.0.0**. Builder **1.1.0** adds the seven profiles to both the website and Plus automatic creation. Future companion fixes keep the builder version; only adding profiles advances it.
+
+| Profile | Game code | CRC32 | Companion |
+|---|---|---|---|
+| FE7 Vietnamese | `AE7E` | `32CD990D` | 1.0.0 |
+| FE6 Vietnamese | `BE8E` | `BD53D5F3` | 1.0.0 |
+| FE8 Vietnamese | `BE8E` | `3CD932D7` | 1.0.0 |
+| FE7 English | `AE7E` | `2A524221` | 1.0.0 |
+| FE8 Europe | `BE8P` | `B3005195` | 1.0.0 |
+| FE8 English - USA/Australia | `BE8E` | `A47246AE` | 1.0.0 |
+| FE6 T-EN | `AFEJ` | `197DE10B` | 1.0.0 |
+| Project Ember | `AFEJ` | `636F7B05` | 1.0.0 |
+| Project Ember Reverse Recruitment | `AFEJ` | `29BC2257` | 1.0.0 |
+| Void's Blitzarre Adventure | `BE8E` | `9D22107C` | 1.0.0 |
+
+FE6 T-EN is original FE6; Vietnamese Remastered is an FE8-based hack. Other ROM revisions and patches need independent profiles. English profiles use English Growth/Analysis and shared UI. Void includes six skill slots and Talk; its Map range overlays still use base movement/weapon ranges and do not include range-changing skills. See [release scope and validation](https://github.com/levi-soft/gba-duo-companion-builder/blob/main/docs/RELEASE-1.1.0.md).
 
 ## Use the website
 
@@ -44,15 +55,9 @@ Long item descriptions keep their natural line height and scroll inside the shar
 information panel instead of being compressed or clipped. Rebuild/import your
 companion to receive the updated layout. No Plus APK update is required.
 
-## Exact profiles in builder 1.0.0
+## Supported ROMs
 
-| Profile | Game code | ROM CRC32 | Companion version |
-| --- | --- | --- | --- |
-| FE7 Vietnamese | AE7E | 32CD990D | 1.0.0 |
-| FE6 Vietnamese Remastered, built on FE8 | BE8E | BD53D5F3 | 1.0.0 |
-| FE8 Vietnamese | BE8E | 3CD932D7 | 1.0.0 |
-
-Other revisions are rejected. The FE6 profile is not original FE6. This is a profile-driven builder; it does not discover arbitrary game memory layouts automatically. See the website's [feature contract](site/FEATURE-CONTRACT.md) for prediction scope, device evidence and limitations.
+The ten exact identities are listed above and on the [supported-games page](https://levi-soft.github.io/gba-duo-companion-builder/supported-games.html). Other ROM revisions require their own profile.
 
 ## GBA Duo Plus integration
 
@@ -70,7 +75,7 @@ npm run build
 npm test
 ```
 
-`site/` is the static website. The build generates `site/catalog.json` and a content-addressed `site/releases/builder-1.0.0-<sha256>.zip` deterministically from the files in `site/`. It does not read a ROM, regenerate the private companion projects or change the frozen 0.9.6 kit source.
+`site/` is the static website. The build generates `site/catalog.json` and a content-addressed `site/releases/builder-1.1.0-<sha256>.zip` deterministically from the files in `site/`. It does not read a ROM, regenerate the private companion projects or change the frozen 0.9.6 kit source.
 
 Tests cover catalog hashes and exact profile identities, local-only assets, empty public game-data templates, shared generation, actual format-2 ZIP output from a synthetic producer, cancellation and bounded native streaming. They do not replace real-browser file-selection tests or real-device Plus acceptance. The source profile evidence is documented separately in `site/FEATURE-CONTRACT.md`.
 

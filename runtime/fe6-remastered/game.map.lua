@@ -2,6 +2,7 @@
 -- Authored runtime module. Generated ROM tables live in data.rom_tables.lua.
 
 local profile = pack.require("game.profile")
+local chapterTitle = pack.require("presentation.chapter")
 
 return function(D)
   local chars, classes, slots = D.chars, D.classes, D.slots
@@ -482,8 +483,7 @@ return function(D)
     v.mapRows = "repeat(" .. h .. ",1fr)"
     local chapter = mem.u8(mapCfg.chapter)
     local chapterInfo = fe8Chapters[chapter + 1]
-    v.mapChapter = (chapter == 0 and "Prologue: " or "Ch. " .. chapter .. ": ")
-      .. (chapterInfo and chapterInfo.name or "---")
+    v.mapChapter = chapterTitle(chapterInfo, chapter == 0 and "Prologue" or "Ch. " .. chapter, true)
     v.mapVictory = chapterInfo and chapterInfo.victory or "---"
     v.mapTurn = mem.u16(mapCfg.turn)
     v.mapPlayerColor = mapCfg.playerColor

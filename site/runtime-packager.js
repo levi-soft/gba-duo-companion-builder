@@ -57,6 +57,10 @@
       }
     }
 
+    const cursor = root.COMPANION_CURSOR_PROFILES?.[profileId];
+    if (cursor && (!project.manifest.match?.gameCode?.length || !project.manifest.match?.crc32?.length)) {
+      throw Error('Cursor navigation requires an exact ROM match.');
+    }
     const files = project.files;
     const previousScript = project.manifest.script;
     if (previousScript && previousScript !== 'main.lua') delete files[previousScript];
@@ -67,6 +71,7 @@
       'return ' + formatData(dataLiteral) + '\n'
     );
     project.manifest.script = 'main.lua';
+    if (cursor) project.manifest.cursorNavigation = JSON.parse(JSON.stringify(cursor));
     return project;
   }
 

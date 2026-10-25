@@ -39,6 +39,7 @@ globalThis.makeCompanionLayout = function (extension, language = 'vi') {
   // FE8 retains the common Growth/Analysis UI and adds its native ability panel.
   if (extension.nativePanel) {
     const identity = byClass('identity-line');
+    if (extension.sprite) identity.children[0] = structuredClone(extension.sprite);
     const panel = structuredClone(extension.nativePanel);
     panel.children[panel.children.length - 1] = identity.children[2];
     identity.children[2] = panel;

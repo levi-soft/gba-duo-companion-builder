@@ -19,7 +19,8 @@ for(const id of ['fe6-remastered','fe8-vietnamese']){
       'main.lua':encode(`local D={chars={},classes={},slots={},mapMeta={chars={},classes={}},mapWeapons={},fe8Chapters={}}
 local map=pack.require('game.map')(D)
 function update()local v={};map.apply(v);return {mapPresent=v.mapPresent,cells=#v.mapCells}end`),
-      'game.map.lua':source(id,'game.map'),'game.profile.lua':encode(profile)
+      'game.map.lua':source(id,'game.map'),'game.profile.lua':encode(profile),
+      'presentation.chapter.lua':source('shared','presentation.chapter')
     }};
     const result=await executeProject(project,{ranges:[{address:base,bytes:ram}],steps:[
       {expect:{mapPresent:true,cells:1}},
@@ -69,7 +70,8 @@ function update()return read()end`),
       'main.lua':encode(`local D={chars={},classes={},slots={[128]=${enemy}},mapMeta={chars={},classes={}},mapWeapons={},fe8Chapters={}}
 local map=pack.require('game.map')(D)
 function update()local v={};map.apply(v);return {marker=v.mapCells[1].marker,color=v.mapCells[1].color}end`),
-      'game.map.lua':source(id,'game.map'),'game.profile.lua':encode(profile)
+      'game.map.lua':source(id,'game.map'),'game.profile.lua':encode(profile),
+      'presentation.chapter.lua':source('shared','presentation.chapter')
     }};
     const result=await executeProject(project,{ranges:[{address:base,bytes:ram}],steps:[
       {expect:{marker:false,color:'transparent'}},

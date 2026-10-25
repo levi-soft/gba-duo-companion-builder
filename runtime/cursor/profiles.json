@@ -1,0 +1,45 @@
+{
+  "presets": {
+    "fe7": {
+      "version": 1, "kind": "fe-map",
+      "cursor": "0x0202BBCC", "size": "0x0202E3D8", "chapter": "0x0202BC06",
+      "turn": "0x0202BC08", "bm": "0x0202BBB8", "procs": "0x02024E28",
+      "playerScript": "0x08B93374", "idlePc": "0x08B933E4",
+      "blue": "0x0202BD50", "green": "0x0202DCD0", "red": "0x0202CEC0",
+      "unitPosition": 16, "unitHp": 19, "unitStateBytes": 4, "unavailableMask": "0x0001000C"
+    },
+    "fe8-us": {
+      "extends": "fe7",
+      "cursor": "0x0202BCC4", "size": "0x0202E4D4", "chapter": "0x0202BCFE",
+      "turn": "0x0202BD00", "bm": "0x0202BCB0", "procs": "0x02024E68",
+      "playerScript": "0x0859AAD8", "idlePc": "0x0859AB58",
+      "blue": "0x0202BE4C", "green": "0x0202DDCC", "red": "0x0202CFBC"
+    },
+    "fe8-europe": {
+      "extends": "fe8-us", "playerScript": "0x087ABDB8", "idlePc": "0x087ABE38"
+    },
+    "fe6": {
+      "extends": "fe7",
+      "cursor": "0x0202AA1C", "size": "0x0202D200", "chapter": "0x0202AA56",
+      "turn": "0x0202AA58", "bm": "0x0202AA08", "procs": "0x02023CC4",
+      "playerScript": "0x085C56A8", "idlePc": "0x085C5718",
+      "blue": "0x0202AB78", "green": "0x0202CAF8", "red": "0x0202BCE8",
+      "unitPosition": 14, "unitHp": 17, "unitStateBytes": 2, "unavailableMask": "0x002C"
+    },
+    "fe6-ember": {
+      "extends": "fe6", "playerScript": "0x087FF4B0", "idlePc": "0x087FF520"
+    }
+  },
+  "profiles": {
+    "fe7-vietnamese": "fe7",
+    "fe6-remastered": "fe8-us",
+    "fe8-vietnamese": "fe8-us",
+    "fe7-english": "fe7",
+    "fe8-europe": "fe8-europe",
+    "fe8-english": "fe8-us",
+    "voids-blitzarre": "fe8-us",
+    "fe6-english": "fe6",
+    "fe6-project-ember": "fe6-ember",
+    "fe6-project-ember-rr": "fe6-ember"
+  }
+}

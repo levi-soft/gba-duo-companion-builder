@@ -25,6 +25,18 @@ test('shared core rejects unknown identities before any preparation',async()=>{
  }
  const {context}=engine();await assert.rejects(context.CompanionBuild.build(new Uint8Array(1)));const other=rom();other.set(Buffer.from('XXXX'),0xac);await assert.rejects(context.CompanionBuild.build(other));
 });
+test('verified identity reaches a generic template before producer navigation packaging',async()=>{
+ const {context}=engine();context.FixtureTemplate.manifest.match={};
+ const original=context.FixturePrep.prepare;
+ context.FixturePrep.prepare=async(bytes,template,...rest)=>{
+  assert.equal(JSON.stringify(template.manifest.match),JSON.stringify({gameCode:['BE8E'],crc32:['3CD932D7']}));
+  return original(bytes,template,...rest);
+ };
+ const result=await context.CompanionBuild.build(rom());
+ const zip=await JSZip.loadAsync(result.zipBytes),manifest=JSON.parse(await zip.file('manifest.json').async('string'));
+ assert.deepEqual(manifest.match,{gameCode:['BE8E'],crc32:['3CD932D7']});
+ assert.deepEqual(context.FixtureTemplate.manifest.match,{},'shared template stays generic');
+});
 test('cancellation prevents preparation and ZIP output',async()=>{
  const {context,prepared}=engine(),controller=new AbortController();controller.abort();await assert.rejects(context.CompanionBuild.build(rom(),{signal:controller.signal}),/Cancelled/);assert.equal(prepared(),0);
 });

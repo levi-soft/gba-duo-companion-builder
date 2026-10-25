@@ -72,11 +72,17 @@ local function modLevelPredictionStart(sharedRam, profileOptions)
       strictStack = true,
       registers = { [4] = target, [5] = actor, [6] = targetUnit, [7] = targetUnit },
     }
+    if entries.beforeEntry then
+      options.beforeEntry = {}
+      for address, hook in pairs(entries.beforeEntry) do
+        options.beforeEntry[address] = hook
+      end
+    end
     if stage == 6 then
       options.registers[6] = actorUnit
       -- Hypothetical level-up only. The actual fight's hit/miss and EXP
       -- outcome are not exposed. No combat, skill or RNG call is skipped.
-      options.beforeEntry = {
+      local conditionalHooks = {
         [entries.expApply or 0x0802B92C] = function(registers, read, write)
           -- Conditional results assume the actor survives. Restore only this
           -- private post-combat HP after every combat/RNG call has completed;
@@ -91,6 +97,10 @@ local function modLevelPredictionStart(sharedRam, profileOptions)
           end
         end,
       }
+      options.beforeEntry = options.beforeEntry or {}
+      for address, hook in pairs(conditionalHooks) do
+        options.beforeEntry[address] = hook
+      end
     end
     return modThumbStart(phase.entry, phase.args, shadow, options)
   end

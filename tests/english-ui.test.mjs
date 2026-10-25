@@ -17,12 +17,12 @@ function strings(value) {
   return value && typeof value === 'object' ? Object.values(value).flatMap(strings) : [];
 }
 
-test('FE7 English 0.1.0 inherits the common widget tree without Vietnamese labels', () => {
+test('FE7 English 1.0.0 inherits the common widget tree without Vietnamese labels', () => {
   const root = context(), en = root.FE7_ENGLISH_TEMPLATE;
-  assert.equal(en.manifest.version, '0.1.0');
+  assert.equal(en.manifest.version, '1.0.0');
   assert.equal(en.manifest.match.crc32[0], '2A524221');
   assert.equal(en.uiLanguage, 'en');
-  assert.throws(() => root.makeFe7EnglishPrototype({gameCode:'AE7E',crc32:'32CD990D'}), /verified exact/);
+  assert.throws(() => root.makeFe7EnglishCompanion({gameCode:'AE7E',crc32:'32CD990D'}), /verified exact/);
   const labels = strings(en.layout);
   for (const text of Object.keys(root.COMPANION_THEME.locales.en.layout)) assert(!labels.includes(text), text);
   assert(labels.includes('Analysis')); assert(labels.includes('Growth rates'));

@@ -2,6 +2,7 @@
 -- Authored runtime module. Generated ROM tables live in data.rom_tables.lua.
 
 local profile = pack.require("game.profile")
+local chapterTitle = pack.require("presentation.chapter")
 
 return function(D)
   local chars, classes, slots = D.chars, D.classes, D.slots
@@ -49,6 +50,7 @@ return function(D)
     end
     return result
   end
+  local neighborX, neighborY = { -1, 1, 0, 0 }, { 0, 0, -1, 1 }
   local function mapUnitReach(v, focus, grid, terrain)
     local w, h = v.mapWidth, v.mapHeight
     if not focus or focus.x >= w or focus.y >= h or (focus.state & 0x20) ~= 0 then
@@ -79,8 +81,8 @@ return function(D)
       for _, index in ipairs(buckets[spent]) do
         if dist[index] == spent then
           local x, y = index % w, math.floor(index / w)
-          for _, p in ipairs({ { x - 1, y }, { x + 1, y }, { x, y - 1 }, { x, y + 1 } }) do
-            local nx, ny = p[1], p[2]
+          for direction = 1, 4 do
+            local nx, ny = x + neighborX[direction], y + neighborY[direction]
             if nx >= 0 and nx < w and ny >= 0 and ny < h then
               local id = grid[ny][nx]
               local cost = costs[terrain[ny][nx] + 1] or 255
@@ -203,20 +205,10 @@ return function(D)
       v.mapDangerCount = v.mapDangerCount + 1
     end
   end
-  local function applyMapTactical(v, tr, ur, cx, cy, selected)
+  local function applyMapTactical(v, grid, terrain, cx, cy, selected)
     local w, h = v.mapWidth, v.mapHeight
     local groups = { Player = {}, Enemy = {}, Ally = {} }
     local units = {}
-    local grid, terrain = {}, {}
-    for y = 0, h - 1 do
-      local ids, ts = {}, {}
-      for x = 0, w - 1 do
-        ids[x] = mem.u8(mem.u32(ur + y * 4) + x)
-        ts[x] = mem.u8(mem.u32(tr + y * 4) + x)
-      end
-      grid[y] = ids
-      terrain[y] = ts
-    end
     local selectedId = selected and mem.u8(selected + 11) or (grid[cy] and grid[cy][cx] or 0)
     v.mapPickContext = tostring(mem.u8(mapCfg.chapter))
       .. ":"
@@ -362,12 +354,51 @@ return function(D)
     end
   end
   -- BE8P terrain indices, shared minimap chip arrangement verified in its ROM.
-  local function applyMapTile(x, y, tr, w, h)
+  local fixed = {
+    [1] = 1,
+    [3] = 2,
+    [4] = 2,
+    [5] = 2,
+    [6] = 3,
+    [7] = 3,
+    [8] = 4,
+    [10] = 5,
+    [11] = 6,
+    [12] = 8,
+    [13] = 9,
+    [14] = 10,
+    [15] = 10,
+    [17] = 11,
+    [18] = 20,
+    [23] = 12,
+    [24] = 12,
+    [29] = 13,
+    [30] = 22,
+    [31] = 14,
+    [32] = 15,
+    [33] = 15,
+    [35] = 2,
+    [37] = 26,
+    [38] = 0x58,
+    [39] = 19,
+    [40] = 19,
+    [41] = 19,
+    [42] = 0x3a,
+    [45] = 17,
+    [49] = 25,
+    [51] = 8,
+    [55] = 6,
+    [56] = 2,
+    [58] = 0x58,
+    [59] = 27,
+    [62] = 12,
+  }
+  local function applyMapTile(x, y, terrain, w, h)
     local function at(a, b)
       if a < 0 or b < 0 or a >= w or b >= h then
         return 0
       end
-      return mem.u8(mem.u32(tr + b * 4) + a)
+      return terrain[b][a]
     end
     local t = at(x, y)
     local function connects(test)
@@ -396,45 +427,6 @@ return function(D)
     if t == 0x13 or t == 0x34 then
       return (at(x - 1, y) == t or at(x + 1, y) == t) and 0x10 or 0x18
     end
-    local fixed = {
-      [1] = 1,
-      [3] = 2,
-      [4] = 2,
-      [5] = 2,
-      [6] = 3,
-      [7] = 3,
-      [8] = 4,
-      [10] = 5,
-      [11] = 6,
-      [12] = 8,
-      [13] = 9,
-      [14] = 10,
-      [15] = 10,
-      [17] = 11,
-      [18] = 20,
-      [23] = 12,
-      [24] = 12,
-      [29] = 13,
-      [30] = 22,
-      [31] = 14,
-      [32] = 15,
-      [33] = 15,
-      [35] = 2,
-      [37] = 26,
-      [38] = 0x58,
-      [39] = 19,
-      [40] = 19,
-      [41] = 19,
-      [42] = 0x3a,
-      [45] = 17,
-      [49] = 25,
-      [51] = 8,
-      [55] = 6,
-      [56] = 2,
-      [58] = 0x58,
-      [59] = 27,
-      [62] = 12,
-    }
     if fixed[t] then
       return fixed[t]
     end
@@ -468,10 +460,19 @@ return function(D)
     if not valid(tr, h * 4) or not valid(ur, h * 4) then
       return
     end
+    -- Read each row pointer and cell once. Tile connectivity and tactical
+    -- ranges share these tables instead of rereading RAM for every neighbour.
+    local grid, terrain = {}, {}
     for y = 0, h - 1 do
-      if not valid(mem.u32(tr + y * 4), w) or not valid(mem.u32(ur + y * 4), w) then
+      local terrainRow, unitRow = mem.u32(tr + y * 4), mem.u32(ur + y * 4)
+      if not valid(terrainRow, w) or not valid(unitRow, w) then
         return
       end
+      local ids, tiles = {}, {}
+      for x = 0, w - 1 do
+        ids[x], tiles[x] = mem.u8(unitRow + x), mem.u8(terrainRow + x)
+      end
+      grid[y], terrain[y] = ids, tiles
     end
     local cx, cy = mem.u16(profile.cursorX), mem.u16(profile.cursorY)
     v.mapWidth = w
@@ -482,8 +483,7 @@ return function(D)
     v.mapRows = "repeat(" .. h .. ",1fr)"
     local chapter = mem.u8(mapCfg.chapter)
     local chapterInfo = fe8Chapters[chapter + 1]
-    v.mapChapter = (chapter == 0 and "Prologue: " or "Ch. " .. chapter .. ": ")
-      .. (chapterInfo and chapterInfo.name or "---")
+    v.mapChapter = chapterTitle(chapterInfo, chapter == 0 and "Prologue" or "Ch. " .. chapter, true)
     v.mapVictory = chapterInfo and chapterInfo.victory or "---"
     v.mapTurn = mem.u16(mapCfg.turn)
     v.mapPlayerColor = mapCfg.playerColor
@@ -491,7 +491,7 @@ return function(D)
     v.mapAllyColor = mapCfg.allyColor
     for y = 0, h - 1 do
       for x = 0, w - 1 do
-        local id = mem.u8(mem.u32(ur + y * 4) + x)
+        local id = grid[y][x]
         local color = id == 0 and "transparent"
           or id < 64 and mapCfg.playerColor
           or id < 128 and mapCfg.allyColor
@@ -503,7 +503,7 @@ return function(D)
           color = "transparent"
         end
         v.mapCells[#v.mapCells + 1] = {
-          tile = "asset:images/minimap/" .. applyMapTile(x, y, tr, w, h) .. ".png",
+          tile = "asset:images/minimap/" .. applyMapTile(x, y, terrain, w, h) .. ".png",
           marker = visible,
           color = color,
           cursor = x == cx and y == cy,
@@ -511,7 +511,7 @@ return function(D)
         }
       end
     end
-    applyMapTactical(v, tr, ur, cx, cy, selected)
+    applyMapTactical(v, grid, terrain, cx, cy, selected)
     for id, u in pairs(mapSlots) do
       if
         mem.u32(u) ~= 0

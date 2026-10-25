@@ -122,6 +122,9 @@
     const profile = profileFor(rom, options);
     const api = root[profile.api];
     const template = clone(root[profile.template]);
+    // Producers may start from a generic public template. Navigation packaging
+    // must receive the exact identity already verified by profileFor().
+    template.manifest.match = { gameCode: [profile.code], crc32: [profile.crc32] };
     template.files = clone(root.COMPANION_UI_FILES);
     const result = await api.prepare(rom, template, root[profile.runtime], {
       signal: options.signal,

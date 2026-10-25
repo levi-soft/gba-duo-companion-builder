@@ -2,10 +2,12 @@
 -- Authored runtime module. Generated ROM tables live in data.rom_tables.lua.
 
 local profile = pack.require("game.profile")
+local chapterTitle = pack.require("presentation.chapter")
 
-return function(D)
+return function(D, memory, tileReader)
+  local mem = memory or mem
   local mapCfg = {
-    ["kind"] = "fe7-us-v1",
+    ["kind"] = profile.mapKind or "fe7-us-v1",
     ["size"] = profile.mapWidth,
     ["unitRows"] = profile.unitRows,
     ["terrainRows"] = profile.terrainRows,
@@ -62,8 +64,8 @@ return function(D)
     if not focus or focus.x >= w or focus.y >= h or (focus.state & 0x20) ~= 0 then
       return {}, 0, {}
     end
-    local weather = mem.u8(0x0202BC0D)
-    local costs = (focus.state & 0x800) ~= 0 and mapMeta.ballistaCosts
+    local weather = mem.u8(profile.weather or 0x0202BC0D)
+    local costs = profile.supportsBallista ~= false and (focus.state & 0x800) ~= 0 and mapMeta.ballistaCosts
       or focus.k.movementCosts[(weather == 1 or weather == 2) and 3 or weather == 4 and 2 or 1]
     local move = math.max(0, math.min(31, focus.k.move + mem.s8(focus.u + 29)))
     local aiA, aiB = mem.u8(focus.u + 66), mem.u8(focus.u + 68)
@@ -268,7 +270,7 @@ return function(D)
           local color = id < 64 and mapCfg.playerColor or id < 128 and mapCfg.allyColor or mapCfg.enemyColor
           local portrait = c.portrait ~= "" and c.portrait or k.portrait
           local hasDrop = false
-          if (state & 0x1000) ~= 0 then
+          if profile.supportsDrops ~= false and (state & 0x1000) ~= 0 then
             for slot = 0, 4 do
               if mem.u16(u + 30 + slot * 2) ~= 0 then
                 hasDrop = true
@@ -376,6 +378,9 @@ return function(D)
   local mapCachedTiles = {}
   local mapBuildIndex = 0
   local function mapTile(x, y)
+    if tileReader then
+      return tileReader(x, y)
+    end
     local r, stack = {}, {}
     for i = 0, 15 do
       r[i] = 0
@@ -509,7 +514,7 @@ return function(D)
     v.mapColumns = "repeat(" .. w .. ",1fr)"
     v.mapRows = "repeat(" .. h .. ",1fr)"
     v.mapAspect = w / h
-    v.mapChapter = mapMeta.chapters[chapter] and mapMeta.chapters[chapter].title or "Chapter " .. chapter
+    v.mapChapter = chapterTitle(mapMeta.chapters[chapter], "Chapter " .. chapter)
     v.mapVictory = mapCfg.objectives and (mapCfg.objectives[chapter] or mapCfg.objectives[tostring(chapter)])
       or (mapMeta.chapters[chapter] and mapMeta.chapters[chapter].objectiveShort)
       or "---"

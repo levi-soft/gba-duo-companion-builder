@@ -4,14 +4,14 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 import {luaFactory} from '../scripts/runtime-validation-engine.mjs';
 
-test('FE8 Europe inherits the English shared UI and native ability panel at 0.1.0', async () => {
+test('FE8 Europe inherits the English shared UI and native ability panel at 1.0.0', async () => {
   const root={structuredClone,TextDecoder,TextEncoder,Uint8Array};root.globalThis=root;
   for(const file of ['runtime-modules.js','theme.js','radar.js','profiles/fe8-vietnamese/template.js',
     'profiles/fe8-vietnamese/prepare.js','profiles/fe8-europe/template.js','profiles/fe8-europe/prepare.js']) {
     vm.runInNewContext(fs.readFileSync('site/'+file,'utf8'),root);
   }
   const project=root.FE8_EUROPE_TEMPLATE;
-  assert.equal(project.manifest.version,'0.1.0');
+  assert.equal(project.manifest.version,'1.0.0');
   assert.equal(project.manifest.match.gameCode[0],'BE8P');
   assert.equal(project.manifest.match.crc32[0],'B3005195');
   assert.equal(project.uiLanguage,'en');

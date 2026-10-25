@@ -288,10 +288,6 @@ return function(D)
     end
     v.ui = v.ui or {}
     v.ui.set = v.ui.set or {}
-    if v.forecastActive ~= growthWasForecast then
-      v.ui.set.growthPopup = false
-      v.ui.set.predictionPopup = false
-    end
     if growthWasForecast and v.forecastActive and v.ui and v.ui.set then
       v.ui.set.mainTab = nil
       v.ui.set.navUnits = nil

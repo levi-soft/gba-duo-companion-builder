@@ -13,13 +13,24 @@ Tạo companion từ ROM được hỗ trợ ngay trên máy của bạn. Websit
 
 Đây là dự án do [levi-soft](https://github.com/levi-soft) duy trì. Tính năng tìm/tạo/cài tự động là **phần mở rộng riêng của GBA Duo Plus**, không phải tính năng của GBA Duo chính thức. Cách nhập ZIP thủ công vẫn được giữ. Khi bản chính thức hỗ trợ đầy đủ, Plus có thể thay phần tích hợp riêng, tiếp tục dùng định dạng catalog và companion này.
 
-## Chốt 1.0.0 và tách phiên bản
+## Builder 1.1.0 — mười profile ROM chính xác
 
-Builder và cả ba companion FE Việt hóa được chốt **1.0.0** sau đợt rà soát.
-**Builder chỉ tăng phiên bản khi thêm profile mới.** Khi sửa companion hiện có,
-chỉ tăng phiên bản companion tương ứng. Checksum nội dung giúp tải đúng bản mới
-mà không cần tăng builder hoặc thay APK Plus.
-[Quy tắc phiên bản](https://github.com/levi-soft/gba-duo-companion-builder/blob/main/docs/VERSIONING.md) · [Kết quả rà soát và giới hạn](https://github.com/levi-soft/gba-duo-companion-builder/blob/main/docs/STABLE-1.0.0-AUDIT.md).
+Bảy companion tiếng Anh được chốt **1.0.0**, cùng ba companion Việt hóa **1.0.0**. Builder **1.1.0** bổ sung bảy profile cho website và chức năng tạo tự động trong Plus. Sau này chỉ tăng Builder khi thêm profile; sửa companion dùng phiên bản riêng.
+
+| Profile | Game code | CRC32 | Companion |
+|---|---|---|---|
+| FE7 Vietnamese | `AE7E` | `32CD990D` | 1.0.0 |
+| FE6 Vietnamese | `BE8E` | `BD53D5F3` | 1.0.0 |
+| FE8 Vietnamese | `BE8E` | `3CD932D7` | 1.0.0 |
+| FE7 English | `AE7E` | `2A524221` | 1.0.0 |
+| FE8 Europe | `BE8P` | `B3005195` | 1.0.0 |
+| FE8 English - USA/Australia | `BE8E` | `A47246AE` | 1.0.0 |
+| FE6 T-EN | `AFEJ` | `197DE10B` | 1.0.0 |
+| Project Ember | `AFEJ` | `636F7B05` | 1.0.0 |
+| Project Ember Reverse Recruitment | `AFEJ` | `29BC2257` | 1.0.0 |
+| Void's Blitzarre Adventure | `BE8E` | `9D22107C` | 1.0.0 |
+
+FE6 T-EN là FE6 gốc; FE6 Việt hóa Remastered là ROM hack trên nền FE8. ROM khác hoặc bản vá khác cần profile riêng. Các profile tiếng Anh dùng UI, Growth và Analysis tiếng Anh. Void hỗ trợ sáu ô skill và Talk; lớp phủ phạm vi trên Map hiện chưa tính skill thay đổi tầm/di chuyển. Xem [phạm vi và kiểm chứng](https://github.com/levi-soft/gba-duo-companion-builder/blob/main/docs/RELEASE-1.1.0.md).
 
 ## Dùng website
 
@@ -44,15 +55,9 @@ Mô tả dài giữ chiều cao dòng và có thể cuộn trong khung thông ti
 hoặc mất phần cuối. Tạo lại/nhập companion để cập nhật giao diện. Không cần
 cập nhật APK Plus.
 
-## Profile chính xác trong builder 1.0.0
+## Danh sách ROM
 
-| Profile | Mã game | CRC32 ROM | Phiên bản companion |
-| --- | --- | --- | --- |
-| FE7 Việt hóa | AE7E | 32CD990D | 1.0.0 |
-| FE6 Việt hóa Remastered, trên nền FE8 | BE8E | BD53D5F3 | 1.0.0 |
-| FE8 Việt hóa | BE8E | 3CD932D7 | 1.0.0 |
-
-Các bản ROM khác bị từ chối. Profile FE6 này không dành cho FE6 gốc. Builder hoạt động theo profile đã có, chưa tự dò cấu trúc RAM cho mọi game. Phạm vi kiểm chứng dự đoán và giới hạn thiết bị nằm trong [FEATURE-CONTRACT.md](site/FEATURE-CONTRACT.md).
+Mười profile và CRC32 được liệt kê ở trên và trên [trang game hỗ trợ](https://levi-soft.github.io/gba-duo-companion-builder/supported-games.html?lang=vi).
 
 ## Tích hợp Plus
 
@@ -70,7 +75,7 @@ npm run build
 npm test
 ```
 
-`site/` chứa website tĩnh. Build tạo `site/catalog.json` và bundle theo nội dung `site/releases/builder-1.0.0-<sha256>.zip` từ mã trong `site/`, không đọc ROM hay sửa các gói 0.9.6 đã chốt trước đây.
+`site/` chứa website tĩnh. Build tạo `site/catalog.json` và bundle theo nội dung `site/releases/builder-1.1.0-<sha256>.zip` từ mã trong `site/`, không đọc ROM hay sửa các gói 0.9.6 đã chốt trước đây.
 
 Kiểm tra tự động bao gồm hash catalog, phiên bản ROM, nguồn asset cục bộ, template không chứa dữ liệu game đã xuất, đóng ZIP format 2 với dữ liệu giả lập phục vụ kiểm thử, hủy tác vụ và truyền ZIP theo khối. Các kiểm tra này không thay thế việc thử chọn tệp trên trình duyệt và chạy Plus trên máy thật.
 
