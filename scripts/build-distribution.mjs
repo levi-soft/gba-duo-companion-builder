@@ -1,27 +1,91 @@
-import fs from'node:fs';import path from'node:path';import crypto from'node:crypto';import vm from'node:vm';import{fileURLToPath}from'node:url';
-const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..'),site=path.join(root,'site');
-const config=JSON.parse(fs.readFileSync(path.join(root,'package.json'))),version=config.version;
-await import('./build-runtime-modules.mjs');
+import fs from 'node:fs';
+import path from 'node:path';
+import vm from 'node:vm';
+import { fileURLToPath } from 'node:url';
+import { builderArtifact, companionVersion, validateBuilderRelease, validateProfileTemplates } from './release-policy.mjs';
+import { fingerprintWebAssets } from './fingerprint-web-assets.mjs';
+
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const site = path.join(root, 'site');
+const { version } = JSON.parse(fs.readFileSync(path.join(root, 'package.json')));
+const policy = JSON.parse(fs.readFileSync(path.join(root, 'release-policy.json')));
+
+await import('./build-authored-sources.mjs');
 await import('../site/jszip.min.js');
-const ctx={};ctx.globalThis=ctx;vm.runInNewContext(fs.readFileSync(path.join(site,'profiles.js'),'utf8'),ctx);
-const zip=new globalThis.JSZip(),entries=[];
-function walk(dir,prefix=''){
- for(const entry of fs.readdirSync(dir,{withFileTypes:true}).sort((a,b)=>a.name<b.name?-1:a.name>b.name?1:0)){
-  const relative=prefix+entry.name;if(relative==='catalog.json'||relative==='releases'||relative.startsWith('releases/'))continue;
-  if(entry.isSymbolicLink())throw Error('Distribution must not contain symlinks');
-  if(entry.isDirectory())walk(path.join(dir,entry.name),relative+'/');
-  else{
-   if(/\.gba$|\.gbastudio\.json$|Local\.zip$|capture.*\.json$|\.sav$|\.ss$/i.test(relative))throw Error('Private/generated game file: '+relative);
-   const data=fs.readFileSync(path.join(dir,entry.name));entries.push({name:relative,bytes:data.length});
-   zip.file(relative,data,{date:new Date('2000-01-01T00:00:00Z'),unixPermissions:0o100644,createFolders:false});
-  }
- }
+
+const context = { structuredClone };
+context.globalThis = context;
+function loadScript(name) {
+  vm.runInNewContext(fs.readFileSync(path.join(site, name), 'utf8'), context, { filename: name });
 }
-walk(site);
-for(const name of ['index.html','plus-runner.html','plus-runner.js','builder-core.js','LICENSE'])if(!entries.some(e=>e.name===name))throw Error('Missing distribution entry: '+name);
-const bytes=await zip.generateAsync({type:'uint8array',compression:'DEFLATE',compressionOptions:{level:9},platform:'UNIX'});
-fs.mkdirSync(path.join(site,'releases'),{recursive:true});const url=`releases/builder-${version}.zip`;fs.writeFileSync(path.join(site,url),bytes);
-const catalog={schemaVersion:1,runnerProtocol:1,builderVersion:version,builder:{url,sha256:crypto.createHash('sha256').update(bytes).digest('hex'),bytes:bytes.length,unpackedBytes:entries.reduce((n,e)=>n+e.bytes,0),entrypoint:'plus-runner.html'},profiles:ctx.COMPANION_PROFILES.map(p=>{const version=p.output.match(/-(\d+\.\d+\.\d+)$/)?.[1];if(!version)throw Error('Profile version missing: '+p.id);return{id:p.id,name:p.name,version,gameCode:p.code,crc32:p.crc32};})};
-fs.writeFileSync(path.join(site,'catalog.json'),JSON.stringify(catalog,null,2)+'\n');
-fs.mkdirSync(path.join(root,'reports'),{recursive:true});fs.writeFileSync(path.join(root,'reports/distribution.json'),JSON.stringify({version,catalog,files:entries},null,2)+'\n');
-console.log(JSON.stringify({version,files:entries.length,bytes:catalog.builder.bytes,unpackedBytes:catalog.builder.unpackedBytes,sha256:catalog.builder.sha256},null,2));
+for (const name of ['runtime-modules.js', 'theme.js', 'profiles.js']) loadScript(name);
+const profiles = context.COMPANION_PROFILES;
+validateBuilderRelease(version, profiles, policy);
+for (const profile of profiles) loadScript(`profiles/${profile.id}/template.js`);
+validateProfileTemplates(profiles, context);
+const landing = path.join(site, 'index.html');
+fs.writeFileSync(landing, fs.readFileSync(landing, 'utf8')
+  .replace(/LOCAL ROM PREPARATION · \d+\.\d+\.\d+/, 'LOCAL ROM PREPARATION · ' + version));
+fingerprintWebAssets(site);
+
+const zip = new globalThis.JSZip();
+const entries = [];
+function addDirectory(directory, prefix = '') {
+  const children = fs.readdirSync(directory, { withFileTypes: true });
+  children.sort((a, b) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0);
+  for (const entry of children) {
+    const name = prefix + entry.name;
+    // Published catalogues and past artifacts never enter the next bundle.
+    if (name === 'catalog.json' || name === 'releases' || name.startsWith('releases/')) continue;
+    if (entry.isSymbolicLink()) throw Error('Distribution must not contain symlinks');
+    const fullPath = path.join(directory, entry.name);
+    if (entry.isDirectory()) {
+      addDirectory(fullPath, name + '/');
+      continue;
+    }
+    if (/\.(?:gba|gbc|gb|gbastudio\.json|sav|ss)$|Local\.zip$|capture.*\.json$/i.test(name)) {
+      throw Error('Private/generated game file: ' + name);
+    }
+    const bytes = fs.readFileSync(fullPath);
+    entries.push({ name, bytes: bytes.length });
+    zip.file(name, bytes, {
+      date: new Date('2000-01-01T00:00:00Z'),
+      unixPermissions: 0o100644,
+      createFolders: false
+    });
+  }
+}
+addDirectory(site);
+for (const required of ['index.html', 'plus-runner.html', 'plus-runner.js', 'builder-core.js', 'LICENSE']) {
+  if (!entries.some(entry => entry.name === required)) throw Error('Missing distribution entry: ' + required);
+}
+
+const bytes = await zip.generateAsync({
+  type: 'uint8array', compression: 'DEFLATE', compressionOptions: { level: 9 }, platform: 'UNIX'
+});
+const artifact = builderArtifact(version, bytes);
+fs.mkdirSync(path.join(site, 'releases'), { recursive: true });
+const destination = path.join(site, artifact.url);
+if (fs.existsSync(destination) && !fs.readFileSync(destination).equals(Buffer.from(bytes))) {
+  throw Error('Refusing to replace an immutable builder artifact');
+}
+fs.writeFileSync(destination, bytes);
+const catalog = {
+  schemaVersion: 1,
+  runnerProtocol: 1,
+  builderVersion: version,
+  builder: {
+    ...artifact,
+    bytes: bytes.length,
+    unpackedBytes: entries.reduce((sum, entry) => sum + entry.bytes, 0),
+    entrypoint: 'plus-runner.html'
+  },
+  profiles: profiles.map(profile => ({
+    id: profile.id, name: profile.name, version: companionVersion(profile),
+    gameCode: profile.code, crc32: profile.crc32
+  }))
+};
+fs.writeFileSync(path.join(site, 'catalog.json'), JSON.stringify(catalog, null, 2) + '\n');
+fs.mkdirSync(path.join(root, 'reports'), { recursive: true });
+fs.writeFileSync(path.join(root, 'reports/distribution.json'), JSON.stringify({ version, catalog, files: entries }, null, 2) + '\n');
+console.log(JSON.stringify({ version, files: entries.length, ...catalog.builder }, null, 2));

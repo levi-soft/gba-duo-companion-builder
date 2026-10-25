@@ -88,3 +88,7 @@ Cả ba profile đều qua bốn tình huống (phân tích gần lên cấp ho�
 | FE8 Việt hóa | 3,089 ms | 377.186 |
 
 Không có lỗi vượt ngân sách nạp hay cập nhật. Đây là số đo trên trạng thái chụp trong chương trình kiểm thử độc lập, chưa phải phép đo FPS hoặc xác nhận giao diện Android đã hiển thị đúng. Phát input native, chơi trực tiếp và hiển thị vẫn cần kiểm tra riêng.
+
+## UI chung và thông tin phát hành
+
+Nguồn layout, CSS và factory nằm trong ui/. Dùng npm run build:ui để sinh site/theme.js. npm test và npm run build tự sinh lại cả UI lẫn Lua. Xem [quy tắc phiên bản](VERSIONING.md).

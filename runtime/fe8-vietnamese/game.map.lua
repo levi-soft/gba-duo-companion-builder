@@ -457,8 +457,21 @@ return function(D)
     if preparationsActive then
       return
     end
-    if w < 1 or h < 1 or w > 64 or h > 64 or tr < 0x02000000 or ur < 0x02000000 then
+    if w < 1 or h < 1 or w > 64 or h > 64 then
       return
+    end
+    local function valid(address, length)
+      return address >= 0x02000000 and address + length <= 0x02040000
+    end
+    -- Map rows can be cleared/replaced during chapter or menu transitions.
+    -- Validate the complete tables and every row before drawing any cells.
+    if not valid(tr, h * 4) or not valid(ur, h * 4) then
+      return
+    end
+    for y = 0, h - 1 do
+      if not valid(mem.u32(tr + y * 4), w) or not valid(mem.u32(ur + y * 4), w) then
+        return
+      end
     end
     local cx, cy = mem.u16(profile.cursorX), mem.u16(profile.cursorY)
     v.mapWidth = w
@@ -483,9 +496,15 @@ return function(D)
           or id < 64 and mapCfg.playerColor
           or id < 128 and mapCfg.allyColor
           or mapCfg.enemyColor
+        local visible = id ~= 0
+        local slot = mapSlots[id]
+        if id >= 128 and mapCfg.respectFog ~= false and slot and (mem.u32(slot + 12) & 0x200) ~= 0 then
+          visible = false
+          color = "transparent"
+        end
         v.mapCells[#v.mapCells + 1] = {
           tile = "asset:images/minimap/" .. applyMapTile(x, y, tr, w, h) .. ".png",
-          marker = id ~= 0,
+          marker = visible,
           color = color,
           cursor = x == cx and y == cy,
           cursorColor = mapCfg.cursorColor,
@@ -506,5 +525,5 @@ return function(D)
     end
   end
 
-  return { apply = applyMap, meta = mapMeta }
+  return { apply = applyMap, meta = mapMeta, config = mapCfg }
 end

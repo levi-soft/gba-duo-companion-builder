@@ -1,6 +1,6 @@
 {
   "name": "gba-duo-companion-builder",
-  "version": "0.9.9",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "description": "Local-ROM companion builder website and GBA Duo Plus distribution catalog",
@@ -10,9 +10,11 @@
   },
   "scripts": {
     "build": "node scripts/build-distribution.mjs",
-    "pretest": "node scripts/build-runtime-modules.mjs",
+    "pretest": "node scripts/build-authored-sources.mjs",
     "test": "node --test tests/*.test.mjs",
-    "check": "npm run build && npm test"
+    "check": "npm run build && npm test",
+    "build:ui": "node scripts/build-ui-theme.mjs",
+    "build:lua": "node scripts/build-runtime-modules.mjs"
   },
   "devDependencies": {
     "wasmoon": "1.16.0"

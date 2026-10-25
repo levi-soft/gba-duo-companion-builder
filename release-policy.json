@@ -1,0 +1,13 @@
+{
+  "builderVersionPolicy": "new-profiles-only",
+  "releases": [
+    {
+      "version": "1.0.0",
+      "profileIds": [
+        "fe7-vietnamese",
+        "fe6-remastered",
+        "fe8-vietnamese"
+      ]
+    }
+  ]
+}

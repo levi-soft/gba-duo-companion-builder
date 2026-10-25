@@ -13,6 +13,14 @@ Tạo companion từ ROM được hỗ trợ ngay trên máy của bạn. Websit
 
 Đây là dự án do [levi-soft](https://github.com/levi-soft) duy trì. Tính năng tìm/tạo/cài tự động là **phần mở rộng riêng của GBA Duo Plus**, không phải tính năng của GBA Duo chính thức. Cách nhập ZIP thủ công vẫn được giữ. Khi bản chính thức hỗ trợ đầy đủ, Plus có thể thay phần tích hợp riêng, tiếp tục dùng định dạng catalog và companion này.
 
+## Chốt 1.0.0 và tách phiên bản
+
+Builder và cả ba companion FE Việt hóa được chốt **1.0.0** sau đợt rà soát.
+**Builder chỉ tăng phiên bản khi thêm profile mới.** Khi sửa companion hiện có,
+chỉ tăng phiên bản companion tương ứng. Checksum nội dung giúp tải đúng bản mới
+mà không cần tăng builder hoặc thay APK Plus.
+[Quy tắc phiên bản](https://github.com/levi-soft/gba-duo-companion-builder/blob/main/docs/VERSIONING.md) · [Kết quả rà soát và giới hạn](https://github.com/levi-soft/gba-duo-companion-builder/blob/main/docs/STABLE-1.0.0-AUDIT.md).
+
 ## Dùng website
 
 1. Mở website bằng Chrome hoặc Edge hiện hành.
@@ -36,13 +44,13 @@ Mô tả dài giữ chiều cao dòng và có thể cuộn trong khung thông ti
 hoặc mất phần cuối. Tạo lại/nhập companion để cập nhật giao diện. Không cần
 cập nhật APK Plus.
 
-## Profile chính xác trong builder 0.9.9
+## Profile chính xác trong builder 1.0.0
 
 | Profile | Mã game | CRC32 ROM | Phiên bản companion |
 | --- | --- | --- | --- |
-| FE7 Việt hóa | AE7E | 32CD990D | 0.7.17 |
-| FE6 Việt hóa Remastered, trên nền FE8 | BE8E | BD53D5F3 | 0.4.18 |
-| FE8 Việt hóa | BE8E | 3CD932D7 | 0.6.9 |
+| FE7 Việt hóa | AE7E | 32CD990D | 1.0.0 |
+| FE6 Việt hóa Remastered, trên nền FE8 | BE8E | BD53D5F3 | 1.0.0 |
+| FE8 Việt hóa | BE8E | 3CD932D7 | 1.0.0 |
 
 Các bản ROM khác bị từ chối. Profile FE6 này không dành cho FE6 gốc. Builder hoạt động theo profile đã có, chưa tự dò cấu trúc RAM cho mọi game. Phạm vi kiểm chứng dự đoán và giới hạn thiết bị nằm trong [FEATURE-CONTRACT.md](site/FEATURE-CONTRACT.md).
 
@@ -62,7 +70,7 @@ npm run build
 npm test
 ```
 
-`site/` chứa website tĩnh. Build tạo `site/catalog.json` và `site/releases/builder-0.9.9.zip` từ mã trong `site/`, không đọc ROM hay sửa các gói 0.9.6 đã chốt trước đây.
+`site/` chứa website tĩnh. Build tạo `site/catalog.json` và bundle theo nội dung `site/releases/builder-1.0.0-<sha256>.zip` từ mã trong `site/`, không đọc ROM hay sửa các gói 0.9.6 đã chốt trước đây.
 
 Kiểm tra tự động bao gồm hash catalog, phiên bản ROM, nguồn asset cục bộ, template không chứa dữ liệu game đã xuất, đóng ZIP format 2 với dữ liệu giả lập phục vụ kiểm thử, hủy tác vụ và truyền ZIP theo khối. Các kiểm tra này không thay thế việc thử chọn tệp trên trình duyệt và chạy Plus trên máy thật.
 

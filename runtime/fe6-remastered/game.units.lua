@@ -8,6 +8,7 @@ return function(D, map, values, abilities)
   local state = { pulseTick = 0, lastIdentity = nil }
   local applyMap = map.apply
   local chars, classes, slots = D.chars, D.classes, D.slots
+  local mapCfg = map.config or {}
   local applyModSkills = abilities.apply
   local emptyUnitValues = pack.require("presentation.defaults")(D, map, values, abilities, state)
   local readPreparations = pack.require("game.preparations")(D.slots, map.meta, profile)
@@ -81,6 +82,22 @@ return function(D, map, values, abilities)
       if not unit then
         return emptyUnitValues()
       end
+    end
+    local slotId = mem.u8(unit + 11)
+    if
+      slots[slotId] ~= unit
+      or not chars[mem.u32(unit)]
+      or not classes[mem.u32(unit + 4)]
+      or mem.u8(unit + 19) == 0
+      or (mem.u32(unit + 12) & (preparationsActive and 0x10004 or 0x1000c)) ~= 0
+      or (
+        not v.unitLocked
+        and slotId >= 128
+        and mapCfg.respectFog ~= false
+        and (mem.u32(unit + 12) & 0x200) ~= 0
+      )
+    then
+      return emptyUnitValues(preparationsActive)
     end
     v.unitPresent, v.unitAbsent = true, false
     v["hp"] = mem.u8((unit + 19))

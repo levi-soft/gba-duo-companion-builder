@@ -7,9 +7,15 @@ return function(slots, metadata, profile)
       return nil
     end
     local id = mem.u8(unit + 11)
-    if id < 1 or id >= 64 or slots[id] ~= unit
-      or not chars[mem.u32(unit)] or not classes[mem.u32(unit + 4)]
-      or mem.u8(unit + 19) == 0 or (mem.u32(unit + 12) & 0x10004) ~= 0 then
+    if
+      id < 1
+      or id >= 64
+      or slots[id] ~= unit
+      or not chars[mem.u32(unit)]
+      or not classes[mem.u32(unit + 4)]
+      or mem.u8(unit + 19) == 0
+      or (mem.u32(unit + 12) & 0x10004) ~= 0
+    then
       return nil
     end
     -- US_NOT_DEPLOYED (0x8) is valid while choosing the deployment roster.

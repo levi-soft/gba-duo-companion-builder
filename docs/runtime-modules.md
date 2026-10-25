@@ -113,3 +113,7 @@ All three profiles passed four cases (completed near-level analysis, Units, Map 
 | FE8 Vietnamese | 3.089 ms | 377,186 |
 
 No load or update budget error occurred. These are observations from isolated captured-state tests, not an FPS benchmark or proof of the Android companion's final rendered UI. Native input dispatch, live gameplay and rendering acceptance remain separate checks.
+
+## Shared UI and release metadata
+
+Readable layout, CSS and theme factory live in ui/. Run npm run build:ui to regenerate site/theme.js. npm test and npm run build regenerate both UI and Lua before validation. See [version policy](VERSIONING.md) for independent builder and companion versions.

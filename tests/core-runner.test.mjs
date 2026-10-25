@@ -28,6 +28,16 @@ test('shared core rejects unknown identities before any preparation',async()=>{
 test('cancellation prevents preparation and ZIP output',async()=>{
  const {context,prepared}=engine(),controller=new AbortController();controller.abort();await assert.rejects(context.CompanionBuild.build(rom(),{signal:controller.signal}),/Cancelled/);assert.equal(prepared(),0);
 });
+
+test('cancellation after preparation does not compile or publish a partial pack',async()=>{
+ const {context,prepared}=engine(),controller=new AbortController(),original=context.FixturePrep.prepare;
+ let compilations=0;
+ context.FixturePrep.prepare=async(...args)=>{const result=await original(...args);controller.abort();return result;};
+ context.CompanionCompiler.compileDesign=()=>{compilations++;throw Error('Compiler must not run after cancellation');};
+ const bytes=rom(),before=Buffer.from(bytes);
+ await assert.rejects(context.CompanionBuild.build(bytes,{signal:controller.signal}),error=>error.name==='AbortError');
+ assert.equal(prepared(),1);assert.equal(compilations,0);assert.deepEqual(Buffer.from(bytes),before);
+});
 test('ROM file reader enforces one ROM and input limits',async()=>{
  const {context}=engine();let read=false;await assert.rejects(context.CompanionBuild.readRom({name:'huge.gba',size:65*1024*1024,arrayBuffer:async()=>{read=true;}}),/64 MiB/);assert.equal(read,false);
  const z=new JSZip();z.file('a.gba',rom());z.file('b.gba',rom());const bytes=await z.generateAsync({type:'arraybuffer'});
@@ -43,6 +53,14 @@ test('forged ZIP size cannot bypass the actual inflated ROM limit',async()=>{
   const signature=view.getUint32(n,true);if(signature===0x04034b50)view.setUint32(n+22,1,true);if(signature===0x02014b50)view.setUint32(n+24,1,true);
  }
  await assert.rejects(context.CompanionBuild.readRom({name:'forged.zip',size:bytes.length,arrayBuffer:async()=>bytes.buffer}),/32 MiB/);
+});
+
+test('ZIP stream errors reject the ROM instead of returning accumulated partial bytes',async()=>{
+ const {context}=engine(),events={};let pauses=0;
+ const stream={on(name,callback){events[name]=callback;return this;},pause(){pauses++;},resume(){events.data(new Uint8Array([1,2,3]));events.error(Error('Truncated ZIP stream'));events.end();}};
+ context.JSZip={loadAsync:async()=>({files:{'fixture.gba':{dir:false,name:'fixture.gba',internalStream:()=>stream}}})};
+ await assert.rejects(context.CompanionBuild.readRom({name:'truncated.zip',size:3,arrayBuffer:async()=>new ArrayBuffer(3)}),/Truncated ZIP stream/);
+ assert.equal(pauses,1);
 });
 function bridgeEngine({config={},cancelAfterAppend=false,cancelBefore=false,zipBytes}={}){
  const e=engine(),chunks=[],calls=[],state={cancelled:cancelBefore};let error,fetches=0;
@@ -66,4 +84,14 @@ test('Plus runner rejects arbitrary ROM URLs before fetching',async()=>{
 test('Plus runner cancellation never commits a partial pack',async()=>{
  const before=bridgeEngine({cancelBefore:true});await before.start();assert.match(before.error(),/Cancelled/);assert.equal(before.fetches(),0);
  const mid=bridgeEngine({zipBytes:new Uint8Array(100000),cancelAfterAppend:true});await mid.start();assert.match(mid.error(),/Cancelled/);assert.equal(mid.chunks.length,1);assert(!mid.calls.some(x=>x[0]==='finish'));
+});
+
+test('Plus runner reports preparation errors without beginning an install stream',async()=>{
+ const e=bridgeEngine();
+ e.context.FixturePrep.prepare=async()=>{throw Error('Synthetic preparation failure');};
+ await e.start();
+ assert.match(e.error(),/Synthetic preparation failure/);
+ assert.equal(e.fetches(),1);
+ assert(!e.calls.some(call=>call[0]==='begin'||call[0]==='finish'));
+ assert.equal(e.chunks.length,0);
 });
