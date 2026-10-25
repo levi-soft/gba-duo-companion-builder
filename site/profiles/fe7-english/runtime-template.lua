@@ -1,0 +1,20 @@
+-- FE7 English development entry point: inherited readers, English presentation.
+local D = pack.require("data.rom_tables")
+local values = pack.require("shared.values")
+local map = pack.require("game.map")(D)
+local read = pack.require("game.units")(D, map, values, nil)
+local inventory = pack.require("presentation.inventory")
+local support = pack.require("game.support")(D)
+local analyze = pack.require("features.analysis")(D)
+local growthFields = pack.require("presentation.growth")
+local present = pack.require("presentation.prediction")()
+local english = pack.require("presentation.english")(D.uiStrings)
+
+function update()
+  local v = read()
+  v = inventory(v)
+  v = analyze(v)
+  v = growthFields(v)
+  v = support(v)
+  return english(present(v))
+end

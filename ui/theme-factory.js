@@ -1,6 +1,20 @@
 // Extend the common layout only with capabilities provided by a ROM profile.
-globalThis.makeCompanionLayout = function (extension) {
-  const layout = structuredClone(COMPANION_THEME.layout);
+globalThis.localizeCompanionUi = function (value, language = 'vi') {
+  const dictionary = language === 'vi' ? {} : COMPANION_THEME.locales?.[language];
+  if (!dictionary) throw Error('Unsupported companion UI language: ' + language);
+  const strings = {...dictionary.layout, ...dictionary.runtime};
+  function translate(node) {
+    if (typeof node === 'string') return strings[node] ?? node;
+    if (Array.isArray(node)) return node.map(translate);
+    if (node && typeof node === 'object') return Object.fromEntries(
+      Object.entries(node).map(([key, child]) => [key, translate(child)]));
+    return node;
+  }
+  return translate(value);
+};
+
+globalThis.makeCompanionLayout = function (extension, language = 'vi') {
+  const layout = localizeCompanionUi(COMPANION_THEME.layout, language);
   if (!extension) return layout;
 
   function find(node, predicate) {

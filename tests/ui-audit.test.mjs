@@ -27,9 +27,10 @@ test('published UI is generated deterministically from readable authored sources
   const layout = JSON.parse(fs.readFileSync('ui/theme.layout.json', 'utf8'));
   const css = fs.readFileSync('ui/theme.css', 'utf8');
   const factory = fs.readFileSync('ui/theme-factory.js', 'utf8');
-  const output = renderUiTheme(layout, css, factory);
+  const locales = {en: JSON.parse(fs.readFileSync('ui/locales/en.json', 'utf8'))};
+  const output = renderUiTheme(layout, css, factory, locales);
   assert.equal(fs.readFileSync('site/theme.js', 'utf8'), output);
-  assert.equal(renderUiTheme(layout, css.replace(/\n/g, '\r\n'), factory.replace(/\n/g, '\r\n')), output);
+  assert.equal(renderUiTheme(layout, css.replace(/\n/g, '\r\n'), factory.replace(/\n/g, '\r\n'), locales), output);
 });
 
 test('all expanded profiles have unique node IDs and one shared Growth/Analysis modal', () => {

@@ -3,14 +3,18 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
-const profiles=['fe7-vietnamese','fe6-remastered','fe8-vietnamese'];
+// English is a development runtime, not yet advertised in the public catalogue.
+// Inherit the FE7 implementation; override only authored English-specific modules.
+const profiles=['fe7-vietnamese','fe6-remastered','fe8-vietnamese','fe7-english'];
+const inherited={'fe7-english':'fe7-vietnamese'};
 const readModules=directory=>Object.fromEntries(fs.readdirSync(directory).filter(name=>name.endsWith('.lua')).sort().map(name=>[
  name,fs.readFileSync(path.join(directory,name),'utf8').replace(/\r\n/g,'\n')
 ]));
 const shared=readModules(path.join(root,'runtime/shared'));
 const registry={};
 for(const profile of profiles){
- const available={...shared,...readModules(path.join(root,'runtime',profile))};
+ const parent=inherited[profile] ? readModules(path.join(root,'runtime',inherited[profile])) : {};
+ const available={...shared,...parent,...readModules(path.join(root,'runtime',profile))};
  const output={};
  function include(file){
   if(output[file])return;
