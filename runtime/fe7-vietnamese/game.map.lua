@@ -445,7 +445,7 @@ return function(D)
     end
     return 0
   end
-  local function applyMapSource(v, selected)
+  local function applyMapSource(v, selected, preparationsActive)
     v.mapPlayerColor = mapCfg.playerColor
     v.mapEnemyColor = mapCfg.enemyColor
     v.mapAllyColor = mapCfg.allyColor
@@ -479,6 +479,9 @@ return function(D)
     v.mapPlayerCount = 0
     v.mapEnemyCount = 0
     v.mapAllyCount = 0
+    if preparationsActive then
+      return
+    end
     local w, h = mem.u16(mapCfg.size), mem.u16(mapCfg.size + 2)
     if w < 1 or h < 1 or w > mapCfg.maxDimension or h > mapCfg.maxDimension then
       return

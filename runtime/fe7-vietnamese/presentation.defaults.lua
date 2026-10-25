@@ -4,7 +4,7 @@
 return function(D, map, values, abilities, state)
   local truth = values.truth
   local applyMapSource = map.apply
-  return function()
+  return function(preparationsActive)
     local v = {
       ["hp"] = "---",
       ["maxHp"] = "---",
@@ -329,7 +329,7 @@ return function(D, map, values, abilities, state)
       v.ui.set.navUnits = true
       v.ui.set.navMap = false
     end
-    applyMapSource(v)
+    applyMapSource(v, nil, preparationsActive)
     v.ui = v.ui or {}
     v.ui.set = v.ui.set or {}
     v.ui.set.companionView = v.forecastActive and "battle" or "companion"

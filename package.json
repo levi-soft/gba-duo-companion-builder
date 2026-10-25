@@ -1,6 +1,6 @@
 {
   "name": "gba-duo-companion-builder",
-  "version": "0.9.7",
+  "version": "0.9.8",
   "private": true,
   "type": "module",
   "description": "Local-ROM companion builder website and GBA Duo Plus distribution catalog",

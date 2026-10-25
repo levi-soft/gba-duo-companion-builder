@@ -1,5 +1,38 @@
 # Shared companion contract
 
+## Preparations selection in builder 0.9.8
+
+FE7 companion 0.7.16, FE6 Remastered 0.4.17 and FE8 0.6.8 read the highlighted
+player unit from the Preparations roster, Items screen or active stat screen.
+Units not selected for deployment remain inspectable. Invalid/empty selections
+clear unit information; stale map cursors and Forecast data are not used.
+
+The implementation is authored in `runtime/shared/game.preparations.lua`.
+Game addresses live in each `game.profile.lua`; unit orchestration and map/default
+presentation call the module without replacing the entry-point update pipeline.
+FE8 layouts were checked against the
+[preparation structs](https://github.com/FireEmblemUniverse/fireemblem8u/blob/master/include/prepscreen.h)
+and [selection reader](https://github.com/FireEmblemUniverse/fireemblem8u/blob/master/src/prep_unitselect.c).
+FE7 addresses were checked in the supported ROM and a live Preparations capture.
+
+Evidence: all 26 automated tests pass, including 36 isolated selection/lifecycle
+cases across the three profiles. Full-runtime fixtures cover roster changes,
+benched units with no map coordinates, stat-screen priority and clearing invalid
+selections on all three profiles. The existing 345-tick map/Forecast regression
+trace remains identical to the frozen baseline. All three packs were rebuilt
+from the supported ROMs with no changed prepared image assets.
+
+On Thor's isolated native Lua harness, all three profiles passed six updates
+each against copied Preparations fixtures, without RAM writes. Maximum measured
+update time was 0.322 ms and maximum instruction count 8,600 in those runs.
+These are short fixture measurements, not sustained frame-time guarantees.
+The real FE7 capture now resolves Lyn, level 7, HP 20, where the old code returned
+no unit. The modified packs have not yet been visually accepted in a live game;
+FE6/FE8 Preparations navigation still needs direct device acceptance.
+
+Rebuild/import companions to receive this fix; installing a new builder does
+not silently modify companions already installed or selected by the user.
+
 FE6 Vietnamese, FE7 Vietnamese and FE8 Vietnamese are profiles of one kit, not separate UI products.
 
 - Units, Map, Battle Forecast, Growth and Analysis come from one common theme.

@@ -10,12 +10,16 @@ return function(D, map, values, abilities)
   local chars, classes, slots = D.chars, D.classes, D.slots
   local applyNativeAbilities = abilities.apply
   local emptyUnitValues = pack.require("presentation.defaults")(D, map, values, abilities, state)
+  local readPreparations = pack.require("game.preparations")(D.slots, map.meta, profile)
   local bindFields = pack.require("game.bindings")(D, values, state)
   local readItems = pack.require("game.items")(D, map)
   local readBattle = pack.require("game.battle")(D)
   return function()
     local v = {}
-    local unit = nil
+    local unit, preparationsActive = readPreparations()
+    if preparationsActive and not unit then
+      return emptyUnitValues(true)
+    end
 
     local playerPc, forecastProc, aiPc = 0, 0, 0
     for n = 0, 63 do
@@ -37,7 +41,7 @@ return function(D, map, values, abilities)
     local aiOwns = aiPc >= profile.enemyPcStart
       and aiPc <= profile.enemyPcEnd
       and (phase == 0x80 or phase == 0x40)
-    if playerOwns or aiOwns then
+    if not preparationsActive and (playerOwns or aiOwns) then
       local id = active >= 0x02000000 and active < 0x02040000 and mem.u8(active + 11) or 0
       if
         slots[id] == active
@@ -123,7 +127,7 @@ return function(D, map, values, abilities)
     end
     readItems(v, unit)
     readBattle(v)
-    applyMap(v, v.unitLocked and unit or nil)
+    applyMap(v, v.unitLocked and unit or nil, preparationsActive)
     state.pulseTick = state.pulseTick + 1
     local studioPulseOn = ((state.pulseTick * 200) % 1000) < 500
     v.item1DropFlash = truth(v.item1Droppable) and studioPulseOn

@@ -11,6 +11,7 @@ Builder tách phần logic do người phát triển viết khỏi bảng dữ l
 | Module | Nhiệm vụ |
 | --- | --- |
 | `game.profile.lua` | Đặt tên các địa chỉ và cấu trúc của game |
+| `game.preparations.lua` (dùng chung) | Đọc unit đang chọn trong danh sách ra trận, Items và bảng chỉ số của Preparations; địa chỉ lấy từ profile |
 | `game.units.lua` | Chọn đúng unit đang trỏ/khóa và điều phối đọc dữ liệu |
 | `game.items.lua` | Trang bị đang dùng, rescue và chỉ số giao chiến |
 | `game.battle.lua` | Dữ liệu Battle Forecast |
@@ -22,6 +23,12 @@ Builder tách phần logic do người phát triển viết khỏi bảng dữ l
 | `data.rom_tables.lua` | Bảng dữ liệu tự sinh từ ROM, không phải logic viết tay |
 
 Danh sách file có thể khác giữa các profile. FE6 Remastered vẫn giữ Mag và skill riêng. Chỉ chia sẻ thuật toán khi hành vi đã tương đương; không đem công thức FE7 áp thay cho công thức của mod.
+
+Phần đọc Preparations được tách khỏi bộ chọn unit trên bản đồ. `game.units` gọi
+module dùng chung, chấp nhận unit còn sống nhưng chưa được chọn ra trận và truyền
+ngữ cảnh sang phần bản đồ/giá trị mặc định. Chọn không hợp lệ sẽ xóa thông tin
+unit, không lấy lại con trỏ bản đồ cũ. Module chỉ đọc, không ghi RAM hoặc bật
+Forecast/điều hướng bản đồ trong Preparations.
 
 ## File tự sinh và cách giả lập nạp module
 

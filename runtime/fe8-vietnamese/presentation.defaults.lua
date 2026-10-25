@@ -5,7 +5,7 @@ return function(D, map, values, abilities, state)
   local truth = values.truth
   local applyMap = map.apply
   local applyNativeAbilities = abilities.apply
-  return function()
+  return function(preparationsActive)
     local v = {
       ["hp"] = "---",
       ["maxHp"] = "---",
@@ -322,7 +322,7 @@ return function(D, map, values, abilities, state)
       }
       state.lastIdentity = identity
     end
-    applyMap(v, nil)
+    applyMap(v, nil, preparationsActive)
     v.ui = v.ui or {}
     v.ui.set = v.ui.set or {}
     v.ui.set.companionView = "companion"

@@ -13,12 +13,16 @@ return function(D, map, values, abilities)
   local emptyUnitValues = pack.require("presentation.defaults")(D, map, values, abilities, state)
   local validSlots = D.validSlots
 
+  local readPreparations = pack.require("game.preparations")(D.slots, map.meta, profile)
   local bindFields = pack.require("game.bindings")(D, values, state)
   local readItems = pack.require("game.items")(D, map)
   local readBattle = pack.require("game.battle")(D)
   return function()
     local v = {}
-    local unit = nil
+    local unit, preparationsActive = readPreparations()
+    if preparationsActive and not unit then
+      return emptyUnitValues(true)
+    end
     local playerPc, forecastProc, aiPc = 0, 0, 0
     for i = 0, 63 do
       local p = profile.processPool + i * 108
@@ -40,7 +44,7 @@ return function(D, map, values, abilities)
     local aiOwns = aiPc >= profile.enemyPcStart
       and aiPc <= profile.enemyPcEnd
       and (faction == 0x40 or faction == 0x80)
-    if (playerOwns or aiOwns) and validSlots[active] then
+    if not preparationsActive and (playerOwns or aiOwns) and validSlots[active] then
       local state = mem.u32(active + 12)
       local deployment = mem.u8(active + 11)
       if
@@ -91,7 +95,7 @@ return function(D, map, values, abilities)
       or not mapMeta.classes[mem.u32(unit + 4)]
       or mapSlots[slotId] ~= unit
       or mem.u8(unit + 19) == 0
-      or (mem.u32(unit + 12) & 0x1000c) ~= 0
+      or (mem.u32(unit + 12) & (preparationsActive and 0x10004 or 0x1000c)) ~= 0
       or (
         not v.unitLocked
         and slotId >= 128
@@ -144,7 +148,7 @@ return function(D, map, values, abilities)
     if bound ~= v then
       return bound
     end
-    applyMapSource(v, unit)
+    applyMapSource(v, unit, preparationsActive)
     readItems(v, unit)
     readBattle(v)
     state.pulseTick = state.pulseTick + 1

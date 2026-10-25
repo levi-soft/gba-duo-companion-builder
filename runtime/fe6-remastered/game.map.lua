@@ -445,7 +445,7 @@ return function(D)
       return n == t
     end)
   end
-  local function applyMap(v, selected)
+  local function applyMap(v, selected, preparationsActive)
     local w, h = mem.u16(profile.mapWidth), mem.u16(profile.mapHeight)
     local tr, ur = mem.u32(profile.terrainRows), mem.u32(profile.unitRows)
     v.mapPresent = false
@@ -454,6 +454,9 @@ return function(D)
     v.mapPlayerCount = 0
     v.mapEnemyCount = 0
     v.mapAllyCount = 0
+    if preparationsActive then
+      return
+    end
     if w < 1 or h < 1 or w > 64 or h > 64 or tr < 0x02000000 or ur < 0x02000000 then
       return
     end

@@ -13,6 +13,7 @@ The modules are named by purpose:
 | Module | Responsibility |
 | --- | --- |
 | `game.profile.lua` | Named addresses and supported game layout |
+| `game.preparations.lua` (shared) | Selected roster/item/stat-screen unit during Preparations, with profile-specific addresses and slot validation |
 | `game.units.lua` | Resolve the selected or locked unit and coordinate reading |
 | `game.items.lua` | Equipped item, rescue and combat values |
 | `game.battle.lua` | Battle Forecast fields |
@@ -24,6 +25,12 @@ The modules are named by purpose:
 | `data.rom_tables.lua` | Locally generated ROM data, not authored game logic |
 
 The exact module set differs by profile. FE6 Remastered retains its separate Mag and skill logic. An algorithm is shared only when it was already equivalent; the refactor does not replace mod formulas with FE7 formulas.
+
+Preparations selection is kept separate from map selection: `game.units` calls
+the shared reader, accepts living player units that are not deployed yet, and
+passes the context to map/default presentation. Invalid selection clears the
+unit instead of falling back to a stale map cursor. The reader performs no RAM
+writes and does not enable Forecast or map-navigation actions in Preparations.
 
 ## Generated files and native loading
 
