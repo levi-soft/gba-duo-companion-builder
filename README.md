@@ -6,6 +6,9 @@ Create a companion from a supported ROM on your own device. The website builds a
 
 **Website:** [levi-soft.github.io/gba-duo-companion-builder](https://levi-soft.github.io/gba-duo-companion-builder/)
 
+**Emulator downloads:** [GBA Duo Plus](https://levi-soft.github.io/gba-duo-plus/) ·
+[GBA Duo Plus SS for phones, tablets and foldables](https://levi-soft.github.io/gba-duo-plus/single-screen/)
+
 This project is maintained by [levi-soft](https://github.com/levi-soft). Automatic discovery/build/install is a **GBA Duo Plus extension**, not an official GBA Duo feature. The standard manual ZIP workflow remains available. If official GBA Duo later provides the complete feature, Plus can replace its provider integration while preserving this public catalog and pack format.
 
 ## Builder 1.1.5 — fifteen companions at 1.0.0
@@ -53,6 +56,17 @@ also updates the list without editing the ROM-selection screen.
 4. Download the Local ZIP, save your game/state, then import and assign the ZIP in GBA Duo Plus. The optional project JSON opens in [GBA Duo Studio](https://github.com/levi-soft/gba-duo-studio).
 
 The website downloads its HTML, JavaScript and authored UI resources. ROM processing happens locally: ROM bytes, extracted artwork and game text are not uploaded. The ROM itself is not changed. Generated files contain assets from your ROM and should remain private; share this builder website instead.
+
+### Website-only updates
+
+Run `npm run build:site` and `npm test` for public metadata, static supported-game
+content and navigation changes. This does not rebuild the verified offline ZIP or
+change `catalog.json`. Publish only the changed website files to `gh-pages`, keeping
+the existing catalog and immutable release artifacts. The normal `npm run build`
+also refreshes this content when preparing a complete Builder distribution.
+
+[Google Search Console setup in Vietnamese](https://github.com/levi-soft/gba-duo-plus/blob/main/docs/SEARCH-CONSOLE.vi.md)
+explains ownership verification, sitemaps and indexing requests for both websites.
 
 ## Preparations fix in 0.9.8
 

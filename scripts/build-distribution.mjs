@@ -11,6 +11,7 @@ const { version } = JSON.parse(fs.readFileSync(path.join(root, 'package.json')))
 const policy = JSON.parse(fs.readFileSync(path.join(root, 'release-policy.json')));
 
 await import('./build-authored-sources.mjs');
+await import('./build-site-content.mjs');
 await import('../site/jszip.min.js');
 
 const context = { structuredClone };

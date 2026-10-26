@@ -10,6 +10,7 @@
   },
   "scripts": {
     "build": "node scripts/build-distribution.mjs",
+    "build:site": "node scripts/build-site-content.mjs",
     "pretest": "node scripts/build-authored-sources.mjs",
     "test": "node --test tests/*.test.mjs",
     "check": "npm run build && npm test",

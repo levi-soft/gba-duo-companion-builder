@@ -34,9 +34,11 @@ test('catalog declares the fifteen exact ROM profiles and Plus runner protocol',
 test('web and Plus use the same core and every HTML dependency is local',()=>{
  for(const name of ['index.html','plus-runner.html']){
   const html=fs.readFileSync(path.join(site,name),'utf8');assert(html.includes('builder-core.js'));
-  for(const m of html.matchAll(/(?:src|href)="([^"]+)"/g)){
-   if(m[1].startsWith('#')||m[1].startsWith('https://github.com/'))continue;
-   assert(!/^https?:|\/\//.test(m[1]),name+' external asset');assert(fs.existsSync(path.join(site,m[1].split(/[?#]/,1)[0])),name+' missing '+m[1]);
+  for(const [tag] of html.matchAll(/<(?:script|link)\b[^>]*>/g)){
+   if(/rel="canonical"/.test(tag))continue;
+   const dependency=tag.match(/(?:src|href)="([^"]+)"/)?.[1];
+   if(!dependency)continue;
+   assert(!/^https?:|\/\//.test(dependency),name+' external asset');assert(fs.existsSync(path.join(site,dependency.split(/[?#]/,1)[0])),name+' missing '+dependency);
   }
   assert(html.includes('object-src \'none\''));assert(html.includes('base-uri \'none\''));
   assert(html.includes('frame-src \'none\''));assert(html.includes('form-action \'none\''));
