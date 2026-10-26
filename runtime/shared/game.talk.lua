@@ -20,7 +20,10 @@ return function(D)
     end
     local events = D.talkEvents[mem.u8(config.chapter) + 1] or {}
     for _, event in ipairs(events) do
-      if event.from == character.id and not flagSet(event.flag) then
+      local condition = event.conditionType or 0
+      local allowed = condition ~= 1 and condition ~= 2
+        and (condition ~= 3 or flagSet(event.conditionFlag))
+      if (event.from == character.id or event.anySource) and allowed and not flagSet(event.flag) then
         for id = 1, 0xbf do
           local other = D.slots[id]
           if other then

@@ -9,8 +9,28 @@ return function(D)
   local function modExpQueryStart(kill, ram)
     return expQueryStart(kill, ram, D.execution)
   end
-  local function modLevelPredictionStart(ram)
-    return levelPredictionStart(ram, D.execution)
+  local function modLevelPredictionStart(ram, sliceSteps)
+    if not sliceSteps then return levelPredictionStart(ram, D.execution) end
+    local entries = {}
+    for key, value in pairs(D.execution or {}) do entries[key] = value end
+    entries.cpuStepsPerTick = sliceSteps
+    return levelPredictionStart(ram, entries)
+  end
+  local function handlePredictionError(cache, message)
+    message = tostring(message)
+    local transient = message:find("script exceeded its per-tick time limit", 1, true)
+      or message:find("script exceeded its per-tick instruction budget", 1, true)
+    local entries = D.execution or {}
+    if transient and (cache.budgetRetries or 0) < (entries.analysisBudgetRetries or 0) then
+      cache.budgetRetries = (cache.budgetRetries or 0) + 1
+      cache.sliceSteps = math.max(128, math.floor((cache.sliceSteps or entries.cpuStepsPerTick or 2048) / 2))
+      cache.predictionError, cache.predictionFailed, cache.progress = nil, false, 0
+      -- The interrupted CPU cannot resume safely. Rebuild it next update from
+      -- the same frozen RAM/RNG, preserving conditional EXP and every ROM call.
+    else
+      cache.predictionFailed, cache.predictionError = true, message
+    end
+    cache.prediction = nil
   end
   local modRngAnchor = nil
   local modAnalysisCache = { key = nil }
@@ -152,13 +172,12 @@ return function(D)
           if c.age < 2 and not (ui and ui.predictionPopup == true) then
             return v
           end
-          local ok, job = pcall(modLevelPredictionStart, c.ramByte)
+          local ok, job = pcall(modLevelPredictionStart, c.ramByte, c.sliceSteps)
           if ok then
             c.prediction = job
             return v
           else
-            c.predictionFailed = true
-            c.predictionError = tostring(job)
+            handlePredictionError(c, job)
           end
         end
         if c.prediction and not c.gains then
@@ -168,9 +187,7 @@ return function(D)
             c.progress = progress or c.progress or 0
           end
           if not ok then
-            c.predictionFailed = true
-            c.predictionError = tostring(done)
-            c.prediction = nil
+            handlePredictionError(c, done)
           elseif done then
             c.gains = gains
           end

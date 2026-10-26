@@ -23,6 +23,26 @@
         "fe6-project-ember-rr",
         "voids-blitzarre"
       ]
+    },
+    {
+      "version": "1.1.5",
+      "profileIds": [
+        "fe7-vietnamese",
+        "fe6-remastered",
+        "fe8-vietnamese",
+        "fe7-english",
+        "fe8-europe",
+        "fe8-english",
+        "fe6-english",
+        "fe6-project-ember",
+        "fe6-project-ember-rr",
+        "voids-blitzarre",
+        "storge",
+        "hag-in-white",
+        "sacred-echoes",
+        "vision-quest",
+        "the-last-promise"
+      ]
     }
   ]
 }

@@ -152,8 +152,10 @@ return function(D)
     local promoted = ((c.attributes | k.attributes) & 0x100) ~= 0
     v.growthTier = promoted and "Đã chuyển chức nghiệp" or "Chưa chuyển chức nghiệp"
     v.growthExpLevel = (v.level or 0) + (promoted and 20 or 0)
-    v.growthLevelsLeft = math.max(0, 20 - (v.level or 0))
-    local allowed = (v.deployment or 255) < 64 and (v.exp or 255) ~= 255 and (v.level or 20) < 20
+    local levelCap = k.levelCap or 20
+    v.growthLevelCap = levelCap
+    v.growthLevelsLeft = math.max(0, levelCap - (v.level or 0))
+    local allowed = (v.deployment or 255) < 64 and (v.exp or 255) ~= 255 and (v.level or levelCap) < levelCap
     v.growthExpNeeded = allowed and tostring(100 - v.exp) or "---"
     v.growthExpText = allowed and (tostring(v.exp) .. " / 100 EXP") or "Không thể nhận EXP"
     v.growthExpProgress = allowed and v.exp or 0

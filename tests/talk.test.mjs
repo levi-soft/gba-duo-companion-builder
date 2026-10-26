@@ -23,6 +23,16 @@ test('Talk respects direction, temporary/permanent flags, target presence and st
    ram[b]=0x08000200;ram[0x02000000]=0x7f;apply(v,a);assert(not v.talkAvailable,'unsupported dynamic chapter')
    ram[0x02000000]=0;apply(v,a);assert(v.talkAvailable);apply(v,nil)
    assert(not v.talkAvailable and v.talkTargetId==0 and v.talkTargetName=='---' and v.talkPrompt=='No available conversation.')
+   -- Storge's repeatable hiring conversations have no completion flag, and
+   -- some become available only after a required event flag has been set.
+   D.talkEvents[1]={{flag=0,from=1,to=2,conditionType=3,conditionFlag=1}}
+   ram[0x03005270]=0;apply(v,a);assert(not v.talkAvailable)
+   ram[0x03005270]=1;apply(v,a);assert(v.talkAvailable)
+   D.talkEvents[1][1].conditionType=1;apply(v,a);assert(not v.talkAvailable)
+   D.talkEvents[1][1].conditionType=2;apply(v,a);assert(not v.talkAvailable)
+   D.talkEvents[1][1].conditionType=0;D.talkEvents[1][1].from=0
+   apply(v,a);assert(not v.talkAvailable)
+   D.talkEvents[1][1].anySource=true;apply(v,a);assert(v.talkAvailable)
    return true
   `),true);
  }finally{engine.global.close();}

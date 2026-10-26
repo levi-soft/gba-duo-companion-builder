@@ -42,7 +42,7 @@ test('all profile entry points apply popup lifecycle even when no unit remains a
         local forecast=false
         local function identity(v) return v end
         pack={require=function(name)
-          if name=='data.rom_tables' then return {uiStrings={}} end
+          if name=='data.rom_tables' then return {uiStrings={},mapMeta={chars={}},slots={}} end
           if name=='shared.values' then return {} end
           if name=='game.execution' then return {} end
           if name=='game.memory' or name=='game.map' or name=='game.abilities' then return function()return {}end end

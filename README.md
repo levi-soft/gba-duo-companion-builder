@@ -8,9 +8,17 @@ Create a companion from a supported ROM on your own device. The website builds a
 
 This project is maintained by [levi-soft](https://github.com/levi-soft). Automatic discovery/build/install is a **GBA Duo Plus extension**, not an official GBA Duo feature. The standard manual ZIP workflow remains available. If official GBA Duo later provides the complete feature, Plus can replace its provider integration while preserving this public catalog and pack format.
 
-## Builder 1.1.0 — ten exact ROM profiles
+## Builder 1.1.5 — fifteen companions at 1.0.0
 
-Seven English companions are now finalized at **1.0.0**, alongside the three Vietnamese companions at **1.0.0**. Builder **1.1.0** adds the seven profiles to both the website and Plus automatic creation. Future companion fixes keep the builder version; only adding profiles advances it.
+This release finalizes **Storge, The Hag in White, Sacred Echoes, Vision Quest and The Last Promise** at companion **1.0.0**, alongside the ten existing profiles. All five inherit the English UI with Units, Map, Talk, Growth and conditional Battle Analysis.
+
+- **Storge:** extended class tables, compact-font text and chapter Talk events.
+- **The Hag in White:** separate Str/Mag, eight-stat Growth/Analysis, native skills and bounded Analysis work.
+- **Sacred Echoes:** native equipment, spells/ranges, HP spell costs, two-AS doubling, mode-aware growths and eight engine weapon categories.
+- **Vision Quest:** six native skill slots, Talk and ROM chapter labels, including side chapters.
+- **The Last Promise:** relocated FE7 tables, Talk, Preparations and class-specific level caps of 20 or 30.
+
+Builder **1.1.5** is explicitly finalized for this batch. Companion versions remain independent; adding or fixing a companion does not automatically increment Builder. See [release scope, verification and remaining limits](https://github.com/levi-soft/gba-duo-companion-builder/blob/main/docs/RELEASE-1.1.5.md).
 
 | Profile | Game code | CRC32 | Companion |
 |---|---|---|---|
@@ -24,8 +32,13 @@ Seven English companions are now finalized at **1.0.0**, alongside the three Vie
 | Project Ember | `AFEJ` | `636F7B05` | 1.0.0 |
 | Project Ember Reverse Recruitment | `AFEJ` | `29BC2257` | 1.0.0 |
 | Void's Blitzarre Adventure | `BE8E` | `9D22107C` | 1.0.0 |
+| Fire Emblem: Storge | `BE8E` | `079106D8` | 1.0.0 |
+| The Hag in White | `BE8E` | `7479D7E2` | 1.0.0 |
+| Fire Emblem: Sacred Echoes | `BE8E` | `13F15F23` | 1.0.0 |
+| Fire Emblem: Vision Quest | `BE8E` | `2BCFEC83` | 1.0.0 |
+| Fire Emblem: The Last Promise | `AE7E` | `D1C6E5D5` | 1.0.0 |
 
-FE6 T-EN is original FE6; Vietnamese Remastered is an FE8-based hack. Other ROM revisions and patches need independent profiles. English profiles use English Growth/Analysis and shared UI. Void includes six skill slots and Talk; its Map range overlays still use base movement/weapon ranges and do not include range-changing skills. See [release scope and validation](https://github.com/levi-soft/gba-duo-companion-builder/blob/main/docs/RELEASE-1.1.0.md).
+FE6 T-EN is original FE6; Vietnamese Remastered is an FE8-based hack. Other ROM revisions and patches need independent profiles. English profiles use English Growth/Analysis and shared UI. Void includes six skill slots and Talk; its Map range overlays still use base movement/weapon ranges and do not include range-changing skills. See [release scope and validation](https://github.com/levi-soft/gba-duo-companion-builder/blob/main/docs/RELEASE-1.1.5.md).
 
 ## Use the website
 
@@ -57,7 +70,7 @@ companion to receive the updated layout. No Plus APK update is required.
 
 ## Supported ROMs
 
-The ten exact identities are listed above and on the [supported-games page](https://levi-soft.github.io/gba-duo-companion-builder/supported-games.html). Other ROM revisions require their own profile.
+The fifteen exact identities are listed above and on the [supported-games page](https://levi-soft.github.io/gba-duo-companion-builder/supported-games.html). Other ROM revisions require their own profile.
 
 ## GBA Duo Plus integration
 
@@ -75,7 +88,7 @@ npm run build
 npm test
 ```
 
-`site/` is the static website. The build generates `site/catalog.json` and a content-addressed `site/releases/builder-1.1.0-<sha256>.zip` deterministically from the files in `site/`. It does not read a ROM, regenerate the private companion projects or change the frozen 0.9.6 kit source.
+`site/` is the static website. The build generates `site/catalog.json` and a content-addressed `site/releases/builder-1.1.5-<sha256>.zip` deterministically from the files in `site/`. It does not read a ROM, regenerate the private companion projects or change the frozen 0.9.6 kit source.
 
 Tests cover catalog hashes and exact profile identities, local-only assets, empty public game-data templates, shared generation, actual format-2 ZIP output from a synthetic producer, cancellation and bounded native streaming. They do not replace real-browser file-selection tests or real-device Plus acceptance. The source profile evidence is documented separately in `site/FEATURE-CONTRACT.md`.
 

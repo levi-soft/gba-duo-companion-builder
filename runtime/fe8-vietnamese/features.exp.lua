@@ -4,12 +4,14 @@
 local modThumbStart = pack.require("features.thumb").start
 local function modExpQueryStart(kill, ramByte, entries)
   entries = entries or {}
+  local sliceSteps = entries.cpuStepsPerTick or 2048
+  assert(sliceSteps >= 128 and sliceSteps <= 2048 and sliceSteps % 1 == 0, "Invalid EXP work slice")
   local actor, target = 0x0203A4EC, 0x0203A56C
   -- These cards describe EXP if the unit survives, never the selected
   -- fight's hidden hit/miss/death outcome from the simulation buffers.
   local initial = {
     [actor + 0x13] = math.max(1, ramByte(actor + 0x72)),
-    [actor + 0x7c] = 1,
+    [actor + 0x7c] = entries.damageForExp and entries.damageForExp(ramByte) or 1,
     [target + 0x13] = kill and 0 or math.max(1, ramByte(target + 0x13)),
     [0x0203A4D4] = 1,
     [0x0203A4D5] = 0,
@@ -30,7 +32,7 @@ local function modExpQueryStart(kill, ramByte, entries)
   end
   run = begin(initial)
   return function()
-    local done, _, shadow = run(2048)
+    local done, _, shadow = run(sliceSteps)
     if not done then
       return false
     end

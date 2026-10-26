@@ -44,8 +44,10 @@ export function validateBuilderRelease(version, profiles, policy) {
   }
   assert.equal(version, previous.version, 'Builder version must match the recorded profile-set release');
   const current = profileSet(profiles.map(profile => profile.id));
-  assert(current.size === previous.ids.size && [...current].every(id => previous.ids.has(id)),
-    'Adding profiles requires a new builder release; companion fixes keep the existing builder version');
+  // A recorded release is a published baseline, not the current catalogue.
+  // Profiles may be added or patched without forcing a builder version bump.
+  assert([...previous.ids].every(id => current.has(id)),
+    'The current catalogue must retain every profile from the recorded builder release');
 }
 
 export function companionVersion(profile) {

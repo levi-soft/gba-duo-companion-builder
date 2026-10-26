@@ -1,0 +1,14 @@
+{
+  "id": "vision-quest",
+  "name": "Fire Emblem: Vision Quest",
+  "nameVi": "Fire Emblem: Vision Quest",
+  "code": "BE8E",
+  "crc32": "2BCFEC83",
+  "api": "VisionQuestPrep",
+  "template": "VISION_QUEST_TEMPLATE",
+  "runtime": "FE8_RUNTIME_TEMPLATE",
+  "native": "FE8_NATIVE_DESIGN",
+  "output": "Vision-Quest-Companion-1.0.0",
+  "language": "en",
+  "status": "stable"
+}

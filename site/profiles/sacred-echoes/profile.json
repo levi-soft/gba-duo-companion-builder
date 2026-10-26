@@ -1,0 +1,14 @@
+{
+  "id": "sacred-echoes",
+  "name": "Fire Emblem: Sacred Echoes",
+  "nameVi": "Fire Emblem: Sacred Echoes",
+  "code": "BE8E",
+  "crc32": "13F15F23",
+  "api": "SacredEchoesPrep",
+  "template": "SACRED_ECHOES_TEMPLATE",
+  "runtime": "FE8_RUNTIME_TEMPLATE",
+  "native": "FE8_NATIVE_DESIGN",
+  "output": "Sacred-Echoes-Companion-1.0.0",
+  "language": "en",
+  "status": "stable"
+}

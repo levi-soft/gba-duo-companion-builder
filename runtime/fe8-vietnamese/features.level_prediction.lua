@@ -5,6 +5,8 @@ local modThumbStart = pack.require("features.thumb").start
 local modCaptureRam = pack.require("game.snapshot")
 local function modLevelPredictionStart(sharedRam, profileOptions)
   local entries = profileOptions and profileOptions.entries or {}
+  local sliceSteps = entries.cpuStepsPerTick or 2048
+  assert(sliceSteps >= 128 and sliceSteps <= 2048 and sliceSteps % 1 == 0, "Invalid analysis work slice")
   local actor, target = 0x0203A4EC, 0x0203A56C
   local config = mem.u16(0x0203A4D4)
   if config ~= 1 and config ~= 2 then
@@ -118,7 +120,7 @@ local function modLevelPredictionStart(sharedRam, profileOptions)
     return 76 + math.min(23, math.floor(steps * 23 / 40000))
   end
   return function()
-    local remaining = 2048
+    local remaining = sliceSteps
     while remaining > 0 do
       local done, _, shadow, steps = run(remaining)
       remaining = remaining - (steps - previousSteps)

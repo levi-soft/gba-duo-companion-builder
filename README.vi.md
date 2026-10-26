@@ -13,9 +13,17 @@ Tạo companion từ ROM được hỗ trợ ngay trên máy của bạn. Websit
 
 Đây là dự án do [levi-soft](https://github.com/levi-soft) duy trì. Tính năng tìm/tạo/cài tự động là **phần mở rộng riêng của GBA Duo Plus**, không phải tính năng của GBA Duo chính thức. Cách nhập ZIP thủ công vẫn được giữ. Khi bản chính thức hỗ trợ đầy đủ, Plus có thể thay phần tích hợp riêng, tiếp tục dùng định dạng catalog và companion này.
 
-## Builder 1.1.0 — mười profile ROM chính xác
+## Builder 1.1.5 — mười lăm companion ở 1.0.0
 
-Bảy companion tiếng Anh được chốt **1.0.0**, cùng ba companion Việt hóa **1.0.0**. Builder **1.1.0** bổ sung bảy profile cho website và chức năng tạo tự động trong Plus. Sau này chỉ tăng Builder khi thêm profile; sửa companion dùng phiên bản riêng.
+Đợt này chốt **Storge, The Hag in White, Sacred Echoes, Vision Quest và The Last Promise** lên companion **1.0.0**, cùng mười profile đã phát hành. Cả năm kế thừa UI tiếng Anh với Units, Map, Talk, Growth và Battle Analysis có điều kiện.
+
+- **Storge:** bảng class mở rộng, font nhỏ riêng của ROM và sự kiện Talk theo chương.
+- **The Hag in White:** Str/Mag riêng, Growth/Analysis tám chỉ số, skill gốc và chia nhỏ công việc Analysis để tránh treo.
+- **Sacred Echoes:** đọc trang bị, phép/tầm đánh từ ROM, phép mất HP, đánh đôi cách nhau 2 AS, growth theo chế độ và tám nhóm vũ khí của engine.
+- **Vision Quest:** sáu ô skill, Talk và tên/số chương từ ROM, kể cả chương phụ.
+- **The Last Promise:** bảng FE7 chuyển địa chỉ, Talk, Preparations và giới hạn cấp 20/30 theo class.
+
+Builder **1.1.5** được chốt riêng cho đợt phát hành này. Phiên bản companion độc lập; thêm hoặc sửa companion không tự tăng phiên bản Builder. Xem [phạm vi, kiểm chứng và giới hạn còn lại](https://github.com/levi-soft/gba-duo-companion-builder/blob/main/docs/RELEASE-1.1.5.md).
 
 | Profile | Game code | CRC32 | Companion |
 |---|---|---|---|
@@ -29,8 +37,13 @@ Bảy companion tiếng Anh được chốt **1.0.0**, cùng ba companion Việt
 | Project Ember | `AFEJ` | `636F7B05` | 1.0.0 |
 | Project Ember Reverse Recruitment | `AFEJ` | `29BC2257` | 1.0.0 |
 | Void's Blitzarre Adventure | `BE8E` | `9D22107C` | 1.0.0 |
+| Fire Emblem: Storge | `BE8E` | `079106D8` | 1.0.0 |
+| The Hag in White | `BE8E` | `7479D7E2` | 1.0.0 |
+| Fire Emblem: Sacred Echoes | `BE8E` | `13F15F23` | 1.0.0 |
+| Fire Emblem: Vision Quest | `BE8E` | `2BCFEC83` | 1.0.0 |
+| Fire Emblem: The Last Promise | `AE7E` | `D1C6E5D5` | 1.0.0 |
 
-FE6 T-EN là FE6 gốc; FE6 Việt hóa Remastered là ROM hack trên nền FE8. ROM khác hoặc bản vá khác cần profile riêng. Các profile tiếng Anh dùng UI, Growth và Analysis tiếng Anh. Void hỗ trợ sáu ô skill và Talk; lớp phủ phạm vi trên Map hiện chưa tính skill thay đổi tầm/di chuyển. Xem [phạm vi và kiểm chứng](https://github.com/levi-soft/gba-duo-companion-builder/blob/main/docs/RELEASE-1.1.0.md).
+FE6 T-EN là FE6 gốc; FE6 Việt hóa Remastered là ROM hack trên nền FE8. ROM khác hoặc bản vá khác cần profile riêng. Các profile tiếng Anh dùng UI, Growth và Analysis tiếng Anh. Void hỗ trợ sáu ô skill và Talk; lớp phủ phạm vi trên Map hiện chưa tính skill thay đổi tầm/di chuyển. Xem [phạm vi và kiểm chứng](https://github.com/levi-soft/gba-duo-companion-builder/blob/main/docs/RELEASE-1.1.5.md).
 
 ## Dùng website
 
@@ -75,7 +88,7 @@ npm run build
 npm test
 ```
 
-`site/` chứa website tĩnh. Build tạo `site/catalog.json` và bundle theo nội dung `site/releases/builder-1.1.0-<sha256>.zip` từ mã trong `site/`, không đọc ROM hay sửa các gói 0.9.6 đã chốt trước đây.
+`site/` chứa website tĩnh. Build tạo `site/catalog.json` và bundle theo nội dung `site/releases/builder-1.1.5-<sha256>.zip` từ mã trong `site/`, không đọc ROM hay sửa các gói 0.9.6 đã chốt trước đây.
 
 Kiểm tra tự động bao gồm hash catalog, phiên bản ROM, nguồn asset cục bộ, template không chứa dữ liệu game đã xuất, đóng ZIP format 2 với dữ liệu giả lập phục vụ kiểm thử, hủy tác vụ và truyền ZIP theo khối. Các kiểm tra này không thay thế việc thử chọn tệp trên trình duyệt và chạy Plus trên máy thật.
 

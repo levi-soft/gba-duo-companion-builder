@@ -21,11 +21,11 @@ test('Plus runner dependencies satisfy the shipped protocol-1 query-free interce
  }
 });
 
-test('catalog declares the ten exact ROM profiles and Plus runner protocol',()=>{
+test('catalog declares the fifteen exact ROM profiles and Plus runner protocol',()=>{
  const catalog=JSON.parse(fs.readFileSync(path.join(site,'catalog.json')));
- assert.equal(catalog.schemaVersion,1);assert.equal(catalog.runnerProtocol,1);assert.equal(catalog.builderVersion,'1.1.0');
+ assert.equal(catalog.schemaVersion,1);assert.equal(catalog.runnerProtocol,1);assert.equal(catalog.builderVersion,'1.1.5');
  assert.equal(catalog.builder.entrypoint,'plus-runner.html');
- assert.deepEqual(catalog.profiles.map(x=>[x.id,x.version,x.gameCode,x.crc32]),[["fe7-vietnamese","1.0.0","AE7E","32CD990D"],["fe6-remastered","1.0.0","BE8E","BD53D5F3"],["fe8-vietnamese","1.0.0","BE8E","3CD932D7"],["fe7-english","1.0.0","AE7E","2A524221"],["fe8-europe","1.0.0","BE8P","B3005195"],["fe8-english","1.0.0","BE8E","A47246AE"],["fe6-english","1.0.0","AFEJ","197DE10B"],["fe6-project-ember","1.0.0","AFEJ","636F7B05"],["fe6-project-ember-rr","1.0.0","AFEJ","29BC2257"],["voids-blitzarre","1.0.0","BE8E","9D22107C"]]);
+ assert.deepEqual(catalog.profiles.map(x=>[x.id,x.version,x.gameCode,x.crc32]),[["fe7-vietnamese","1.0.0","AE7E","32CD990D"],["fe6-remastered","1.0.0","BE8E","BD53D5F3"],["fe8-vietnamese","1.0.0","BE8E","3CD932D7"],["fe7-english","1.0.0","AE7E","2A524221"],["fe8-europe","1.0.0","BE8P","B3005195"],["fe8-english","1.0.0","BE8E","A47246AE"],["fe6-english","1.0.0","AFEJ","197DE10B"],["fe6-project-ember","1.0.0","AFEJ","636F7B05"],["fe6-project-ember-rr","1.0.0","AFEJ","29BC2257"],["voids-blitzarre","1.0.0","BE8E","9D22107C"],["storge","1.0.0","BE8E","079106D8"],["hag-in-white","1.0.0","BE8E","7479D7E2"],["sacred-echoes","1.0.0","BE8E","13F15F23"],["vision-quest","1.0.0","BE8E","2BCFEC83"],["the-last-promise","1.0.0","AE7E","D1C6E5D5"]]);
  const zip=fs.readFileSync(path.join(site,catalog.builder.url));assert.equal(zip.length,catalog.builder.bytes);
  assert.equal(crypto.createHash('sha256').update(zip).digest('hex'),catalog.builder.sha256);
  assert(catalog.builder.unpackedBytes>catalog.builder.bytes);

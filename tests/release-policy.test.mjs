@@ -22,12 +22,13 @@ test('companion patches keep the builder version and receive distinct immutable 
   }), /only when adding profiles/);
 });
 
-test('adding profiles needs a new recorded builder version without dropping existing profiles', () => {
+test('adding profiles keeps the builder version until a release is explicitly recorded', () => {
   const expanded = [...profiles, { id: 'second' }];
-  assert.throws(() => validateBuilderRelease('1.0.0', expanded, release), /Adding profiles requires/);
+  validateBuilderRelease('1.0.0', expanded, release);
+  assert.throws(() => validateBuilderRelease('1.1.0', expanded, release), /recorded profile-set/);
   const next = { ...release, releases: [...release.releases, { version: '1.1.0', profileIds: ['first', 'second'] }] };
   validateBuilderRelease('1.1.0', expanded, next);
-  assert.throws(() => validateBuilderRelease('1.1.0', [{ id: 'second' }], next), /requires/);
+  assert.throws(() => validateBuilderRelease('1.1.0', [{ id: 'second' }], next), /must retain/);
 });
 
 test('catalogue and downloadable companion versions must match the pack manifest', () => {

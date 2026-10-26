@@ -17,9 +17,12 @@ The modules are named by purpose:
 | `game.units.lua` | Resolve the selected or locked unit and coordinate reading |
 | `game.items.lua` | Equipped item, rescue and combat values |
 | `game.battle.lua` | Battle Forecast fields |
+| `game.native-abilities.lua` | Shared native FE8 abilities; hack adapters can compose them with additional features |
 | `game.map.lua` | Map state, roster and movement/danger ranges |
 | `game.bindings.lua` | Existing game-to-display field formulas and guards |
 | `features.growth.lua` | Growth and caps, where used by the profile |
+| `features.base-growth.lua`, `features.split-growth.lua` | Reusable FE8 support/pulse and separate Str/Mag Growth stages |
+| `features.native-skills.lua` | Bounded exact-ROM skill getter with a private cache and output buffer |
 | `features.analysis.lua`, `features.exp.lua`, `features.level_prediction.lua` | Conditional EXP and level analysis |
 | `presentation.*.lua` | Default, inventory, Growth and prediction presentation |
 | `data.rom_tables.lua` | Locally generated ROM data, not authored game logic |
@@ -117,3 +120,10 @@ No load or update budget error occurred. These are observations from isolated ca
 ## Shared UI and release metadata
 
 Readable layout, CSS and theme factory live in ui/. Run npm run build:ui to regenerate site/theme.js. npm test and npm run build regenerate both UI and Lua before validation. See [version policy](VERSIONING.md) for independent builder and companion versions.
+
+## Sacred Echoes native queries
+
+`features.native-query` sequences bounded native getter jobs on private RAM.
+Sacred Echoes composes `game.fe8-map`, `game.fe8-battle` and
+`game.fe8-equipment`, overriding only its exact-ROM contracts. Existing FE8
+profiles use wrappers with the same defaults. See [implementation and limits](SACRED-ECHOES-DEVELOPMENT.md).

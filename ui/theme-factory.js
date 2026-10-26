@@ -1,4 +1,17 @@
 // Extend the common layout only with capabilities provided by a ROM profile.
+
+globalThis.withCompanionTalk = function (extension, talkSource) {
+  const result=structuredClone(extension);
+  result.sprite=structuredClone(talkSource.sprite);
+  const talk=structuredClone(talkSource.pages.find(page=>page.name==='talk'));
+  talk.child.class='native-ability-detail';
+  talk.child.children[0].class='native-ability-title';
+  talk.child.children[1].class='native-ability-description';
+  result.pages.push(talk);
+  result.css+='\n'+talkSource.css.split('\n')
+    .filter(rule=>/remaster-sprite-frame|remaster-unit-sprite|remaster-talk-badge/.test(rule)).join('\n');
+  return result;
+};
 globalThis.localizeCompanionUi = function (value, language = 'vi') {
   const dictionary = language === 'vi' ? {} : COMPANION_THEME.locales?.[language];
   if (!dictionary) throw Error('Unsupported companion UI language: ' + language);
@@ -33,14 +46,17 @@ globalThis.makeCompanionLayout = function (extension, language = 'vi') {
   const inventoryPages = () => find(layout, node => node.type === 'pages' && node.state === 'inventoryDetail');
   const byClass = className => find(layout, node => node.class === className);
 
-  // FE8 retains the common Growth/Analysis UI and adds its native ability panel.
-  if (extension.nativePanel) {
+  // Sprite/detail extensions retain the common Growth/Analysis UI.
+  // FE8 may additionally supply its native ability panel.
+  if (!extension.skills) {
     const identity = byClass('identity-line');
     if (extension.sprite) identity.children[0] = structuredClone(extension.sprite);
-    const panel = structuredClone(extension.nativePanel);
-    panel.children[panel.children.length - 1] = identity.children[2];
-    identity.children[2] = panel;
-    inventoryPages().pages.push(...structuredClone(extension.pages));
+    if (extension.nativePanel) {
+      const panel = structuredClone(extension.nativePanel);
+      panel.children[panel.children.length - 1] = identity.children[2];
+      identity.children[2] = panel;
+    }
+    inventoryPages().pages.push(...structuredClone(extension.pages || []));
     return layout;
   }
 

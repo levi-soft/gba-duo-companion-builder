@@ -10,6 +10,10 @@ return function(D)
   end
   local growthRng = pack.require("features.rng").new
   local growthLevelGains = pack.require("features.growth").levelGains
+  local function levelCap(unit)
+    local class = growthClasses[unit.kp]
+    return class and class.levelCap or 20
+  end
   local function growthSimulateBattle(a, b, seed, normalMode, noExp, hypotheticalId)
     -- The caller supplies untouched battle records (before simulation effects).
     local rng = growthRng(seed)
@@ -101,7 +105,7 @@ return function(D)
         or (a.id & 0xc0) == 0 and (b.id & 0xc0) == 0
         or s.id >= 64
         or s.exp == 255
-        or s.level >= 20
+        or s.level >= levelCap(s)
         or s.hp <= 0
         or (t.attributes & 0x1000000) ~= 0
       then
@@ -148,11 +152,11 @@ return function(D)
       local hypothetical = not noExp and s.id == hypotheticalId
       s.gains = { 0, 0, 0, 0, 0, 0, 0 }
       s.levelUp = s.exp ~= 255
-        and s.level < 20
+        and s.level < levelCap(s)
         and (hypothetical or s.exp + s.expGain >= 100 and s.expGain > 0)
       if s.levelUp then
         s.gains = growthLevelGains(growthCharacters[s.cp], growthClasses[s.kp], s, rng)
-        if s.level == 19 then
+        if s.level == levelCap(s) - 1 then
           s.expGain = 100 - s.exp
         end
       end
