@@ -1,0 +1,13 @@
+{
+  "id": "the-last-promise",
+  "name": "Fire Emblem: The Last Promise",
+  "nameVi": "Fire Emblem: The Last Promise",
+  "code": "AE7E",
+  "crc32": "D1C6E5D5",
+  "api": "TheLastPromisePrep",
+  "template": "THE_LAST_PROMISE_TEMPLATE",
+  "runtime": "FE7_RUNTIME_TEMPLATE",
+  "output": "The-Last-Promise-Companion-1.0.0",
+  "language": "en",
+  "status": "stable"
+}

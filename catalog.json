@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "runnerProtocol": 1,
-  "builderVersion": "1.1.0",
+  "builderVersion": "1.1.5",
   "builder": {
-    "sha256": "9606bc948886f022b827b857befe49c976ebf0f30409fa56a85b9430e7dadaed",
-    "url": "releases/builder-1.1.0-9606bc948886f022b827b857befe49c976ebf0f30409fa56a85b9430e7dadaed.zip",
-    "bytes": 2708998,
-    "unpackedBytes": 6419533,
+    "sha256": "a5c51f3a25943e8bdd486b11326158af6fa131edfb0e5987a3543088b3a69914",
+    "url": "releases/builder-1.1.5-a5c51f3a25943e8bdd486b11326158af6fa131edfb0e5987a3543088b3a69914.zip",
+    "bytes": 2874033,
+    "unpackedBytes": 7187039,
     "entrypoint": "plus-runner.html"
   },
   "profiles": [
@@ -79,6 +79,41 @@
       "version": "1.0.0",
       "gameCode": "BE8E",
       "crc32": "9D22107C"
+    },
+    {
+      "id": "storge",
+      "name": "Fire Emblem: Storge",
+      "version": "1.0.0",
+      "gameCode": "BE8E",
+      "crc32": "079106D8"
+    },
+    {
+      "id": "hag-in-white",
+      "name": "The Hag in White",
+      "version": "1.0.0",
+      "gameCode": "BE8E",
+      "crc32": "7479D7E2"
+    },
+    {
+      "id": "sacred-echoes",
+      "name": "Fire Emblem: Sacred Echoes",
+      "version": "1.0.0",
+      "gameCode": "BE8E",
+      "crc32": "13F15F23"
+    },
+    {
+      "id": "vision-quest",
+      "name": "Fire Emblem: Vision Quest",
+      "version": "1.0.0",
+      "gameCode": "BE8E",
+      "crc32": "2BCFEC83"
+    },
+    {
+      "id": "the-last-promise",
+      "name": "Fire Emblem: The Last Promise",
+      "version": "1.0.0",
+      "gameCode": "AE7E",
+      "crc32": "D1C6E5D5"
     }
   ]
 }

@@ -1,8 +1,16 @@
-# Fire Emblem Companion Builder 1.1.0
+# Fire Emblem Companion Builder 1.1.5
 
-## Builder 1.1.0 — ten exact ROM profiles
+## Builder 1.1.5 — fifteen companions at 1.0.0
 
-Seven English companions are now finalized at **1.0.0**, alongside the three Vietnamese companions at **1.0.0**. Builder **1.1.0** adds the seven profiles to both the website and Plus automatic creation. Future companion fixes keep the builder version; only adding profiles advances it.
+This release finalizes **Storge, The Hag in White, Sacred Echoes, Vision Quest and The Last Promise** at companion **1.0.0**, alongside the ten existing profiles. All five inherit the English UI with Units, Map, Talk, Growth and conditional Battle Analysis.
+
+- **Storge:** extended class tables, compact-font text and chapter Talk events.
+- **The Hag in White:** separate Str/Mag, eight-stat Growth/Analysis, native skills and bounded Analysis work.
+- **Sacred Echoes:** native equipment, spells/ranges, HP spell costs, two-AS doubling, mode-aware growths and eight engine weapon categories.
+- **Vision Quest:** six native skill slots, Talk and ROM chapter labels, including side chapters.
+- **The Last Promise:** relocated FE7 tables, Talk, Preparations and class-specific level caps of 20 or 30.
+
+Builder **1.1.5** is explicitly finalized for this batch. Companion versions remain independent; adding or fixing a companion does not automatically increment Builder. See [release scope, verification and remaining limits](https://github.com/levi-soft/gba-duo-companion-builder/blob/main/docs/RELEASE-1.1.5.md).
 
 | Profile | Game code | CRC32 | Companion |
 |---|---|---|---|
@@ -16,8 +24,23 @@ Seven English companions are now finalized at **1.0.0**, alongside the three Vie
 | Project Ember | `AFEJ` | `636F7B05` | 1.0.0 |
 | Project Ember Reverse Recruitment | `AFEJ` | `29BC2257` | 1.0.0 |
 | Void's Blitzarre Adventure | `BE8E` | `9D22107C` | 1.0.0 |
+| Fire Emblem: Storge | `BE8E` | `079106D8` | 1.0.0 |
+| The Hag in White | `BE8E` | `7479D7E2` | 1.0.0 |
+| Fire Emblem: Sacred Echoes | `BE8E` | `13F15F23` | 1.0.0 |
+| Fire Emblem: Vision Quest | `BE8E` | `2BCFEC83` | 1.0.0 |
+| Fire Emblem: The Last Promise | `AE7E` | `D1C6E5D5` | 1.0.0 |
 
-FE6 T-EN is original FE6; Vietnamese Remastered is an FE8-based hack. Other ROM revisions and patches need independent profiles. English profiles use English Growth/Analysis and shared UI. Void includes six skill slots and Talk; its Map range overlays still use base movement/weapon ranges and do not include range-changing skills. See [release scope and validation](https://github.com/levi-soft/gba-duo-companion-builder/blob/main/docs/RELEASE-1.1.0.md).
+FE6 T-EN | `AFEJ` | `197DE10B` | 1.0.0 |
+| Project Ember | `AFEJ` | `636F7B05` | 1.0.0 |
+| Project Ember Reverse Recruitment | `AFEJ` | `29BC2257` | 1.0.0 |
+| Void's Blitzarre Adventure | `BE8E` | `9D22107C` | 1.0.0 |
+| Fire Emblem: Storge | `BE8E` | `079106D8` | 0.1.0 (development) |
+| The Hag in White | `BE8E` | `7479D7E2` | 0.1.1 (development) |
+| Sacred Echoes | `BE8E` | `13F15F23` | 0.1.2 (development) |
+| Vision Quest | `BE8E` | `2BCFEC83` | 0.1.0 (development) |
+| The Last Promise | `AE7E` | `D1C6E5D5` | 0.1.0 (development) |
+
+FE6 T-EN is original FE6; Vietnamese Remastered is an FE8-based hack. Other ROM revisions and patches need independent profiles. English profiles use English Growth/Analysis and shared UI. Void includes six skill slots and Talk; its Map range overlays still use base movement/weapon ranges and do not include range-changing skills. See [release scope and validation](https://github.com/levi-soft/gba-duo-companion-builder/blob/main/docs/RELEASE-1.1.5.md).
 
 ## Build and install
 

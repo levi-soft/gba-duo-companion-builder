@@ -1,4 +1,3 @@
-// Exact-ROM profiles. Companion versions are independent of the builder version.
 globalThis.COMPANION_PROFILES=[
   {
     "id": "fe7-vietnamese",
@@ -127,6 +126,75 @@ globalThis.COMPANION_PROFILES=[
     "template": "VOIDS_BLITZARRE_TEMPLATE",
     "runtime": "FE8_RUNTIME_TEMPLATE",
     "output": "Voids-Blitzarre-Adventure-Companion-1.0.0",
+    "language": "en",
+    "status": "stable"
+  },
+  {
+    "id": "storge",
+    "name": "Fire Emblem: Storge",
+    "nameVi": "Fire Emblem: Storge",
+    "code": "BE8E",
+    "crc32": "079106D8",
+    "api": "StorgePrep",
+    "template": "STORGE_TEMPLATE",
+    "runtime": "FE8_RUNTIME_TEMPLATE",
+    "native": "FE8_NATIVE_DESIGN",
+    "output": "Storge-Companion-1.0.0",
+    "language": "en",
+    "status": "stable"
+  },
+  {
+    "id": "hag-in-white",
+    "name": "The Hag in White",
+    "nameVi": "The Hag in White",
+    "code": "BE8E",
+    "crc32": "7479D7E2",
+    "api": "HagInWhitePrep",
+    "template": "HAG_IN_WHITE_TEMPLATE",
+    "runtime": "FE8_RUNTIME_TEMPLATE",
+    "native": "FE8_NATIVE_DESIGN",
+    "output": "The-Hag-in-White-Companion-1.0.0",
+    "language": "en",
+    "status": "stable"
+  },
+  {
+    "id": "sacred-echoes",
+    "name": "Fire Emblem: Sacred Echoes",
+    "nameVi": "Fire Emblem: Sacred Echoes",
+    "code": "BE8E",
+    "crc32": "13F15F23",
+    "api": "SacredEchoesPrep",
+    "template": "SACRED_ECHOES_TEMPLATE",
+    "runtime": "FE8_RUNTIME_TEMPLATE",
+    "native": "FE8_NATIVE_DESIGN",
+    "output": "Sacred-Echoes-Companion-1.0.0",
+    "language": "en",
+    "status": "stable"
+  },
+  {
+    "id": "vision-quest",
+    "name": "Fire Emblem: Vision Quest",
+    "nameVi": "Fire Emblem: Vision Quest",
+    "code": "BE8E",
+    "crc32": "2BCFEC83",
+    "api": "VisionQuestPrep",
+    "template": "VISION_QUEST_TEMPLATE",
+    "runtime": "FE8_RUNTIME_TEMPLATE",
+    "native": "FE8_NATIVE_DESIGN",
+    "output": "Vision-Quest-Companion-1.0.0",
+    "language": "en",
+    "status": "stable"
+  },
+  {
+    "id": "the-last-promise",
+    "name": "Fire Emblem: The Last Promise",
+    "nameVi": "Fire Emblem: The Last Promise",
+    "code": "AE7E",
+    "crc32": "D1C6E5D5",
+    "api": "TheLastPromisePrep",
+    "template": "THE_LAST_PROMISE_TEMPLATE",
+    "runtime": "FE7_RUNTIME_TEMPLATE",
+    "output": "The-Last-Promise-Companion-1.0.0",
     "language": "en",
     "status": "stable"
   }
