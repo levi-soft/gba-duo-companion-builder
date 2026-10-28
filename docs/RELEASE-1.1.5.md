@@ -1,5 +1,9 @@
 # Companion Builder 1.1.5 — fifteen companions at 1.0.0
 
+For the later same-version Studio/custom-project improvements, see the
+[2026-10-28 authoring update](AUTHORING-UPDATE-2026-10-28.md). The profile-release
+validation below describes the original 2026-10-26 batch.
+
 Builder 1.1.5 adds five finalized English profiles to the website, offline kit and
 GBA Duo Plus automatic companion catalogue. All fifteen companions are now
 version 1.0.0. The ten previously published exact ROM identities remain supported.

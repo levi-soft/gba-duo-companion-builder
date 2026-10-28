@@ -5,6 +5,7 @@ site/catalog.json
 *.gba
 *.sav
 *.ss
+*.ram-evidence.json
 *.gbastudio.json
 *-Local.zip
 *.log

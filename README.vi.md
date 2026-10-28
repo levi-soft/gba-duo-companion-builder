@@ -1,5 +1,10 @@
 # GBA Duo Companion Builder
 
+Đợt cập nhật ngày **28/10/2026** giữ Builder **1.1.5** và phiên bản các companion:
+đóng gói dự án Studio theo đúng ROM, chọn mẫu từ bộ đọc có sẵn và báo lỗi tham
+chiếu trước khi xuất. Xem [ghi chú cập nhật](docs/AUTHORING-UPDATE-2026-10-28.md)
+và [hướng dẫn dự án tùy chỉnh](docs/custom-projects.vi.md).
+
 [Danh sách game được hỗ trợ](https://levi-soft.github.io/gba-duo-companion-builder/supported-games.html?lang=vi)
 có trang riêng, hiển thị phiên bản companion và thông tin ROM chính xác. Danh sách
 lấy từ cùng `site/profiles.js` mà Builder sử dụng; khi thêm profile, danh sách tự
@@ -47,6 +52,12 @@ FE6 T-EN là FE6 gốc; FE6 Việt hóa Remastered là ROM hack trên nền FE8.
 
 ## Dùng website
 
+Với companion đã chỉnh sửa hoặc game ngoài danh mục, bật **Dùng dự án Studio
+của tôi** và chọn JSON đã lưu cùng đúng ROM. Builder có thể giữ giao diện cũ
+hoặc dựng thẻ nhân vật/bảng chỉ số bằng các trường của bộ đọc có sẵn; nhãn được
+nhập bằng tiếng Việt. Tính năng này không tự tạo bộ đọc cho game mới. Xem
+[hướng dẫn dự án tùy chỉnh và chọn mẫu](docs/custom-projects.vi.md).
+
 1. Mở website bằng Chrome hoặc Edge hiện hành.
 2. Chọn tiếng Việt hoặc tiếng Anh, rồi chọn ROM `.gba` hoặc ZIP chứa đúng một ROM `.gba`.
 3. Bấm **Tạo companion** và chờ xử lý trên máy.
@@ -70,7 +81,7 @@ cập nhật APK Plus.
 
 ## Danh sách ROM
 
-Mười profile và CRC32 được liệt kê ở trên và trên [trang game hỗ trợ](https://levi-soft.github.io/gba-duo-companion-builder/supported-games.html?lang=vi).
+Mười lăm profile và CRC32 được liệt kê ở trên và trên [trang game hỗ trợ](https://levi-soft.github.io/gba-duo-companion-builder/supported-games.html?lang=vi).
 
 ## Tích hợp Plus
 

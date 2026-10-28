@@ -19,6 +19,19 @@ test('shared core builds the actual format-2 ZIP from a synthetic producer',asyn
  assert.equal(manifest.formatVersion,2);assert.equal(manifest.layout,'layout.json');assert.deepEqual(manifest.styles,['style.css']);
  assert.equal(await zip.file('scripts/fixture.lua').async('string'),'function update() return {value=7} end');assert(zip.file('preview-data.json'));
 });
+test('seeded pack properties preserve arbitrary asset bytes and produce identical ZIPs for identical input',async()=>{
+ let seed=0x11bbaa33;const next=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed;};
+ for(let run=0;run<20;run++){
+  const e=engine(),payload=Buffer.alloc(next()%512);for(let n=0;n<payload.length;n++)payload[n]=next()>>>24;
+  e.context.COMPANION_UI_FILES['assets/generated.bin']=payload.toString('base64');
+  const first=await e.context.CompanionBuild.build(rom()),second=await e.context.CompanionBuild.build(rom());
+  assert.deepEqual(Buffer.from(first.zipBytes),Buffer.from(second.zipBytes),'identical source must produce byte-identical ZIP');
+  const zip=await JSZip.loadAsync(first.zipBytes);
+  for(const entry of Object.values(zip.files))assert.equal(entry.date.getFullYear(),1980,'every ZIP entry, including folders, needs a fixed timestamp');
+  assert.deepEqual(await zip.file('assets/generated.bin').async('nodebuffer'),payload,'ZIP must preserve exact binary bytes');
+ }
+});
+
 test('shared core rejects unknown identities before any preparation',async()=>{
  for(const expected of [{profileId:'other'},{gameCode:'AE7E'},{crc32:'00000000'}]){
   const {context,prepared}=engine();await assert.rejects(context.CompanionBuild.build(rom(),expected));assert.equal(prepared(),0);

@@ -13,6 +13,11 @@ This project is maintained by [levi-soft](https://github.com/levi-soft). Automat
 
 ## Builder 1.1.5 — fifteen companions at 1.0.0
 
+The **2026-10-28 authoring update** keeps Builder **1.1.5** and all companion
+versions. It adds exact-ROM packaging for edited Studio projects, selectable
+reader-based templates and shared reference diagnostics. See the
+[update notes and verification scope](docs/AUTHORING-UPDATE-2026-10-28.md).
+
 This release finalizes **Storge, The Hag in White, Sacred Echoes, Vision Quest and The Last Promise** at companion **1.0.0**, alongside the ten existing profiles. All five inherit the English UI with Units, Map, Talk, Growth and conditional Battle Analysis.
 
 - **Storge:** extended class tables, compact-font text and chapter Talk events.
@@ -44,6 +49,19 @@ Builder **1.1.5** is explicitly finalized for this batch. Companion versions rem
 FE6 T-EN is original FE6; Vietnamese Remastered is an FE8-based hack. Other ROM revisions and patches need independent profiles. English profiles use English Growth/Analysis and shared UI. Void includes six skill slots and Talk; its Map range overlays still use base movement/weapon ranges and do not include range-changing skills. See [release scope and validation](https://github.com/levi-soft/gba-duo-companion-builder/blob/main/docs/RELEASE-1.1.5.md).
 
 ## Use the website
+
+Have an edited Studio project or a companion for another game? The optional
+**Use my Studio project** flow packages it against its exact local ROM without
+adding a curated profile. See [custom projects and author API](docs/custom-projects.md)
+for requirements and generation limits.
+
+That flow can also keep your Studio interface or create a character card,
+stat table, or both from your existing reader fields. Labels can be entered
+in Vietnamese; missing or incompatible choices block packaging. It does not
+create a reader for an unknown game. See the [Vietnamese workflow](docs/custom-projects.vi.md).
+
+Authors can also reuse [character-card and stat-table constructors](docs/function-blocks.md)
+with their own reader fields, independently of the curated game profiles.
 
 The separate [Supported games page](https://levi-soft.github.io/gba-duo-companion-builder/supported-games.html)
 lists the profiles, companion versions and exact ROM details in English or Vietnamese.

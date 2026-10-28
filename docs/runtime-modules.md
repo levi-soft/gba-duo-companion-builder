@@ -1,5 +1,9 @@
 # Readable Lua runtime modules
 
+For labeled Studio RAM samples and exact-ROM semantic assertions, see
+[RAM evidence replay](ram-evidence.md). The original comparison runner below
+remains available for before/after characterization.
+
 [Tiếng Việt](runtime-modules.vi.md)
 
 The builder separates authored game logic from the tables generated from a player's ROM. The FE7 Vietnamese, FE6 Remastered and FE8 Vietnamese profiles use the same packaging contract, while keeping their game-specific formulas and memory layouts separate.
