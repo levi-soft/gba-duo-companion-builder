@@ -3,10 +3,10 @@
   "runnerProtocol": 1,
   "builderVersion": "1.1.5",
   "builder": {
-    "sha256": "a5c51f3a25943e8bdd486b11326158af6fa131edfb0e5987a3543088b3a69914",
-    "url": "releases/builder-1.1.5-a5c51f3a25943e8bdd486b11326158af6fa131edfb0e5987a3543088b3a69914.zip",
-    "bytes": 2874033,
-    "unpackedBytes": 7187039,
+    "sha256": "7e7399db270944f0aef7ee6f3175852a92588830c2e49ab9dff670dd91e2a5ec",
+    "url": "releases/builder-1.1.5-7e7399db270944f0aef7ee6f3175852a92588830c2e49ab9dff670dd91e2a5ec.zip",
+    "bytes": 2898760,
+    "unpackedBytes": 7263611,
     "entrypoint": "plus-runner.html"
   },
   "profiles": [
