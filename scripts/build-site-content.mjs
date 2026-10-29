@@ -46,10 +46,18 @@ for (const [name, meta] of Object.entries(definition)) {
     html = html.replace(/<!-- builder-help:start -->[\s\S]*?<!-- builder-help:end -->/g, '');
     const help = `<!-- builder-help:start --><section class="about-builder" lang="en"><h2>Fire Emblem companion packs, built on your device</h2><p>GBA Duo Companion Builder turns an exact supported ROM into a companion ZIP for GBA Duo Plus and GBA Duo Plus SS. Depending on the profile, companions include Units, Map, Talk, Growth and conditional Battle Analysis.</p><p>There are <a href="supported-games.html">${profiles.length} supported profiles</a>, including FE6, FE7, FE8, Project Ember, Sacred Echoes, Vision Quest and The Last Promise. Other ROM revisions need their own profiles.</p><h3>How do I use a companion?</h3><p>Choose your ROM, build locally, then import the downloaded ZIP through your game's Companion pack menu. Generated game images and text stay private. You can also create supported packs directly inside Plus or Plus SS.</p><h3>Which emulator should I download?</h3><p><a href="https://levi-soft.github.io/gba-duo-plus/">GBA Duo Plus</a> uses a second Android display. <a href="https://levi-soft.github.io/gba-duo-plus/single-screen/">GBA Duo Plus SS</a> puts the game and companion on one screen for phones, tablets and foldables.</p></section><noscript><p class="notice">Building a pack needs JavaScript. You can still read the <a href="supported-games.html">supported ROM list</a> and <a href="https://levi-soft.github.io/gba-duo-plus/">download the emulator</a> without it.</p></noscript><!-- builder-help:end -->`;
     html = html.replace('<footer>', help + '<footer>');
+    html = html.replace('<h2>Fire Emblem companion packs, built on your device</h2>', '<h2>Fire Emblem companion packs, built on your device</h2><p>Feature support is incomplete in the fifteen profiles added in 1.2.0: ten have no Battle Analysis, and five have only limited conditional Analysis tests. Full companion-app acceptance is pending. Check the <a href="supported-games.html">per-game feature status</a> before building.</p>');
   } else {
-    const cards = profiles.map(profile => `<li class="game-card"><h2>${escape(profile.name)}</h2><p class="game-version">Companion ${escape(profile.output.match(/-(\d+\.\d+\.\d+)$/)[1])}</p><details><summary>ROM details</summary><dl><dt>Game code</dt><dd>${escape(profile.code)}</dd><dt>CRC32</dt><dd>${escape(profile.crc32)}</dd></dl></details></li>`).join('\n');
+    const cards = profiles.map(profile => {
+      const analysis = profile.analysisStatus === 'unverified'
+        ? '<p class="game-version analysis-unavailable">Battle Analysis: unavailable (feature incomplete).</p>'
+        : profile.analysisStatus === 'conditional-tested'
+          ? '<p class="game-version analysis-conditional">Battle Analysis: limited conditional tests; app acceptance incomplete.</p>' : '';
+      return `<li class="game-card"><h2>${escape(profile.name)}</h2><p class="game-version">Companion ${escape(profile.output.match(/-(\d+\.\d+\.\d+)$/)[1])}</p>${analysis}<details><summary>ROM details</summary><dl><dt>Game code</dt><dd>${escape(profile.code)}</dd><dt>CRC32</dt><dd>${escape(profile.crc32)}</dd></dl></details></li>`;
+    }).join('\n');
     html = html.replace(/(<ul id="gameList"[^>]*>)[\s\S]*?(<\/ul>)/, `$1\n${cards}\n$2`);
     html = html.replace(/(<p id="count"[^>]*>)[\s\S]*?(<\/p>)/, `$1${profiles.length} supported games$2`);
+    html = html.replace(/(<p id="exactNote"[^>]*>)[\s\S]*?(<\/p>)/, '$1Support applies to the exact ROM revision listed for each game. Feature support varies: check each card\'s Analysis status. Companion 1.0.0 does not establish complete feature support.$2');
   }
   fs.writeFileSync(file, html);
 }

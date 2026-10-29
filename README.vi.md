@@ -1,5 +1,7 @@
 # GBA Duo Companion Builder
 
+**Đính chính về 15 bản mới:** 10 bản chưa có Battle Analysis hoạt động; 5 bản chỉ kiểm chứng Analysis trong một số ca có điều kiện. Chưa nghiệm thu đầy đủ thao tác trong app companion trên thiết bị thật. CI đạt và số phiên bản 1.0.0 không chứng minh đã hoàn thiện tính năng. Xem [phần còn thiếu và công việc cần làm](docs/ANALYSIS-GAPS-1.2.0.vi.md).
+
 **Builder 1.2.0** phát hành thêm 15 companion, nâng catalogue lên **30 profile, đều ở companion 1.0.0**. Đợt mới sửa theo dõi unit trong màn chỉ số, RNG và chọn trên Map, cùng các bộ đọc riêng cho từng ROM. Mười lăm bộ đọc cũ được giữ nguyên. Xem [ghi chú phát hành và danh sách ROM](docs/RELEASE-1.2.0.md), gồm 10 Analysis còn khóa, giới hạn Pokemblem và phạm vi kiểm chứng.
 
 Đợt cập nhật ngày **28/10/2026** giữ Builder **1.1.5** và phiên bản các companion:

@@ -1,8 +1,15 @@
 # Companion Builder 1.2.0 — thirty companions at 1.0.0
 
+> **Verification correction:** these fifteen additions have partial feature
+> support. **Ten have no working Battle Analysis; five have only limited
+> conditional Analysis fixtures.** None has completed physical companion-app
+> acceptance testing across its full supported flow. The earlier completion
+> report overstated what the audits established. Version 1.0.0 and passing CI
+> do not establish feature completeness. See the
+> [per-profile gaps and remaining work](ANALYSIS-GAPS-1.2.0.vi.md).
+
 Builder 1.2.0 adds fifteen exact-ROM companions to the website, offline kit and
 GBA Duo Plus catalogue. All thirty companion profiles are version **1.0.0**.
-The maintainer explicitly finalized this release after the development audits.
 The previous fifteen templates, readers and exact ROM identities remain unchanged.
 
 ## New companions
@@ -86,8 +93,9 @@ metadata, synthetic tests and validation reports.
   are distinct checks. Complete campaigns, every skill/item/mode, and physical
   companion-app input/UI acceptance for all fifteen games remain unverified.
 
-Version 1.0.0 records the maintainer's finalized release; it does not remove these
-limits. See [the detailed batch report](FE-EXPANSION-2026-10-29.vi.md) and each
+The released version numbers do not remove these limits. The maintainer's request
+to publish was not acceptance of complete Analysis support or full device QA.
+See [the detailed batch report](FE-EXPANSION-2026-10-29.vi.md) and each
 profile's linked validation history for the exact supported ROM and scope.
 
 ## Distribution and credits

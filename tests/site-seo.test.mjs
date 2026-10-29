@@ -28,6 +28,14 @@ test('public pages have distinct metadata, matching canonical/schema URLs and cr
     assert(games.includes(profile.code));
   }
   assert.equal([...games.matchAll(/class="game-card"/g)].length,context.COMPANION_PROFILES.length);
+  for(const profile of context.COMPANION_PROFILES){
+    if(!profile.analysisStatus)continue;
+    const card=games.split('<li class="game-card">').find(card=>card.includes(`<h2>${profile.name.replaceAll('&','&amp;').replaceAll("'",'&#39;')}</h2>`));
+    assert(card,'Static profile card: '+profile.id);
+    assert(card.includes(profile.analysisStatus==='unverified'?'analysis-unavailable':'analysis-conditional'),'Feature limit must be visible without JavaScript: '+profile.id);
+  }
+  assert.equal([...games.matchAll(/class="game-version analysis-unavailable"/g)].length,10);
+  assert.equal([...games.matchAll(/class="game-version analysis-conditional"/g)].length,5);
   const runner=fs.readFileSync('site/plus-runner.html','utf8');
   assert(runner.includes('name="robots" content="noindex,nofollow"'));
   assert(!sitemap.includes('plus-runner'));

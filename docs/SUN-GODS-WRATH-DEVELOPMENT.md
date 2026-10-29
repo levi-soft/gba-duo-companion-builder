@@ -1,6 +1,6 @@
 # The Sun God’s Wrath companion 1.0.0
 
-Released at **1.0.0** with **Builder 1.2.0**, as explicitly finalized by the maintainer. See [release notes](RELEASE-1.2.0.md) for current scope and retained limitations.
+Released version: **1.0.0**, built with **Builder 1.2.0**. Feature verification is incomplete: ten new profiles have no working Analysis, five have limited conditional tests, and full companion-app acceptance is pending. See the [verification correction](ANALYSIS-GAPS-1.2.0.vi.md) and [release notes](RELEASE-1.2.0.md).
 
 ## Pre-release validation record
 

@@ -1,7 +1,13 @@
 # 15 companion Fire Emblem mới — phát hành 1.0.0
 
+**Đính chính:** kết luận hoàn tất trước đây quá rộng. Mười bản chưa có Analysis
+hoạt động; năm bản chỉ có ca kiểm chứng Analysis có điều kiện. Chưa nghiệm thu
+đầy đủ thao tác companion trong app trên thiết bị thật cho cả 15 game. Xem
+[phần còn thiếu và công việc cần làm](ANALYSIS-GAPS-1.2.0.vi.md).
+
 Đợt ngày 29/10/2026 thêm 15 profile ROM chính xác, nâng danh sách trong mã nguồn
-lên 30. Người duy trì đã chốt **15 bản mới ở 1.0.0**, đi cùng **Builder 1.2.0**.
+lên 30. Đã phát hành **15 bản mới ở 1.0.0**, đi cùng **Builder 1.2.0**;
+yêu cầu phát hành không phải nghiệm thu đầy đủ tính năng hoặc thiết bị.
 Đã kiểm lại lỗi theo dõi unit trong màn chỉ số R/Down/B ở 14 game; Pokemblem
 giữ cơ chế chọn riêng. Mười lăm companion đã phát hành giữ phiên bản và mã Lua cũ.
 Xem [ghi chú phát hành 1.2.0](RELEASE-1.2.0.md). Phiên bản 1.0.0 giữ nguyên các
