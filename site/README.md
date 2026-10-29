@@ -1,5 +1,7 @@
 # Fire Emblem Companion Builder 1.2.0
 
+**Release 1.2.0 is withdrawn.** The public website and catalogue use Builder 1.1.5 with fifteen profiles. The fifteen additions here are under implementation and acceptance testing, not an approved release.
+
 **Verification correction for the fifteen new profiles:** ten have no working Battle Analysis; five have only limited conditional Analysis tests. Full companion-app acceptance remains incomplete. Passing CI and version 1.0.0 do not establish complete feature support. See [the gaps and remaining work](https://github.com/levi-soft/gba-duo-companion-builder/blob/main/docs/ANALYSIS-GAPS-1.2.0.vi.md).
 
 Builder 1.2.0 adds fifteen released companions: all thirty catalogue profiles use companion 1.0.0. The previous fifteen readers remain unchanged. New readers track native stat-screen selections and fix RNG/Map selection, with exact-ROM validation. Ten Analysis paths remain gated and Pokemblem retains companion-only selection. See [release scope and validation](https://github.com/levi-soft/gba-duo-companion-builder/blob/main/docs/RELEASE-1.2.0.md).

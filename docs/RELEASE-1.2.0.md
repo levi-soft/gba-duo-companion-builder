@@ -1,5 +1,11 @@
 # Companion Builder 1.2.0 — thirty companions at 1.0.0
 
+> **WITHDRAWN:** the 1.2.0 GitHub release and tag have been removed at the
+> maintainer's request. The public website/catalogue has returned to Builder
+> 1.1.5 and its previous fifteen profiles. The fifteen additions below are
+> undergoing renewed implementation and acceptance testing. This document is
+> a historical record, not an active release announcement.
+
 > **Verification correction:** these fifteen additions have partial feature
 > support. **Ten have no working Battle Analysis; five have only limited
 > conditional Analysis fixtures.** None has completed physical companion-app

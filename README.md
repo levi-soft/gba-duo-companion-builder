@@ -1,5 +1,7 @@
 # GBA Duo Companion Builder
 
+**Release 1.2.0 is withdrawn.** The public website and catalogue have returned to **Builder 1.1.5 with fifteen profiles**. The fifteen additions in this source checkout are under renewed feature implementation and acceptance testing; they are not an approved release. See the [open feature gaps](docs/ANALYSIS-GAPS-1.2.0.vi.md).
+
 **Verification correction for the fifteen new profiles:** ten have no working Battle Analysis; five have only limited conditional Analysis tests. Full companion-app acceptance remains incomplete. Passing CI and version 1.0.0 do not establish complete feature support. See [the gaps and remaining work](docs/ANALYSIS-GAPS-1.2.0.vi.md).
 
 **Builder 1.2.0** adds fifteen released companions, bringing the catalogue to **30 profiles at companion 1.0.0**. The new batch includes stat-screen unit tracking, RNG/Map selection fixes and ROM-specific readers. The previous fifteen readers are unchanged. See the [release notes and exact-ROM list](docs/RELEASE-1.2.0.md) for the ten gated Analysis paths, Pokemblem limits and validation scope.
