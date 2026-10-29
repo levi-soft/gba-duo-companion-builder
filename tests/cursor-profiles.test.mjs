@@ -5,10 +5,11 @@ import vm from 'node:vm';
 import {resolveCursorProfiles} from '../scripts/cursor-profiles.mjs';
 
 const source=JSON.parse(fs.readFileSync('runtime/cursor/profiles.json','utf8'));
-test('all declared companions package resolved navigation without changing their identity or version',()=>{
+test('navigation-enabled companions package resolved contracts while explicit opt-outs stay read-only',()=>{
   const context={TextEncoder,Buffer};
-  for(const file of ['site/runtime-modules.js','site/runtime-packager.js'])vm.runInNewContext(fs.readFileSync(file,'utf8'),context);
-  const profiles=resolveCursorProfiles(source);assert.equal(Object.keys(profiles).length,Object.keys(context.COMPANION_RUNTIME_MODULES).length);
+  for(const file of ['site/profiles.js','site/runtime-modules.js','site/runtime-packager.js'])vm.runInNewContext(fs.readFileSync(file,'utf8'),context);
+  const profiles=resolveCursorProfiles(source),enabled=context.COMPANION_PROFILES.filter(p=>p.cursorNavigationVerified!==false);
+  assert.deepEqual(Object.keys(profiles).sort(),Array.from(enabled,p=>p.id).sort());
   for(const [id,profile] of Object.entries(profiles)){
     const manifest={id,version:id.includes('vietnamese')||id==='fe6-remastered'?'1.0.0':'0.1.0',match:{gameCode:['TEST'],crc32:['12345678']}};
     const before=structuredClone(manifest),project={manifest,files:{}};
@@ -22,6 +23,14 @@ test('all declared companions package resolved navigation without changing their
   assert.equal(profiles['fe6-english'].unitStateBytes,2);
   assert.equal(profiles['fe6-project-ember'].playerScript,'0x087FF4B0');
   assert.deepEqual(profiles['fe6-project-ember'],profiles['fe6-project-ember-rr']);
+  const excluded=context.COMPANION_PROFILES.filter(p=>p.cursorNavigationVerified===false);
+  assert.deepEqual(Array.from(excluded,p=>p.id),['pokemblem']);
+  for(const profile of excluded){
+    const manifest={id:profile.id,version:'0.1.0',match:{gameCode:[profile.code],crc32:[profile.crc32]}},before=structuredClone(manifest),project={manifest,files:{}};
+    context.CompanionRuntime.install(project,profile.id,'{}');
+    assert.equal(project.manifest.cursorNavigation,undefined);
+    const {script,...unchanged}=project.manifest;assert.deepEqual(unchanged,before);
+  }
 });
 test('navigation inheritance rejects unknown and cyclic presets',()=>{
   assert.throws(()=>resolveCursorProfiles({presets:{a:{extends:'a'}},profiles:{x:'a'}}),/Cyclic/);

@@ -1,5 +1,7 @@
 # GBA Duo Companion Builder
 
+**Builder 1.2.0** phát hành thêm 15 companion, nâng catalogue lên **30 profile, đều ở companion 1.0.0**. Đợt mới sửa theo dõi unit trong màn chỉ số, RNG và chọn trên Map, cùng các bộ đọc riêng cho từng ROM. Mười lăm bộ đọc cũ được giữ nguyên. Xem [ghi chú phát hành và danh sách ROM](docs/RELEASE-1.2.0.md), gồm 10 Analysis còn khóa, giới hạn Pokemblem và phạm vi kiểm chứng.
+
 Đợt cập nhật ngày **28/10/2026** giữ Builder **1.1.5** và phiên bản các companion:
 đóng gói dự án Studio theo đúng ROM, chọn mẫu từ bộ đọc có sẵn và báo lỗi tham
 chiếu trước khi xuất. Xem [ghi chú cập nhật](docs/AUTHORING-UPDATE-2026-10-28.md)
@@ -18,7 +20,7 @@ Tạo companion từ ROM được hỗ trợ ngay trên máy của bạn. Websit
 
 Đây là dự án do [levi-soft](https://github.com/levi-soft) duy trì. Tính năng tìm/tạo/cài tự động là **phần mở rộng riêng của GBA Duo Plus**, không phải tính năng của GBA Duo chính thức. Cách nhập ZIP thủ công vẫn được giữ. Khi bản chính thức hỗ trợ đầy đủ, Plus có thể thay phần tích hợp riêng, tiếp tục dùng định dạng catalog và companion này.
 
-## Builder 1.1.5 — mười lăm companion ở 1.0.0
+## Bản trước: Builder 1.1.5 — mười lăm companion ở 1.0.0
 
 Đợt này chốt **Storge, The Hag in White, Sacred Echoes, Vision Quest và The Last Promise** lên companion **1.0.0**, cùng mười profile đã phát hành. Cả năm kế thừa UI tiếng Anh với Units, Map, Talk, Growth và Battle Analysis có điều kiện.
 

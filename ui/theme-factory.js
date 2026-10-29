@@ -119,3 +119,40 @@ globalThis.makeCompanionLayout = function (extension, language = 'vi') {
   layout.children.push(sharedGrowth, sharedAnalysis);
   return layout;
 };
+
+// Opt in per template: keep long names clear of skill buttons on narrow screens.
+globalThis.fitCompanionHeader = function (template, {leadership = false} = {}) {
+  function visit(node) {
+    if (!node || typeof node !== 'object') return;
+    if (!leadership && node.children)
+      node.children = node.children.filter(child => child.id !== 'remaster-leadership-stars');
+    if (node.class === 'identity-line') {
+      const [sprite, identity, abilities, ...controls] = node.children;
+      if (abilities.class !== 'remaster-skills') {
+        node.class += ' companion-identity-compact';
+        return;
+      }
+      node.type = 'column';
+      node.class += ' companion-identity-split';
+      node.children = [
+        {type:'row', id:node.id+'-main', class:'companion-identity-main', children:[sprite,identity,...controls]},
+        {type:'row', id:node.id+'-abilities', class:'companion-identity-abilities', children:[abilities]}
+      ];
+      return;
+    }
+    for (const value of Object.values(node)) if (value && typeof value === 'object')
+      (Array.isArray(value) ? value : [value]).forEach(visit);
+  }
+  visit(template.layout);
+  template.css += '\n.companion-identity-compact .unit-name{font-size:4.4vmin;line-height:5vmin;}\n'
+    + '.companion-identity-compact .class-name{font-size:3.1vmin;line-height:3.8vmin;}\n'
+    + '.companion-identity-compact .native-ability-panel{width:30%;flex:0 0 30%;}\n'
+    + '.companion-identity-split{height:50%;flex:0 0 50%;align-items:stretch;gap:0;padding:0.35vmin 0.7vmin;}\n'
+    + '.companion-identity-main{width:100%;height:62%;flex:0 0 62%;min-height:0;align-items:center;gap:0.7vmin;}\n'
+    + '.companion-identity-main .unit-identity{padding:0;min-width:0;}\n'
+    + '.companion-identity-main .unit-name{font-size:4.6vmin;line-height:5vmin;}\n'
+    + '.companion-identity-main .class-name{font-size:3.2vmin;line-height:3.8vmin;}\n'
+    + '.companion-identity-abilities{width:100%;height:38%;flex:0 0 38%;min-height:0;align-items:center;justify-content:flex-end;}\n'
+    + '.companion-identity-abilities .remaster-skills,.companion-identity-abilities .native-ability-panel{width:100%;height:100%;flex:1 1 100%;}\n';
+  return template;
+};

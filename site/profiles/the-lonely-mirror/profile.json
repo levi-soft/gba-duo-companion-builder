@@ -1,0 +1,16 @@
+{
+  "id": "the-lonely-mirror",
+  "name": "Fire Emblem: The Lonely Mirror",
+  "nameVi": "Fire Emblem: The Lonely Mirror",
+  "code": "BE8E",
+  "crc32": "A74E93C7",
+  "api": "TheLonelyMirrorPrep",
+  "template": "THE_LONELY_MIRROR_TEMPLATE",
+  "runtime": "FE8_RUNTIME_TEMPLATE",
+  "native": "FE8_NATIVE_DESIGN",
+  "runtimeParent": "fe8-english",
+  "output": "The-Lonely-Mirror-Companion-1.0.0",
+  "language": "en",
+  "status": "stable",
+  "analysisStatus": "conditional-tested"
+}

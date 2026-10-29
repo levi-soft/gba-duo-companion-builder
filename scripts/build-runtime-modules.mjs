@@ -1,13 +1,22 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import vm from 'node:vm';
 import {fileURLToPath} from 'node:url';
 import {resolveCursorProfiles} from './cursor-profiles.mjs';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 // Derived profiles inherit the base game and override only their own contracts.
 // Their development/stable status is declared separately in the profile registry.
-const profiles=['fe7-vietnamese','fe6-remastered','fe8-vietnamese','fe7-english','fe8-europe','fe8-english','fe6-english','fe6-project-ember','fe6-project-ember-rr','voids-blitzarre','storge','hag-in-white','sacred-echoes','vision-quest','the-last-promise'];
+const registryContext={};
+vm.runInNewContext(fs.readFileSync(path.join(root,'site/profiles.js'),'utf8'),registryContext);
+const profiles=registryContext.COMPANION_PROFILES.map(profile=>profile.id);
 const inherited={'fe7-english':'fe7-vietnamese','fe8-europe':'fe8-vietnamese','fe8-english':'fe8-europe','fe6-english':'fe7-vietnamese','fe6-project-ember':'fe6-english','fe6-project-ember-rr':'fe6-project-ember','voids-blitzarre':'fe8-english','storge':'fe8-english','hag-in-white':'fe8-english','sacred-echoes':'fe8-english','vision-quest':'fe8-english','the-last-promise':'fe7-english'};
+for(const profile of registryContext.COMPANION_PROFILES){
+ if(profile.runtimeParent){
+  if(!profiles.includes(profile.runtimeParent))throw Error('Unknown runtime parent: '+profile.runtimeParent);
+  inherited[profile.id]=profile.runtimeParent;
+ }
+}
 const readModules=directory=>Object.fromEntries(fs.readdirSync(directory).filter(name=>name.endsWith('.lua')).sort().map(name=>[
  name,fs.readFileSync(path.join(directory,name),'utf8').replace(/\r\n/g,'\n')
 ]));

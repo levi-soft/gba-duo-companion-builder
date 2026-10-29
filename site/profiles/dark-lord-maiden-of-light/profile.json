@@ -1,0 +1,16 @@
+{
+  "id": "dark-lord-maiden-of-light",
+  "name": "Fire Emblem: Dark Lord and the Maiden of Light",
+  "nameVi": "Fire Emblem: Dark Lord and the Maiden of Light",
+  "code": "AE7E",
+  "crc32": "C99A6D26",
+  "api": "DarkLordMaidenOfLightPrep",
+  "template": "DARK_LORD_MAIDEN_OF_LIGHT_TEMPLATE",
+  "runtime": "FE7_RUNTIME_TEMPLATE",
+  "native": "FE7_NATIVE_DESIGN",
+  "runtimeParent": "fe7-english",
+  "output": "Dark-Lord-and-the-Maiden-of-Light-Companion-1.0.0",
+  "language": "en",
+  "status": "stable",
+  "analysisStatus": "conditional-tested"
+}

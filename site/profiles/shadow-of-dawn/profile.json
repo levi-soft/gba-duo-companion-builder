@@ -1,0 +1,16 @@
+{
+  "id": "shadow-of-dawn",
+  "name": "Fire Emblem: The Shadow of Dawn",
+  "nameVi": "Fire Emblem: The Shadow of Dawn",
+  "code": "BE8E",
+  "crc32": "EB38F5F7",
+  "api": "ShadowOfDawnPrep",
+  "template": "SHADOW_OF_DAWN_TEMPLATE",
+  "runtime": "FE8_RUNTIME_TEMPLATE",
+  "native": "FE8_NATIVE_DESIGN",
+  "output": "The-Shadow-of-Dawn-Companion-1.0.0",
+  "language": "en",
+  "status": "stable",
+  "runtimeParent": "fe8-english",
+  "analysisStatus": "unverified"
+}

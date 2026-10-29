@@ -1,5 +1,7 @@
 # GBA Duo Companion Builder
 
+**Builder 1.2.0** adds fifteen released companions, bringing the catalogue to **30 profiles at companion 1.0.0**. The new batch includes stat-screen unit tracking, RNG/Map selection fixes and ROM-specific readers. The previous fifteen readers are unchanged. See the [release notes and exact-ROM list](docs/RELEASE-1.2.0.md) for the ten gated Analysis paths, Pokemblem limits and validation scope.
+
 [Tiếng Việt](README.vi.md)
 
 Create a companion from a supported ROM on your own device. The website builds a ZIP for manual import; GBA Duo Plus can use the same builder bundle to create, install and assign the companion inside the emulator.
@@ -11,7 +13,7 @@ Create a companion from a supported ROM on your own device. The website builds a
 
 This project is maintained by [levi-soft](https://github.com/levi-soft). Automatic discovery/build/install is a **GBA Duo Plus extension**, not an official GBA Duo feature. The standard manual ZIP workflow remains available. If official GBA Duo later provides the complete feature, Plus can replace its provider integration while preserving this public catalog and pack format.
 
-## Builder 1.1.5 — fifteen companions at 1.0.0
+## Previous release: Builder 1.1.5 — fifteen companions at 1.0.0
 
 The **2026-10-28 authoring update** keeps Builder **1.1.5** and all companion
 versions. It adds exact-ROM packaging for edited Studio projects, selectable
@@ -120,7 +122,7 @@ npm run build
 npm test
 ```
 
-`site/` is the static website. The build generates `site/catalog.json` and a content-addressed `site/releases/builder-1.1.5-<sha256>.zip` deterministically from the files in `site/`. It does not read a ROM, regenerate the private companion projects or change the frozen 0.9.6 kit source.
+`site/` is the static website. The build generates `site/catalog.json` and a content-addressed `site/releases/builder-1.2.0-<sha256>.zip` deterministically from the files in `site/`. It does not read a ROM, regenerate the private companion projects or change the frozen 0.9.6 kit source.
 
 Tests cover catalog hashes and exact profile identities, local-only assets, empty public game-data templates, shared generation, actual format-2 ZIP output from a synthetic producer, cancellation and bounded native streaming. They do not replace real-browser file-selection tests or real-device Plus acceptance. The source profile evidence is documented separately in `site/FEATURE-CONTRACT.md`.
 

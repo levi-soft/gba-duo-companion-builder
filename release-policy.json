@@ -43,6 +43,41 @@
         "vision-quest",
         "the-last-promise"
       ]
+    },
+    {
+      "version": "1.2.0",
+      "profileIds": [
+        "fe7-vietnamese",
+        "fe6-remastered",
+        "fe8-vietnamese",
+        "fe7-english",
+        "fe8-europe",
+        "fe8-english",
+        "fe6-english",
+        "fe6-project-ember",
+        "fe6-project-ember-rr",
+        "voids-blitzarre",
+        "storge",
+        "hag-in-white",
+        "sacred-echoes",
+        "vision-quest",
+        "the-last-promise",
+        "andaron-saga",
+        "bells-of-byelen",
+        "cerulean-crescent",
+        "dark-lord-maiden-of-light",
+        "dream-of-five",
+        "eligors-spear",
+        "iron-emblem",
+        "justice-and-pride",
+        "pokemblem",
+        "the-dark-amulet",
+        "the-four-kings",
+        "the-lonely-mirror",
+        "morrows-golden-country",
+        "shadow-of-dawn",
+        "sun-gods-wrath"
+      ]
     }
   ]
 }
