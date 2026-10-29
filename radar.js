@@ -29,13 +29,7 @@
     };
   }
 
-  function rasterScale(value) {
-    if (![1, 0.5, 1 / 3, 0.25].includes(value)) throw Error('Unsupported Growth raster scale.');
-    return value;
-  }
-
-  function svg(growth, bonus, language = 'vi', pixelScale = 1) {
-    rasterScale(pixelScale);
+  function svg(growth, bonus, language = 'vi') {
     const g = geometry(growth, bonus, language);
     const polygon = points => points.map(point => point.map(n => n.toFixed(2)).join(',')).join(' ');
     let content = '';
@@ -57,19 +51,14 @@
     }
     content += '<text x="360" y="686" font-size="28" fill="#c8d7e1">' + g.footer
       + '</text><text x="360" y="716" font-size="20" fill="#c8d7e1">' + g.note + '</text>';
-    return '<svg xmlns="http://www.w3.org/2000/svg" width="' + Math.round(g.width * pixelScale)
-      + '" height="' + Math.round(g.height * pixelScale) + '"'
-      + (pixelScale === 1 ? '' : ' viewBox="0 0 720 740"')
-      + '><g font-family="Inter, sans-serif" text-anchor="middle" dominant-baseline="central">'
+    return '<svg xmlns="http://www.w3.org/2000/svg" width="720" height="740"><g font-family="Inter, sans-serif" text-anchor="middle" dominant-baseline="central">'
       + content + '</g></svg>';
   }
 
-  function draw(canvas, growth, bonus, language = 'vi', pixelScale = 1) {
-    rasterScale(pixelScale);
+  function draw(canvas, growth, bonus, language = 'vi') {
     const g = geometry(growth, bonus, language);
-    canvas.width = Math.round(g.width * pixelScale); canvas.height = Math.round(g.height * pixelScale);
+    canvas.width = g.width; canvas.height = g.height;
     const context = canvas.getContext('2d');
-    if (pixelScale !== 1) context.scale(pixelScale, pixelScale);
     function polygon(points) {
       context.beginPath();
       points.forEach(([x,y], index) => index ? context.lineTo(x,y) : context.moveTo(x,y));

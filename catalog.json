@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "runnerProtocol": 1,
-  "builderVersion": "1.2.0",
+  "builderVersion": "1.1.5",
   "builder": {
-    "sha256": "dd56c7d8a6417e2bac1b6a040739da1169b0d8359e4511b16d437597b45e7a92",
-    "url": "releases/builder-1.2.0-dd56c7d8a6417e2bac1b6a040739da1169b0d8359e4511b16d437597b45e7a92.zip",
-    "bytes": 3351722,
-    "unpackedBytes": 9407284,
+    "sha256": "7e7399db270944f0aef7ee6f3175852a92588830c2e49ab9dff670dd91e2a5ec",
+    "url": "releases/builder-1.1.5-7e7399db270944f0aef7ee6f3175852a92588830c2e49ab9dff670dd91e2a5ec.zip",
+    "bytes": 2898760,
+    "unpackedBytes": 7263611,
     "entrypoint": "plus-runner.html"
   },
   "profiles": [
@@ -114,111 +114,6 @@
       "version": "1.0.0",
       "gameCode": "AE7E",
       "crc32": "D1C6E5D5"
-    },
-    {
-      "id": "andaron-saga",
-      "name": "Fire Emblem: Andaron Saga",
-      "version": "1.0.0",
-      "gameCode": "BE8E",
-      "crc32": "A3B9CD19"
-    },
-    {
-      "id": "bells-of-byelen",
-      "name": "Bells of Byelen",
-      "version": "1.0.0",
-      "gameCode": "BE8E",
-      "crc32": "48B996CD"
-    },
-    {
-      "id": "cerulean-crescent",
-      "name": "Cerulean Crescent",
-      "version": "1.0.0",
-      "gameCode": "BE8E",
-      "crc32": "DC071CC2"
-    },
-    {
-      "id": "dark-lord-maiden-of-light",
-      "name": "Fire Emblem: Dark Lord and the Maiden of Light",
-      "version": "1.0.0",
-      "gameCode": "AE7E",
-      "crc32": "C99A6D26"
-    },
-    {
-      "id": "dream-of-five",
-      "name": "Fire Emblem: Dream of Five - Definitive Edition",
-      "version": "1.0.0",
-      "gameCode": "BE8E",
-      "crc32": "B313A6F5"
-    },
-    {
-      "id": "eligors-spear",
-      "name": "Fire Emblem: Eligor's Spear",
-      "version": "1.0.0",
-      "gameCode": "BE8E",
-      "crc32": "6E5FE3B0"
-    },
-    {
-      "id": "iron-emblem",
-      "name": "Fire Emblem: Iron Emblem",
-      "version": "1.0.0",
-      "gameCode": "BE8E",
-      "crc32": "141FF3AA"
-    },
-    {
-      "id": "justice-and-pride",
-      "name": "Fire Emblem: Justice & Pride",
-      "version": "1.0.0",
-      "gameCode": "BE8E",
-      "crc32": "AC23B461"
-    },
-    {
-      "id": "pokemblem",
-      "name": "Pokemblem",
-      "version": "1.0.0",
-      "gameCode": "BE8E",
-      "crc32": "10BDF112"
-    },
-    {
-      "id": "the-dark-amulet",
-      "name": "Fire Emblem: The Dark Amulet",
-      "version": "1.0.0",
-      "gameCode": "BE8E",
-      "crc32": "8537CE2A"
-    },
-    {
-      "id": "the-four-kings",
-      "name": "Fire Emblem: The Four Kings",
-      "version": "1.0.0",
-      "gameCode": "BE8E",
-      "crc32": "0DDE5BEB"
-    },
-    {
-      "id": "the-lonely-mirror",
-      "name": "Fire Emblem: The Lonely Mirror",
-      "version": "1.0.0",
-      "gameCode": "BE8E",
-      "crc32": "A74E93C7"
-    },
-    {
-      "id": "morrows-golden-country",
-      "name": "The Morrow's Golden Country",
-      "version": "1.0.0",
-      "gameCode": "BE8E",
-      "crc32": "20287E1B"
-    },
-    {
-      "id": "shadow-of-dawn",
-      "name": "Fire Emblem: The Shadow of Dawn",
-      "version": "1.0.0",
-      "gameCode": "BE8E",
-      "crc32": "EB38F5F7"
-    },
-    {
-      "id": "sun-gods-wrath",
-      "name": "The Sun God’s Wrath",
-      "version": "1.0.0",
-      "gameCode": "BE8E",
-      "crc32": "566D7A9E"
     }
   ]
 }

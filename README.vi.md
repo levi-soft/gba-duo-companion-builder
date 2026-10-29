@@ -1,11 +1,4 @@
-# Fire Emblem Companion Builder 1.2.0
-
-**Đính chính về 15 bản mới:** 10 bản chưa có Battle Analysis hoạt động; 5 bản chỉ kiểm chứng Analysis trong một số ca có điều kiện. Chưa nghiệm thu đầy đủ thao tác trong app companion trên thiết bị thật. CI đạt và số phiên bản 1.0.0 không chứng minh đã hoàn thiện tính năng. Xem [phần còn thiếu và công việc cần làm](https://github.com/levi-soft/gba-duo-companion-builder/blob/main/docs/ANALYSIS-GAPS-1.2.0.vi.md).
-
-Builder 1.2.0 phát hành thêm 15 companion; cả 30 profile đều ở companion 1.0.0.
-Bộ đọc cũ giữ nguyên. Các bản mới sửa chọn unit trong màn chỉ số, RNG và Map,
-nhận đúng game code/CRC32. Mười Analysis còn khóa; Pokemblem chọn trong companion.
-Xem [phạm vi và kiểm chứng](https://github.com/levi-soft/gba-duo-companion-builder/blob/main/docs/RELEASE-1.2.0.md).
+# Fire Emblem Companion Builder 1.1.0
 
 ## Builder 1.1.0 — mười profile ROM chính xác
 
