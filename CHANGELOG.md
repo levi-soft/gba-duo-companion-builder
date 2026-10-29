@@ -5,7 +5,8 @@
 - Finalize the fifteen new exact-ROM companions at 1.0.0, alongside the fifteen existing releases.
 - Include the audited native stat-screen selection, RNG, Map pick, split-stat, skill and Pokemblem fixes described below. Existing released readers remain unchanged.
 - Preserve ten explicit Analysis gates and Pokemblem's companion-only selection/range limits. Release numbering does not expand their verified scope.
-- Verification: 193 Builder tests, 69 Android host tests, 211 visible units with 14,733 field comparisons, 241 reachable widget callbacks, 15 Studio roundtrips and 2,780 standalone native Lua updates on Thor.
+- Verification: 194 Builder tests, 69 Android host tests, 211 visible units with 14,733 field comparisons, 241 reachable widget callbacks, 15 Studio roundtrips and 2,780 standalone native Lua updates on Thor.
+- Canonicalize replay-evidence hashes so Lua object-key iteration order cannot produce a false mismatch; preserve array/tick order and field-value differences.
 - Add Windows/Linux Node 22/24 CI. See [release notes](docs/RELEASE-1.2.0.md).
 
 ## Development batch — fifteen new 0.1.x companions (2026-10-29)

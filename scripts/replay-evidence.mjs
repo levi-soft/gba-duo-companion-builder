@@ -17,6 +17,18 @@ export function romIdentity(rom){
   return {gameCode:String.fromCharCode(...rom.subarray(0xac,0xb0)),crc32:((crc^0xffffffff)>>>0).toString(16).toUpperCase().padStart(8,'0')};
 }
 
+// Lua table iteration order can differ between engine instances. Evidence
+// digests describe semantic output: sort object keys while retaining tick and
+// array order, rather than hashing the engine's incidental insertion order.
+export function replayOutputHash(values){
+  function canonical(value){
+    if(Array.isArray(value))return value.map(canonical);
+    if(value&&typeof value==='object')return Object.fromEntries(Object.keys(value).sort().map(key=>[key,canonical(value[key])]));
+    return value;
+  }
+  return crypto.createHash('sha256').update(JSON.stringify(canonical(values))).digest('hex');
+}
+
 export async function replayEvidence(project,evidence,rom,plan={},factory=luaFactory()){
   const doc=validateEvidence(evidence),identity=romIdentity(rom),first=doc.samples[0].packet;
   assert.equal(identity.gameCode,first.gameCode,'Evidence game code differs from ROM');
@@ -34,7 +46,7 @@ export async function replayEvidence(project,evidence,rom,plan={},factory=luaFac
     const output=await executeProject(project,{factory,ranges,rom,steps});
     rows.push({label:sample.label,frame:sample.packet.frame,ticks:output.values.length,readOnly:output.readOnly,
       expectedFields:steps.reduce((n,s)=>n+Object.keys(s.expect??{}).length,0),
-      outputSha256:crypto.createHash('sha256').update(JSON.stringify(output.values)).digest('hex'),values:output.values.at(-1)});
+      outputSha256:replayOutputHash(output.values),values:output.values.at(-1)});
   }
   return {identity,romSha256:crypto.createHash('sha256').update(rom).digest('hex'),samples:rows};
 }

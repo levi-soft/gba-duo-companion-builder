@@ -1,11 +1,21 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
 import {appendEvidence,parseEvidence,replayBytes} from '../scripts/ram-evidence.mjs';
-import {replayEvidence,romIdentity} from '../scripts/replay-evidence.mjs';
+import {replayEvidence,replayOutputHash,romIdentity} from '../scripts/replay-evidence.mjs';
 const rom=Buffer.alloc(192);rom.write('TEST',0xac);
 const identity=romIdentity(rom);
 const packet={...identity,sessionId:'synthetic',packId:'test',frame:8,ranges:[{address:0x02000000,length:4,base64:'AH+A/w=='}]};
 const project={manifest:{script:'main.lua',match:{gameCode:['TEST'],crc32:[identity.crc32]}},files:{'main.lua':Buffer.from('function update()return {hp=mem.u8(0x02000001),last=mem.u8(0x02000003)}end').toString('base64')}};
+
+test('replay digests ignore Lua map insertion order while preserving array order and field values',()=>{
+  const a=[{last:255,hp:127,nested:{z:2,a:1},rolls:[1,2]}];
+  const b=[{rolls:[1,2],nested:{a:1,z:2},hp:127,last:255}];
+  const expected=createHash('sha256').update('[{"hp":127,"last":255,"nested":{"a":1,"z":2},"rolls":[1,2]}]').digest('hex');
+  assert.equal(replayOutputHash(a),expected);assert.equal(replayOutputHash(b),expected);
+  assert.notEqual(replayOutputHash([{...b[0],rolls:[2,1]}]),expected);
+  assert.notEqual(replayOutputHash([{...b[0],hp:126}]),expected);
+});
 test('Studio evidence feeds the real offline Lua host and verifies expected semantic fields',async()=>{
   const doc=appendEvidence(null,packet,'Map');
   const result=await replayEvidence(project,doc,rom,{Map:{steps:[{ticks:3,ui:{},expect:{hp:127,last:255}}]}});

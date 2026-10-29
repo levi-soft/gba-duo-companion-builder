@@ -58,6 +58,9 @@ in fourteen ROMs, including real R/Down/B input and return to Map. Existing Map
 navigation evidence covers 29 arrivals and fourteen selection/preview locks.
 
 The version finalization changes release metadata, not the audited runtime logic.
+The final source gate contains **194 tests**, including a regression for stable
+replay-evidence hashes across Lua table iteration orders. Object-key ordering
+does not alter the digest; tick/array order and field-value changes still do.
 The release gate rebuilds all fifteen new companions from the final public
 Builder bundle, checks their exact identities/ZIP hashes and compares their Lua,
 layout, assets and native cursor contracts with the audited candidate. Generated
