@@ -25,6 +25,8 @@ function render(){
     card.append(textElement('h2',lang==='vi'?(profile.nameVi||profile.name):profile.name));
     const version=profile.output.match(/-(\d+\.\d+\.\d+)$/)?.[1];
     if(version)card.append(textElement('p',labels.version+' '+version,'game-version'));
+    if(profile.status==='development')card.append(textElement('p',lang==='vi'?'Bản phát triển.':'Development build.','game-version'));
+    if(profile.analysisStatus==='unverified')card.append(textElement('p',lang==='vi'?'Bản này chưa bật Battle Analysis.':'Battle Analysis is not enabled in this build.','game-version'));
     const details=document.createElement('details');
     details.append(textElement('summary',labels.rom));
     const fields=document.createElement('dl');

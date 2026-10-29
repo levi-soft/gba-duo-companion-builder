@@ -369,10 +369,10 @@
     }));
   }
 
-  async function renderRadar(growth, bonus, language = 'vi') {
+  async function renderRadar(growth, bonus, language = 'vi', pixelScale = 1) {
     await fonts();
     const canvas = document.createElement('canvas');
-    root.CompanionRadar.draw(canvas, growth, bonus, language);
+    root.CompanionRadar.draw(canvas, growth, bonus, language, pixelScale);
     const blob = await new Promise((resolve, reject) => {
       canvas.toBlob(result => result
         ? resolve(result)
@@ -392,7 +392,7 @@
     template.files = clone(root.COMPANION_UI_FILES);
     const result = await api.prepare(rom, template, root[profile.runtime], {
       signal: options.signal,
-      renderRadar: options.renderRadar || ((growth, bonus) => renderRadar(growth, bonus, profile.language || 'vi')),
+      renderRadar: options.renderRadar || ((growth, bonus) => renderRadar(growth, bonus, profile.language || 'vi', profile.growthRasterScale ?? 1)),
       onProgress: options.onProgress,
       yieldControl: options.yieldControl || (() => new Promise(resolve => setTimeout(resolve, 0))),
     });

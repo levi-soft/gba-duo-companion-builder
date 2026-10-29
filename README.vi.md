@@ -1,4 +1,9 @@
-# Fire Emblem Companion Builder 1.1.0
+# Fire Emblem Companion Builder 1.2.0
+
+Builder 1.2.0 phát hành thêm 15 companion; cả 30 profile đều ở companion 1.0.0.
+Bộ đọc cũ giữ nguyên. Các bản mới sửa chọn unit trong màn chỉ số, RNG và Map,
+nhận đúng game code/CRC32. Mười Analysis còn khóa; Pokemblem chọn trong companion.
+Xem [phạm vi và kiểm chứng](https://github.com/levi-soft/gba-duo-companion-builder/blob/main/docs/RELEASE-1.2.0.md).
 
 ## Builder 1.1.0 — mười profile ROM chính xác
 

@@ -25,3 +25,25 @@ Vision Quest is by Pandan and friends, with the v3 update by Pushwall. Original 
 ## The Last Promise
 
 The Last Promise is by Blazer and the original project contributors. See the [official project, guides and credits](https://www.feshrine.net/thelastpromise/). Original portraits, sprites, music, maps, writing and game modifications belong to their respective authors. This independent companion extracts assets and text locally from the user's exact ROM; none of those prepared assets are shipped in the public builder.
+
+## Builder 1.2.0 companion projects
+
+The following projects and their respective authors/contributors retain all rights to their original game modifications, art, music, writing and engine work. Their full contributor lists remain authoritative. These profiles extract game resources locally from the exact user ROM.
+
+| Project | Original project / credits |
+|---|---|
+| Fire Emblem: Andaron Saga | [Project and contributor notices](https://www.youtube.com/watch?v=UEcbKgp5ggQ) |
+| Bells of Byelen | [Project and contributor notices](https://feuniverse.us/t/fe8-complete-bells-of-byelen-24-chapters/17648) |
+| Cerulean Crescent | [Project and contributor notices](https://feuniverse.us/t/fe8-cerulean-crescent-31-chapters-complete-2-0-update-release-the-birds/13666) |
+| Fire Emblem: Dark Lord and the Maiden of Light | [Project and contributor notices](https://feuniverse.us/t/fire-emblem-dark-lord-and-the-maiden-of-light/6463/1) |
+| Fire Emblem: Dream of Five - Definitive Edition | [Project and contributor notices](https://feuniverse.us/t/fe8-complete-fe-dream-of-five-definitive-edition/21043) |
+| Fire Emblem: Eligor's Spear | [Project and contributor notices](https://feuniverse.us/t/fe8-complete-eligors-spear-version-4-0-47-chapters/4755) |
+| Fire Emblem: Iron Emblem | [Project and contributor notices](https://feuniverse.us/t/fe8-complete-iron-emblem-v1-3-1-1-full-length-rr-out/12539) |
+| Fire Emblem: Justice & Pride | [Project and contributor notices](https://feuniverse.us/t/fire-emblem-justice-pride-full-length-fe8-hack/5922) |
+| Pokemblem | [Project and contributor notices](https://feuniverse.us/t/pokemblem-complete-v1-24/8875) |
+| Fire Emblem: The Dark Amulet | [Project and contributor notices](https://feuniverse.us/t/fe8-complete-the-dark-amulet-v1-6-08-08-2024/24299) |
+| Fire Emblem: The Four Kings | [Project and contributor notices](https://feuniverse.us/t/fe8-complete-fire-emblem-the-four-kings-4-11-24-update-now-with-weapon-reversal/7030) |
+| Fire Emblem: The Lonely Mirror | [Project and contributor notices](https://feuniverse.us/t/fire-emblem-the-lonely-mirror-full-game/5712) |
+| The Morrow's Golden Country | [Project and contributor notices](https://feuniverse.us/t/fe8-fire-emblem-the-morrows-golden-country-complete/16284) |
+| Fire Emblem: The Shadow of Dawn | [Project and contributor notices](https://feuniverse.us/t/fe8-complete-the-shadow-of-dawn-v1-4-09-05-2025/33523) |
+| The Sun God’s Wrath | [Project and contributor notices](https://feuniverse.us/t/fe8-complete-the-sun-gods-wrath-final-release-27-chapters-no-fatigue-100-growth-now-added-5-22-2022/6207) |

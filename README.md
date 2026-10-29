@@ -1,4 +1,6 @@
-# Fire Emblem Companion Builder 1.1.5
+# Fire Emblem Companion Builder 1.2.0
+
+Builder 1.2.0 adds fifteen released companions: all thirty catalogue profiles use companion 1.0.0. The previous fifteen readers remain unchanged. New readers track native stat-screen selections and fix RNG/Map selection, with exact-ROM validation. Ten Analysis paths remain gated and Pokemblem retains companion-only selection. See [release scope and validation](https://github.com/levi-soft/gba-duo-companion-builder/blob/main/docs/RELEASE-1.2.0.md).
 
 The **2026-10-28 authoring update** keeps version **1.1.5**. An optional custom
 project flow can package an edited Studio project, preserve its reader/interface
@@ -6,7 +8,7 @@ or create a card/stat table from existing reader fields, and show reference
 diagnostics before building. See the
 [update notes](https://github.com/levi-soft/gba-duo-companion-builder/blob/main/docs/AUTHORING-UPDATE-2026-10-28.md).
 
-## Builder 1.1.5 — fifteen companions at 1.0.0
+## Previous release: Builder 1.1.5 — fifteen companions at 1.0.0
 
 This release finalizes **Storge, The Hag in White, Sacred Echoes, Vision Quest and The Last Promise** at companion **1.0.0**, alongside the ten existing profiles. All five inherit the English UI with Units, Map, Talk, Growth and conditional Battle Analysis.
 

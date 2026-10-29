@@ -1,0 +1,16 @@
+{
+  "id": "sun-gods-wrath",
+  "name": "The Sun God’s Wrath",
+  "nameVi": "The Sun God’s Wrath",
+  "code": "BE8E",
+  "crc32": "566D7A9E",
+  "api": "SunGodsWrathPrep",
+  "template": "SUN_GODS_WRATH_TEMPLATE",
+  "runtime": "FE8_RUNTIME_TEMPLATE",
+  "native": "FE8_NATIVE_DESIGN",
+  "runtimeParent": "fe8-english",
+  "output": "Sun-Gods-Wrath-Companion-1.0.0",
+  "language": "en",
+  "status": "stable",
+  "analysisStatus": "unverified"
+}
