@@ -1,0 +1,16 @@
+{
+  "id": "the-four-kings",
+  "name": "Fire Emblem: The Four Kings",
+  "nameVi": "Fire Emblem: The Four Kings",
+  "code": "BE8E",
+  "crc32": "0DDE5BEB",
+  "api": "TheFourKingsPrep",
+  "template": "THE_FOUR_KINGS_TEMPLATE",
+  "runtime": "FE8_RUNTIME_TEMPLATE",
+  "native": "FE8_NATIVE_DESIGN",
+  "runtimeParent": "fe8-english",
+  "output": "The-Four-Kings-Companion-1.0.0",
+  "language": "en",
+  "status": "stable",
+  "analysisStatus": "conditional-tested"
+}

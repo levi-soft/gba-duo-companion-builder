@@ -1,0 +1,16 @@
+{
+  "id": "andaron-saga",
+  "name": "Fire Emblem: Andaron Saga",
+  "nameVi": "Fire Emblem: Andaron Saga",
+  "code": "BE8E",
+  "crc32": "A3B9CD19",
+  "api": "AndaronSagaPrep",
+  "template": "ANDARON_SAGA_TEMPLATE",
+  "runtime": "FE8_RUNTIME_TEMPLATE",
+  "native": "FE8_NATIVE_DESIGN",
+  "output": "Andaron-Saga-Companion-1.0.0",
+  "language": "en",
+  "status": "stable",
+  "runtimeParent": "fe8-english",
+  "analysisStatus": "conditional-tested"
+}

@@ -1,0 +1,16 @@
+{
+  "id": "bells-of-byelen",
+  "name": "Bells of Byelen",
+  "nameVi": "Bells of Byelen",
+  "code": "BE8E",
+  "crc32": "48B996CD",
+  "api": "BellsOfByelenPrep",
+  "template": "BELLS_OF_BYELEN_TEMPLATE",
+  "runtime": "FE8_RUNTIME_TEMPLATE",
+  "native": "FE8_NATIVE_DESIGN",
+  "runtimeParent": "hag-in-white",
+  "output": "Bells-of-Byelen-Companion-1.0.0",
+  "language": "en",
+  "status": "stable",
+  "analysisStatus": "conditional-tested"
+}

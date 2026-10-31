@@ -1,0 +1,16 @@
+{
+  "id": "iron-emblem",
+  "name": "Fire Emblem: Iron Emblem",
+  "nameVi": "Fire Emblem: Iron Emblem",
+  "code": "BE8E",
+  "crc32": "141FF3AA",
+  "api": "IronEmblemPrep",
+  "template": "IRON_EMBLEM_TEMPLATE",
+  "runtime": "FE8_RUNTIME_TEMPLATE",
+  "native": "FE8_NATIVE_DESIGN",
+  "runtimeParent": "fe8-english",
+  "output": "Iron-Emblem-Companion-1.0.0",
+  "language": "en",
+  "status": "stable",
+  "analysisStatus": "conditional-tested"
+}

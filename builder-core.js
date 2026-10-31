@@ -166,6 +166,15 @@
       if(!step()||typeof raw!=='string'||!raw||raw.startsWith('$')||/[{}]/.test(raw))return;
       if(exactFile){if(!Object.hasOwn(files,raw))add('error','missing-asset',location,{nodeId:node.id,property,detail:raw});else formatWarning(raw,node,property,location);return;}
       if(/^(?:data:|blob:|https?:|\/|#)/i.test(raw))return;
+      if(raw.startsWith('radar:')){
+        const parts=raw.split(':'),rates=(parts[3]??'').split(','),axes=(parts[4]??'').split(',');
+        const valid=raw.length<=512&&parts.length===5&&parts[1]==='1'&&['en','vi'].includes(parts[2])
+          &&[7,8].includes(rates.length)&&rates.length===axes.length
+          &&rates.every(v=>/^-?\d+$/.test(v)&&Number(v)>=-1000&&Number(v)<=2000)
+          &&axes.every(v=>/^[A-Za-z/]{1,12}$/.test(v));
+        if(!valid)add(sample||optional?'warning':'error','asset-path',location,{nodeId:node.id,property,detail:raw});
+        return;
+      }
       let name=raw.replace(/^asset:/,'').replace(/^assets\//,'').split(/[?#]/)[0];
       if(!name)return;
       if(name.includes('\\')){add('warning','unverified-asset',location,{nodeId:node.id,property,detail:raw});return;}
@@ -369,10 +378,10 @@
     }));
   }
 
-  async function renderRadar(growth, bonus, language = 'vi') {
+  async function renderRadar(growth, bonus, language = 'vi', pixelScale = 1) {
     await fonts();
     const canvas = document.createElement('canvas');
-    root.CompanionRadar.draw(canvas, growth, bonus, language);
+    root.CompanionRadar.draw(canvas, growth, bonus, language, pixelScale);
     const blob = await new Promise((resolve, reject) => {
       canvas.toBlob(result => result
         ? resolve(result)
@@ -392,7 +401,7 @@
     template.files = clone(root.COMPANION_UI_FILES);
     const result = await api.prepare(rom, template, root[profile.runtime], {
       signal: options.signal,
-      renderRadar: options.renderRadar || ((growth, bonus) => renderRadar(growth, bonus, profile.language || 'vi')),
+      renderRadar: options.renderRadar || ((growth, bonus) => renderRadar(growth, bonus, profile.language || 'vi', profile.growthRasterScale ?? 1)),
       onProgress: options.onProgress,
       yieldControl: options.yieldControl || (() => new Promise(resolve => setTimeout(resolve, 0))),
     });
@@ -424,7 +433,7 @@
     }
     zip.file('manifest.json', JSON.stringify({
       ...project.manifest,
-      formatVersion: 2,
+      formatVersion: Math.max(2,project.manifest.formatVersion||2,project.manifest.requires?4:2),
       layout: 'layout.json',
       styles: ['style.css'],
     }, null, 2));

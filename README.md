@@ -1,4 +1,19 @@
-# Fire Emblem Companion Builder 1.1.5
+# Fire Emblem Companion Builder 1.2.0
+
+**Thirty companion profiles at 1.0.0 — released again 2026-10-31.** This build
+contains the shared thirty-profile repair, replacing the withdrawn first build.
+Use your exact ROM to create a private companion ZIP; rebuild and import it to
+update an existing installed pack. See [release notes and known limits](https://github.com/levi-soft/gba-duo-companion-builder/blob/v1.2.0/docs/RELEASE-1.2.0.md).
+
+Map/roster focus uses the existing GBA Duo Plus 0.1.8-plus.4 native D-pad API,
+with Packs can change games off and no APK update. Unit taps no longer add a
+status line above the chapter. Growth retains its PNG and adds signed bonuses
+to the rate table. This does not provide native focus on stock GBA Duo v0.1.8.
+
+The 25 ms update timeout, Storge green IDs 85–99 and an earlier stock-host
+blank-data observation remain open. All-thirty physical Android acceptance is
+incomplete. See [the current feature contract](FEATURE-CONTRACT.md); version
+1.0.0 does not mean every campaign, skill or device layout has been verified.
 
 The **2026-10-28 authoring update** keeps version **1.1.5**. An optional custom
 project flow can package an edited Studio project, preserve its reader/interface
@@ -6,7 +21,7 @@ or create a card/stat table from existing reader fields, and show reference
 diagnostics before building. See the
 [update notes](https://github.com/levi-soft/gba-duo-companion-builder/blob/main/docs/AUTHORING-UPDATE-2026-10-28.md).
 
-## Builder 1.1.5 — fifteen companions at 1.0.0
+## Previous release: Builder 1.1.5 — fifteen companions at 1.0.0
 
 This release finalizes **Storge, The Hag in White, Sacred Echoes, Vision Quest and The Last Promise** at companion **1.0.0**, alongside the ten existing profiles. All five inherit the English UI with Units, Map, Talk, Growth and conditional Battle Analysis.
 

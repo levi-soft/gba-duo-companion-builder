@@ -1,0 +1,16 @@
+{
+  "id": "justice-and-pride",
+  "name": "Fire Emblem: Justice & Pride",
+  "nameVi": "Fire Emblem: Justice & Pride",
+  "code": "BE8E",
+  "crc32": "AC23B461",
+  "api": "JusticeAndPridePrep",
+  "template": "JUSTICE_AND_PRIDE_TEMPLATE",
+  "runtime": "FE8_RUNTIME_TEMPLATE",
+  "native": "FE8_NATIVE_DESIGN",
+  "output": "Justice-Pride-Companion-1.0.0",
+  "language": "en",
+  "status": "stable",
+  "runtimeParent": "fe8-english",
+  "analysisStatus": "conditional-tested"
+}
