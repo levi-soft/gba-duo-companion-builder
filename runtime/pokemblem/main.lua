@@ -11,7 +11,8 @@ local analyze = pack.require("features.analysis")(D)
 local present = pack.require("presentation.prediction")()
 local forecast = pack.require("presentation.forecast")()
 local english = pack.require("presentation.english")(D.uiStrings)
+local text = pack.require("presentation.pokemblem-text")
 
 function update()
-  return english(forecast(present(analyze(growth(presentation(read()))))))
+  return text(english(forecast(present(analyze(growth(presentation(read())))))))
 end

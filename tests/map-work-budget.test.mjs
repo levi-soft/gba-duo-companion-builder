@@ -11,6 +11,7 @@ test('FE8 map reads each terrain/occupancy cell once and shares it with connecti
  const project={manifest:{script:'main.lua'},files:{
   'game.map.lua':encode(fs.readFileSync('runtime/fe8-vietnamese/game.map.lua')),'game.fe8-map.lua':encode(fs.readFileSync('runtime/shared/game.fe8-map.lua')),
   'game.profile.lua':encode(profile),'presentation.chapter.lua':encode(fs.readFileSync('runtime/shared/presentation.chapter.lua')),
+  'presentation.map-picks.lua':encode(fs.readFileSync('runtime/shared/presentation.map-picks.lua')),
   'main.lua':encode(`local reads=0;local read=mem.u8;mem.u8=function(a)if a>=0x02002000 and a<0x02003177 then reads=reads+1 end;return read(a)end
 local map=pack.require('game.map')({chars={},classes={},slots={},mapMeta={chars={},classes={}},mapWeapons={},fe8Chapters={}})
 function update()reads=0;local v={};map.apply(v);return {present=v.mapPresent,cells=#v.mapCells,reads=reads}end`)

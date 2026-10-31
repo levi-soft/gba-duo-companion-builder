@@ -34,8 +34,8 @@ test('public pages have distinct metadata, matching canonical/schema URLs and cr
     assert(card,'Static profile card: '+profile.id);
     assert(card.includes(profile.analysisStatus==='unverified'?'analysis-unavailable':'analysis-conditional'),'Feature limit must be visible without JavaScript: '+profile.id);
   }
-  assert.equal([...games.matchAll(/class="game-version analysis-unavailable"/g)].length,10);
-  assert.equal([...games.matchAll(/class="game-version analysis-conditional"/g)].length,5);
+  assert.equal([...games.matchAll(/class="game-version analysis-unavailable"/g)].length,0);
+  assert.equal([...games.matchAll(/class="game-version analysis-conditional"/g)].length,15);
   const runner=fs.readFileSync('site/plus-runner.html','utf8');
   assert(runner.includes('name="robots" content="noindex,nofollow"'));
   assert(!sitemap.includes('plus-runner'));

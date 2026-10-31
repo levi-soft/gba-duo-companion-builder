@@ -4578,13 +4578,10 @@
                                     "border-left-color": "{color}"
                                   },
                                   "onClick": {
-                                    "set": {
-                                      "mapPickedId": "{id}",
-                                      "mapPickedContext": "{mapPickContext}"
-                                    },
                                     "call": "focusMapUnit",
                                     "args": [
-                                      "{id}"
+                                      "{id}",
+                                      "{mapPickContext}"
                                     ]
                                   },
                                   "style": {
@@ -4610,6 +4607,27 @@
                         "type": "column",
                         "class": "map-status-main",
                         "children": [
+                          {
+                            "id": "native-map-ranges-pending",
+                            "type": "text",
+                            "class": "map-label",
+                            "visibleIf": "$ui.companionWorkPending",
+                            "onClick": {
+                              "set": {
+                                "companionWorkPulse": "{ui.companionWorkNext}"
+                              }
+                            },
+                            "text": "Đang tính vùng di chuyển và tấn công…",
+                            "style": {
+                              "height": "4.2vmin",
+                              "min-height": "4.2vmin",
+                              "flex": "0 0 4.2vmin",
+                              "padding": "0",
+                              "font-size": "2.5625vmin",
+                              "line-height": "3.41667vmin",
+                              "white-space": "nowrap"
+                            }
+                          },
                           {
                             "id": "nfcb3f5ef3383",
                             "type": "row",
@@ -4695,235 +4713,269 @@
                             "class": "map-display",
                             "children": [
                               {
-                                "id": "nd8be0715a355",
-                                "type": "list",
-                                "class": "map-terrain-grid",
-                                "items": "$mapCells",
-                                "empty": "No map data",
-                                "template": {
-                                  "id": "nd3d446e4482b",
-                                  "type": "box",
-                                  "class": "map-cell",
-                                  "children": [
-                                    {
-                                      "id": "nd6581f9fe7d1",
-                                      "type": "image",
-                                      "class": "map-chip",
-                                      "src": "$tile",
-                                      "style": {
-                                        "font-family": "\"Inter\""
-                                      }
-                                    },
-                                    {
-                                      "id": "n9009f88c0617",
-                                      "type": "box",
-                                      "class": "map-danger-overlay",
-                                      "children": [],
-                                      "bindStyle": {
-                                        "background-color": "{dangerColor}"
-                                      },
-                                      "style": {
-                                        "font-family": "\"Inter\""
-                                      },
-                                      "classIf": {
-                                        "overlay-visible": "$danger"
-                                      }
-                                    },
-                                    {
-                                      "id": "nf132d7f4ff56",
-                                      "type": "box",
-                                      "class": "map-range-overlay",
-                                      "children": [],
-                                      "bindStyle": {
-                                        "background-color": "{rangeColor}"
-                                      },
-                                      "style": {
-                                        "font-family": "\"Inter\""
-                                      },
-                                      "classIf": {
-                                        "overlay-visible": "$inRange"
-                                      }
-                                    },
-                                    {
-                                      "id": "ncb919669b1d5",
-                                      "type": "box",
-                                      "class": "map-marker",
-                                      "children": [],
-                                      "visibleIf": "$marker",
-                                      "bindStyle": {
-                                        "background-color": "{color}"
-                                      },
-                                      "style": {
-                                        "font-family": "\"Inter\""
-                                      }
-                                    },
-                                    {
-                                      "id": "n35b639b1d103",
-                                      "type": "column",
-                                      "class": "map-cursor",
-                                      "children": [
-                                        {
-                                          "id": "nc74692712f80",
-                                          "type": "row",
-                                          "class": "map-cursor-edge",
-                                          "children": [
-                                            {
-                                              "id": "n31403bed164a",
-                                              "type": "box",
-                                              "class": "map-corner tl",
-                                              "children": [],
-                                              "style": {
-                                                "font-family": "\"Inter\""
-                                              }
-                                            },
-                                            {
-                                              "id": "nf4c47af69e87",
-                                              "type": "box",
-                                              "class": "map-corner tr",
-                                              "children": [],
-                                              "style": {
-                                                "font-family": "\"Inter\""
-                                              }
-                                            }
-                                          ],
-                                          "style": {
-                                            "font-family": "\"Inter\""
-                                          }
-                                        },
-                                        {
-                                          "id": "n76f8b19e2cfc",
-                                          "type": "spacer",
-                                          "class": "map-cursor-gap",
-                                          "style": {
-                                            "font-family": "\"Inter\""
-                                          }
-                                        },
-                                        {
-                                          "id": "ne947ee4f3528",
-                                          "type": "row",
-                                          "class": "map-cursor-edge",
-                                          "children": [
-                                            {
-                                              "id": "nac7d054617b8",
-                                              "type": "box",
-                                              "class": "map-corner bl",
-                                              "children": [],
-                                              "style": {
-                                                "font-family": "\"Inter\""
-                                              }
-                                            },
-                                            {
-                                              "id": "n3c8dc4281792",
-                                              "type": "box",
-                                              "class": "map-corner br",
-                                              "children": [],
-                                              "style": {
-                                                "font-family": "\"Inter\""
-                                              }
-                                            }
-                                          ],
-                                          "style": {
-                                            "font-family": "\"Inter\""
-                                          }
-                                        }
-                                      ],
-                                      "style": {
-                                        "font-family": "\"Inter\""
-                                      },
-                                      "classIf": {
-                                        "cursor-visible": "$cursor"
-                                      }
-                                    },
-                                    {
-                                      "id": "n261de8113c4d",
-                                      "type": "column",
-                                      "class": "map-cursor map-picked-cursor",
-                                      "children": [
-                                        {
-                                          "id": "n1053e18b8c73",
-                                          "type": "row",
-                                          "class": "map-cursor-edge",
-                                          "children": [
-                                            {
-                                              "id": "n65bdb0d7bc47",
-                                              "type": "box",
-                                              "class": "map-corner tl",
-                                              "children": [],
-                                              "style": {
-                                                "font-family": "\"Inter\""
-                                              }
-                                            },
-                                            {
-                                              "id": "nee4d563e217a",
-                                              "type": "box",
-                                              "class": "map-corner tr",
-                                              "children": [],
-                                              "style": {
-                                                "font-family": "\"Inter\""
-                                              }
-                                            }
-                                          ],
-                                          "style": {
-                                            "font-family": "\"Inter\""
-                                          }
-                                        },
-                                        {
-                                          "id": "n6c998ca7d91c",
-                                          "type": "spacer",
-                                          "class": "map-cursor-gap",
-                                          "style": {
-                                            "font-family": "\"Inter\""
-                                          }
-                                        },
-                                        {
-                                          "id": "n3dd9b4b30b54",
-                                          "type": "row",
-                                          "class": "map-cursor-edge",
-                                          "children": [
-                                            {
-                                              "id": "n840c9d9e8f71",
-                                              "type": "box",
-                                              "class": "map-corner bl",
-                                              "children": [],
-                                              "style": {
-                                                "font-family": "\"Inter\""
-                                              }
-                                            },
-                                            {
-                                              "id": "n2f91a7049146",
-                                              "type": "box",
-                                              "class": "map-corner br",
-                                              "children": [],
-                                              "style": {
-                                                "font-family": "\"Inter\""
-                                              }
-                                            }
-                                          ],
-                                          "style": {
-                                            "font-family": "\"Inter\""
-                                          }
-                                        }
-                                      ],
-                                      "style": {
-                                        "font-family": "\"Inter\""
-                                      },
-                                      "classIf": {
-                                        "cursor-visible": "$picked"
-                                      }
-                                    }
-                                  ],
-                                  "style": {
-                                    "font-family": "\"Inter\""
-                                  }
-                                },
+                                "id": "map-interactive-surface",
+                                "type": "box",
+                                "class": "map-surface",
                                 "bindStyle": {
-                                  "grid-template-columns": "{mapColumns}",
-                                  "grid-template-rows": "{mapRows}",
                                   "aspect-ratio": "{mapAspect}"
                                 },
-                                "style": {
-                                  "font-family": "\"Inter\""
-                                }
+                                "children": [
+                                  {
+                                    "id": "nd8be0715a355",
+                                    "type": "list",
+                                    "class": "map-terrain-grid",
+                                    "items": "$mapCells",
+                                    "empty": "No map data",
+                                    "template": {
+                                      "id": "nd3d446e4482b",
+                                      "type": "box",
+                                      "class": "map-cell",
+                                      "children": [
+                                        {
+                                          "id": "nd6581f9fe7d1",
+                                          "type": "image",
+                                          "class": "map-chip",
+                                          "src": "$tile",
+                                          "style": {
+                                            "font-family": "\"Inter\""
+                                          }
+                                        },
+                                        {
+                                          "id": "n9009f88c0617",
+                                          "type": "box",
+                                          "class": "map-danger-overlay",
+                                          "children": [],
+                                          "bindStyle": {
+                                            "background-color": "{dangerColor}"
+                                          },
+                                          "style": {
+                                            "font-family": "\"Inter\""
+                                          },
+                                          "classIf": {
+                                            "overlay-visible": "$danger"
+                                          }
+                                        },
+                                        {
+                                          "id": "nf132d7f4ff56",
+                                          "type": "box",
+                                          "class": "map-range-overlay",
+                                          "children": [],
+                                          "bindStyle": {
+                                            "background-color": "{rangeColor}"
+                                          },
+                                          "style": {
+                                            "font-family": "\"Inter\""
+                                          },
+                                          "classIf": {
+                                            "overlay-visible": "$inRange"
+                                          }
+                                        },
+                                        {
+                                          "id": "ncb919669b1d5",
+                                          "type": "box",
+                                          "class": "map-marker",
+                                          "children": [],
+                                          "visibleIf": "$marker",
+                                          "bindStyle": {
+                                            "background-color": "{color}"
+                                          },
+                                          "style": {
+                                            "font-family": "\"Inter\""
+                                          }
+                                        },
+                                        {
+                                          "id": "n35b639b1d103",
+                                          "type": "column",
+                                          "class": "map-cursor",
+                                          "children": [
+                                            {
+                                              "id": "nc74692712f80",
+                                              "type": "row",
+                                              "class": "map-cursor-edge",
+                                              "children": [
+                                                {
+                                                  "id": "n31403bed164a",
+                                                  "type": "box",
+                                                  "class": "map-corner tl",
+                                                  "children": [],
+                                                  "style": {
+                                                    "font-family": "\"Inter\""
+                                                  }
+                                                },
+                                                {
+                                                  "id": "nf4c47af69e87",
+                                                  "type": "box",
+                                                  "class": "map-corner tr",
+                                                  "children": [],
+                                                  "style": {
+                                                    "font-family": "\"Inter\""
+                                                  }
+                                                }
+                                              ],
+                                              "style": {
+                                                "font-family": "\"Inter\""
+                                              }
+                                            },
+                                            {
+                                              "id": "n76f8b19e2cfc",
+                                              "type": "spacer",
+                                              "class": "map-cursor-gap",
+                                              "style": {
+                                                "font-family": "\"Inter\""
+                                              }
+                                            },
+                                            {
+                                              "id": "ne947ee4f3528",
+                                              "type": "row",
+                                              "class": "map-cursor-edge",
+                                              "children": [
+                                                {
+                                                  "id": "nac7d054617b8",
+                                                  "type": "box",
+                                                  "class": "map-corner bl",
+                                                  "children": [],
+                                                  "style": {
+                                                    "font-family": "\"Inter\""
+                                                  }
+                                                },
+                                                {
+                                                  "id": "n3c8dc4281792",
+                                                  "type": "box",
+                                                  "class": "map-corner br",
+                                                  "children": [],
+                                                  "style": {
+                                                    "font-family": "\"Inter\""
+                                                  }
+                                                }
+                                              ],
+                                              "style": {
+                                                "font-family": "\"Inter\""
+                                              }
+                                            }
+                                          ],
+                                          "style": {
+                                            "font-family": "\"Inter\""
+                                          },
+                                          "classIf": {
+                                            "cursor-visible": "$cursor"
+                                          }
+                                        },
+                                        {
+                                          "id": "n261de8113c4d",
+                                          "type": "column",
+                                          "class": "map-cursor map-picked-cursor",
+                                          "children": [
+                                            {
+                                              "id": "n1053e18b8c73",
+                                              "type": "row",
+                                              "class": "map-cursor-edge",
+                                              "children": [
+                                                {
+                                                  "id": "n65bdb0d7bc47",
+                                                  "type": "box",
+                                                  "class": "map-corner tl",
+                                                  "children": [],
+                                                  "style": {
+                                                    "font-family": "\"Inter\""
+                                                  }
+                                                },
+                                                {
+                                                  "id": "nee4d563e217a",
+                                                  "type": "box",
+                                                  "class": "map-corner tr",
+                                                  "children": [],
+                                                  "style": {
+                                                    "font-family": "\"Inter\""
+                                                  }
+                                                }
+                                              ],
+                                              "style": {
+                                                "font-family": "\"Inter\""
+                                              }
+                                            },
+                                            {
+                                              "id": "n6c998ca7d91c",
+                                              "type": "spacer",
+                                              "class": "map-cursor-gap",
+                                              "style": {
+                                                "font-family": "\"Inter\""
+                                              }
+                                            },
+                                            {
+                                              "id": "n3dd9b4b30b54",
+                                              "type": "row",
+                                              "class": "map-cursor-edge",
+                                              "children": [
+                                                {
+                                                  "id": "n840c9d9e8f71",
+                                                  "type": "box",
+                                                  "class": "map-corner bl",
+                                                  "children": [],
+                                                  "style": {
+                                                    "font-family": "\"Inter\""
+                                                  }
+                                                },
+                                                {
+                                                  "id": "n2f91a7049146",
+                                                  "type": "box",
+                                                  "class": "map-corner br",
+                                                  "children": [],
+                                                  "style": {
+                                                    "font-family": "\"Inter\""
+                                                  }
+                                                }
+                                              ],
+                                              "style": {
+                                                "font-family": "\"Inter\""
+                                              }
+                                            }
+                                          ],
+                                          "style": {
+                                            "font-family": "\"Inter\""
+                                          },
+                                          "classIf": {
+                                            "cursor-visible": "$picked"
+                                          }
+                                        }
+                                      ],
+                                      "style": {
+                                        "font-family": "\"Inter\""
+                                      }
+                                    },
+                                    "bindStyle": {
+                                      "grid-template-columns": "{mapColumns}",
+                                      "grid-template-rows": "{mapRows}"
+                                    },
+                                    "style": {
+                                      "font-family": "\"Inter\""
+                                    }
+                                  },
+                                  {
+                                    "id": "map-unit-pick-layer",
+                                    "type": "list",
+                                    "class": "map-pick-layer",
+                                    "items": "$mapPickTargets",
+                                    "empty": "",
+                                    "template": {
+                                      "id": "map-unit-pick-target",
+                                      "type": "box",
+                                      "class": "map-pick-target",
+                                      "bindStyle": {
+                                        "left": "{left}",
+                                        "top": "{top}",
+                                        "width": "{width}",
+                                        "height": "{height}"
+                                      },
+                                      "onClick": {
+                                        "call": "focusMapUnit",
+                                        "args": [
+                                          "{id}",
+                                          "{mapPickContext}"
+                                        ]
+                                      }
+                                    }
+                                  }
+                                ]
                               }
                             ],
                             "style": {
@@ -5421,7 +5473,7 @@
                               "id": "growth-text-51",
                               "type": "text",
                               "text": "Tỷ lệ",
-                              "class": "growth-stat-value"
+                              "class": "growth-stat-value growth-stat-rate"
                             },
                             {
                               "id": "growth-text-52",
@@ -5451,8 +5503,8 @@
                             {
                               "id": "growth-text-2",
                               "type": "text",
-                              "text": "{growthHp}%",
-                              "class": "growth-stat-value"
+                              "text": "{growthHpRateText}",
+                              "class": "growth-stat-value growth-stat-rate"
                             },
                             {
                               "id": "growth-text-3",
@@ -5482,8 +5534,8 @@
                             {
                               "id": "growth-text-7",
                               "type": "text",
-                              "text": "{growthPower}%",
-                              "class": "growth-stat-value"
+                              "text": "{growthPowerRateText}",
+                              "class": "growth-stat-value growth-stat-rate"
                             },
                             {
                               "id": "growth-text-8",
@@ -5513,8 +5565,8 @@
                             {
                               "id": "growth-text-12",
                               "type": "text",
-                              "text": "{growthSkill}%",
-                              "class": "growth-stat-value"
+                              "text": "{growthSkillRateText}",
+                              "class": "growth-stat-value growth-stat-rate"
                             },
                             {
                               "id": "growth-text-13",
@@ -5544,8 +5596,8 @@
                             {
                               "id": "growth-text-17",
                               "type": "text",
-                              "text": "{growthSpd}%",
-                              "class": "growth-stat-value"
+                              "text": "{growthSpdRateText}",
+                              "class": "growth-stat-value growth-stat-rate"
                             },
                             {
                               "id": "growth-text-18",
@@ -5575,8 +5627,8 @@
                             {
                               "id": "growth-text-22",
                               "type": "text",
-                              "text": "{growthLuck}%",
-                              "class": "growth-stat-value"
+                              "text": "{growthLuckRateText}",
+                              "class": "growth-stat-value growth-stat-rate"
                             },
                             {
                               "id": "growth-text-23",
@@ -5606,8 +5658,8 @@
                             {
                               "id": "growth-text-27",
                               "type": "text",
-                              "text": "{growthDef}%",
-                              "class": "growth-stat-value"
+                              "text": "{growthDefRateText}",
+                              "class": "growth-stat-value growth-stat-rate"
                             },
                             {
                               "id": "growth-text-28",
@@ -5637,8 +5689,8 @@
                             {
                               "id": "growth-text-32",
                               "type": "text",
-                              "text": "{growthRes}%",
-                              "class": "growth-stat-value"
+                              "text": "{growthResRateText}",
+                              "class": "growth-stat-value growth-stat-rate"
                             },
                             {
                               "id": "growth-text-33",
@@ -5664,6 +5716,11 @@
                           "type": "text",
                           "id": "growth-calculation-note",
                           "class": "growth-calculation-note",
+                          "onClick": {
+                            "set": {
+                              "companionWorkPulse": "{ui.companionWorkNext}"
+                            }
+                          },
                           "text": "{growthCalculationNote}",
                           "visibleIf": "$growthCalculationNote"
                         }
@@ -5851,6 +5908,11 @@
                           "type": "text",
                           "id": "prediction-progress-text",
                           "class": "prediction-progress-text",
+                          "onClick": {
+                            "set": {
+                              "companionWorkPulse": "{ui.companionWorkNext}"
+                            }
+                          },
                           "text": "{predictionProgressText}"
                         },
                         {
@@ -6138,6 +6200,28 @@
         }
       ],
       "visibleIf": "$ui.predictionPopup"
+    },
+    {
+      "id": "companion-work-resume",
+      "type": "button",
+      "class": "companion-work-resume",
+      "text": "Tiếp tục",
+      "visibleIf": "$ui.companionWorkNeedsContinue",
+      "onClick": {
+        "set": {
+          "companionWorkPulse": "{ui.companionWorkNext}"
+        }
+      }
+    },
+    {
+      "id": "companion-error-resume",
+      "type": "button",
+      "class": "companion-work-resume",
+      "text": "Tiếp tục",
+      "visibleIf": "$_scriptError",
+      "onClick": {
+        "call": "resumeCompanion"
+      }
     }
   ],
   "style": {

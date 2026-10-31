@@ -18,7 +18,7 @@
       D.lookup10[pointer]='Avatar';
     }
     D.levelCaps=Array.from({length:255},(_,id)=>r.u8(0xB2C020+id));
-    D.customProfile={id:"cerulean-crescent",split:false,supports:true,growthNote:"Base ROM growths; growth-mode, item and skill modifiers are not included. Promotion does not reset level.",limitations:"Growth modifiers and capture mode are not inferred from retail FE8 flags. Range overlays use base movement and weapon ranges."};
+    D.customProfile={id:"cerulean-crescent",split:true,supports:true,growthNote:"Current native growth rates include active bonuses. Analysis follows the current growth mode.",limitations:"Growth modifiers and capture mode are not inferred from retail FE8 flags. Range overlays use base movement and weapon ranges."};
     D.customProfile.promotedExpBonus=r.u8(0x2C35E);
     D.skillConfig={entry:0x8B408F8,buffer:0x02026B90,cache:0x02026BB0,limit:6};
     D.skillData={};
@@ -40,10 +40,26 @@
     });
     // Active level-up HP clamp is 80; the other core caps come from class records.
     for(const [pointer,c]of Object.entries(D.growthClasses)){const at=+pointer-0x08000000;c.caps=[80,r.u8(at+20),r.u8(at+21),r.u8(at+22),r.u8(at+23),r.u8(at+24),r.u8(0x2C016)];}
+    // Active native magic attacks read Unit/BattleUnit +0x3A. These are the
+    // exact tables referenced by this ROM's Mag getter and level-up cap path.
+    D.equipmentConfig={...(D.equipmentConfig||{}),magicOffset:0x3A};
+    for(const c of Object.values(D.growthCharacters))for(const asset of c.radars)delete project.files['assets/'+asset.slice(6)];
+    const charts=new Set();
+    for(const [pointer,c]of Object.entries(D.growthCharacters)){
+      const pid=D.chars[pointer].id,g=c.growth;
+      c.rates=[g[0],g[1],r.u8(0xB2C124+pid*2+1),g[2],g[3],g[6],g[4],g[5]];
+      const name='assets/images/growth/'+c.rates.join('-')+'.png';c.radar='asset:'+name.slice(7);c.radars=[c.radar,c.radar];
+      if(!charts.has(name)){project.files[name]=root.CompanionRom.b64(await options.renderRadar(c.rates,0,100,project.files));charts.add(name);}
+    }
+    for(const [pointer,c]of Object.entries(D.growthClasses)){
+      const at=+pointer-0x08000000,cid=D.classes[pointer].id;
+      c.caps=[80,r.u8(at+20),r.u8(0xB2C324+cid*4+2),r.u8(at+21),r.u8(at+22),r.u8(0x2C016),r.u8(at+23),r.u8(at+24)];D.lookup12[pointer]='Str';
+    }
     // Use the ROM's own displayed chapter title rather than retail slot numbers.
     for(const chapter of D.fe8Chapters){chapter.label=chapter.name;chapter.name='';}
   }
-  const profile=Object.freeze({...{
+  const profile=Object.freeze({
+    mapRenderOnDemand:true,...{
     id:"cerulean-crescent",
     code:"BE8E",
     crc32:0xDC071CC2,

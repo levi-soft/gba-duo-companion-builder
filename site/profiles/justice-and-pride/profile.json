@@ -12,5 +12,5 @@
   "language": "en",
   "status": "stable",
   "runtimeParent": "fe8-english",
-  "analysisStatus": "unverified"
+  "analysisStatus": "conditional-tested"
 }

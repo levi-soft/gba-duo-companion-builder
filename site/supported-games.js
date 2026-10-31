@@ -5,14 +5,14 @@ const copy={
   vi:{title:'Game được hỗ trợ',back:'← Companion Builder',intro:'Xem phiên bản ROM được hỗ trợ của từng game bên dưới. Builder tự nhận diện profile phù hợp khi bạn chọn ROM.',exactNote:'Chỉ phiên bản ROM được liệt kê cho từng game mới được hỗ trợ. Bản dịch, bản mod và phiên bản ROM khác cần profile riêng.',start:'Tạo companion',count:n=>`${n} game được hỗ trợ`,version:'Companion',rom:'Chi tiết ROM',code:'Game code',checksum:'CRC32'}
 };
 Object.assign(copy.en,{
-  exactNote:'Support applies to the exact ROM revision listed for each game. Feature support varies: check each card\'s Analysis status. Companion 1.0.0 does not establish complete feature support.',
+  exactNote:'Support applies to the exact ROM revision listed for each game. Battle Analysis assumes survival and calculates conditional EXP and level-up results; it does not predict hits or critical hits.',
   analysisUnavailable:'Battle Analysis: unavailable (feature incomplete).',
-  analysisConditional:'Battle Analysis: limited conditional tests; app acceptance incomplete.'
+  analysisConditional:'Battle Analysis: conditional EXP and level-up analysis.'
 });
 Object.assign(copy.vi,{
-  exactNote:'Chỉ hỗ trợ đúng phiên bản ROM được liệt kê. Tính năng khác nhau theo game: xem trạng thái Analysis trên từng thẻ. Companion 1.0.0 chưa đồng nghĩa đã đầy đủ tính năng.',
+  exactNote:'Chỉ hỗ trợ đúng phiên bản ROM được liệt kê. Battle Analysis giả định unit sống sót và tính EXP, lên cấp theo điều kiện; không dự đoán đòn đánh trúng hoặc chí mạng.',
   analysisUnavailable:'Battle Analysis: chưa khả dụng (chưa hoàn thiện).',
-  analysisConditional:'Battle Analysis: mới kiểm chứng các ca có điều kiện; chưa nghiệm thu đầy đủ trong app.'
+  analysisConditional:'Battle Analysis: phân tích EXP và lên cấp theo điều kiện.'
 });
 const requested=new URLSearchParams(globalThis.location?.search||'').get('lang');
 if(Object.hasOwn(copy,requested))$('language').value=requested;

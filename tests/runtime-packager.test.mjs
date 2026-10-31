@@ -3,11 +3,19 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
 
-function runtime(modules) {
-  const context = { TextEncoder, Buffer, COMPANION_RUNTIME_MODULES: { fixture: modules } };
+function runtime(modules,requirements) {
+  const context = { TextEncoder, Buffer, COMPANION_RUNTIME_MODULES: { fixture: modules },COMPANION_HOST_REQUIREMENTS:{fixture:requirements} };
   vm.runInNewContext(fs.readFileSync('site/runtime-packager.js', 'utf8'), context);
   return context.CompanionRuntime;
 }
+
+test('new host features require format 4 and survive direct prepared-project packaging',()=>{
+  const api=runtime({'main.lua':'function update()return{}end'},['gba-bus-context-v1','growth-radar-v1']);
+  const project={manifest:{formatVersion:2},files:{}};
+  api.install(project,'fixture','{}');
+  assert.equal(project.manifest.formatVersion,4);
+  assert.deepEqual(JSON.parse(JSON.stringify(project.manifest.requires)),{features:['gba-bus-context-v1','growth-radar-v1']});
+});
 
 test('module packaging preserves assets and identity while replacing the legacy entry', () => {
   const main = 'local D = pack.require("data.rom_tables")\nfunction update() return D end\n';

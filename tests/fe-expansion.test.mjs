@@ -24,6 +24,31 @@ function siteContext(){
  return c;
 }
 
+test('new companion headers keep all six skills beside the unit identity and RNG control',()=>{
+ const c=siteContext();let sixSkillHeaders=0;
+ const visit=(node,check)=>{
+  if(!node||typeof node!=='object')return;
+  check(node);
+  for(const value of Object.values(node))if(value&&typeof value==='object')
+   (Array.isArray(value)?value:[value]).forEach(child=>visit(child,check));
+ };
+ for(const profile of c.COMPANION_PROFILES.filter(p=>expected[p.id])){
+  visit(c[profile.template].layout,node=>{
+   if(!node.class?.split(' ').includes('identity-line'))return;
+   const descendants=[];visit(node,child=>descendants.push(child));
+   const skills=descendants.find(child=>child.class==='remaster-skills');
+   if(!skills)return;
+   sixSkillHeaders++;
+   assert.equal(node.type,'row',profile.id+': skills must share the identity row');
+   assert(node.children.includes(skills),profile.id+': skills moved below the name/class');
+   assert(node.children.some(child=>child.class==='unit-identity'),profile.id+': unit identity must share the skills row');
+   assert.equal(skills.children.length,6,profile.id+': keep six skill slots');
+   assert(node.children.some(child=>child.class==='rng-led-control'),profile.id+': RNG control must stay in the header');
+  });
+ }
+ assert.equal(sixSkillHeaders,8,'Exercise every six-skill profile, not only text ability panels');
+});
+
 test('fifteen new ROM revisions remain separate from the fifteen existing profiles',async()=>{
  const c=siteContext();assert.equal(c.COMPANION_PROFILES.length,30);
  const identities=new Set();
@@ -39,7 +64,7 @@ test('fifteen new ROM revisions remain separate from the fifteen existing profil
   await assert.rejects(c[profile.api].prepare(wrong,c[profile.template],null,{onProgress(){progressed=true;}}),/CRC32/);
   assert.equal(progressed,false,'Foreign revisions must fail before ROM extraction: '+profile.id);
   assert(c.COMPANION_RUNTIME_MODULES[profile.id]?.['main.lua']);
-  if(profile.id==='pokemblem')assert.equal(c.COMPANION_CURSOR_PROFILES[profile.id],undefined,'Free movement must not inherit FE8 cursor writes');
+  if(profile.id==='pokemblem')assert.deepEqual(JSON.parse(JSON.stringify(c.COMPANION_CURSOR_PROFILES[profile.id].modeGuard)),{address:'0x030017A7',mask:'0x01',expected:'0x00'},'Cursor navigation must reject armed or running free movement');
   else assert(c.COMPANION_CURSOR_PROFILES[profile.id]);
  }
  assert.equal(c.COMPANION_PROFILES.filter(x=>expected[x.id]).length,15);
@@ -169,15 +194,23 @@ test('HP drain follows the native before-weapon effect on either side, not retai
  }
 });
 
-test('unverified native BIOS reads never produce EXP, a completed prediction or a stale gain',async()=>{
+test('native query failures clear prior results and a fresh forecast can recover',async()=>{
  for(const id of ['andaron-saga','justice-and-pride','the-dark-amulet','shadow-of-dawn']){
   const source=fs.readFileSync('runtime/'+id+'/features.analysis.lua','utf8');
-  const project={manifest:{script:'main.lua'},files:{'main.lua':Buffer.from(`local apply=pack.require('features.analysis')({});function update()return apply({forecastActive=ui.forecast,exp=99})end`).toString('base64'),'features.analysis.lua':Buffer.from(source).toString('base64')}};
-  const result=await executeProject(project,{ranges:[{address:0x03000000,bytes:Buffer.alloc(8)}],steps:[{ticks:3,ui:{forecast:true,predictionPopup:true}},{ticks:1,ui:{forecast:false,predictionPopup:true}},{ticks:2,ui:{forecast:false,predictionPopup:false}}]});
-  for(const value of result.values){assert.equal(value.analysisSupported,false);assert.equal(value.analysisReady,false);assert.equal(value.predictionAvailable,false);assert.equal(value.predictionComplete,false);assert.equal(value.predictionBusy,false);assert.equal(value.rngExpHit,undefined);assert.equal(value.rngExpKill,undefined);}
-  assert.equal(result.values[0].analysisFailed,true);assert(result.values[0].predictionFailureReason.includes('unavailable'));
-  assert.equal(result.values[3].analysisFailed,true,'Opening the popup must explain the gate before combat');
-  assert(result.values[3].analysisPredictionError.includes('unavailable'));
-  assert.equal(result.values.at(-1).analysisFailed,false);assert.equal(result.values.at(-1).analysisPredictionError,undefined);
+  const modules={
+   'main.lua':`local apply=pack.require('features.analysis')({});function update()return apply({forecastActive=ui.forecast~=false,exp=99})end`,
+   'features.analysis.lua':source,'features.fe8-analysis.lua':fs.readFileSync('runtime/fe8-vietnamese/features.analysis.lua','utf8'),
+   'game.snapshot.lua':`return function()return mem.u8 end`,'game.profile.lua':`return{activeUnit=0x03000010}`,
+   'features.exp.lua':`return function()return function()if ui.fail then error('Native CPU: missing captured bus context')end;return true,{gain=1,leveled=false}end end`,
+   'features.level_prediction.lua':`return function()error('No level-up job is eligible')end`
+  };
+  const project={manifest:{script:'main.lua'},files:Object.fromEntries(Object.entries(modules).map(([name,text])=>[name,Buffer.from(text).toString('base64')]))};
+  const result=await executeProject(project,{ranges:[{address:0x02000000,bytes:Buffer.alloc(0x40000)},{address:0x03000000,bytes:Buffer.alloc(0x8000)}],steps:[
+   {ticks:4,expect:{analysisReady:true,rngExpHit:1,rngExpKill:1}},
+   {ticks:3,ui:{fail:true},patches:[{address:0x03000000,bytes:[1]}],expect:{analysisFailed:true,predictionAvailable:false,predictionComplete:false,rngExpHit:undefined,rngExpKill:undefined}},
+   {ticks:1,ui:{forecast:false,predictionPopup:true},expect:{analysisFailed:false,analysisPredictionError:undefined,analysisReady:false,predictionAvailable:false}},
+   {ticks:4,expect:{analysisReady:true,analysisFailed:false,rngExpHit:1,rngExpKill:1}}
+  ]});
+  assert.match(result.values[4].analysisPredictionError,/missing captured bus context/);assert.equal(result.readOnly,true);
  }
 });

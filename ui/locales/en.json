@@ -1,5 +1,7 @@
 {
   "layout": {
+    "Tiếp tục": "Continue",
+    "Đang tính vùng di chuyển và tấn công…": "Calculating ranges…",
     "Phân tích": "Analysis",
     "Trỏ vào nhân vật để xem tăng trưởng và RNG.": "Select a unit to view Growth and RNG.",
     "Còn {growthExpNeeded} EXP để lên cấp": "{growthExpNeeded} EXP to next level",

@@ -1,6 +1,7 @@
 -- Native FE6 selection: cursor fallback and a verified player-action owner.
 return function(D, map, memory)
   local profile = pack.require("game.profile")
+  local selectCompanionUnit = pack.require("game.companion-selection")
   local function ram(a, n)
     return a >= 0x02000000 and a + n <= 0x02040000
   end
@@ -17,7 +18,7 @@ return function(D, map, memory)
   local fill = pack.require("presentation.unit")(D, valid)
   local items = pack.require("game.items")(D)
   local battle = pack.require("game.battle")(D, memory)
-  local preparations = pack.require("game.preparations")(D.slots, map.meta, profile, memory)
+  local preparations = pack.require("game.native-selection")(D.slots, map.meta, profile, memory)
   local tick = 0
   local lastIdentity
   return function()
@@ -43,6 +44,7 @@ return function(D, map, memory)
     end
     local u, inPreparations = preparations()
     if inPreparations then
+      selectCompanionUnit(D, profile, u, v, true, memory, map.config)
       if u then
         fill(v, u)
         items(v, u, true)
@@ -63,6 +65,7 @@ return function(D, map, memory)
       then
         u, v.unitLocked = active, true
       end
+      u = selectCompanionUnit(D, profile, u, v, false, memory, map.config)
       if valid(u) then
         fill(v, u)
         items(v, u)
@@ -71,6 +74,7 @@ return function(D, map, memory)
       end
     end
     map.apply(v, v.unitLocked and u or nil, inPreparations)
+    if not v.unitPresent then selectCompanionUnit(D, profile, nil, v, true, memory, map.config) end
     local flash = tick % 6 < 3
     for _, name in ipairs({
       "dropPulse",

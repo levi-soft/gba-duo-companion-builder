@@ -37,6 +37,7 @@
     }
   }
   const profile=Object.freeze({
+    mapRenderOnDemand:true,
     id:"justice-and-pride",
     code:"BE8E",
     crc32:0xAC23B461,

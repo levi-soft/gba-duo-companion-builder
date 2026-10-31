@@ -47,6 +47,7 @@ async function prepare(input,template,runtimeTemplate,options={},profile=DEFAULT
  for(let id=1;id<256;id++){const address=r.u32(profile.slots+id*4);if(address>=0x02000000&&address+72<=0x02040000)slots[id]=address;}
  const table=(records,fn)=>Object.fromEntries(Object.entries(records).map(([k,v])=>[k,fn(v,k)])),weapons=Object.fromEntries(Object.entries(items).filter(([,x])=>x.attributes&1));
  const D={chars:characters,classes,slots,nativeClasses:table(classes,x=>[x.id,x.attributes]),nativeCharacters:table(characters,x=>x.attributes)};
+ if(profile.mapRenderOnDemand===true)D.mapRenderOnDemand=true;
  D.mapMeta={chars:characters,classes,ballistaCosts:Array(65).fill(-1)};D.mapWeapons=table(weapons,x=>({name:x.name,icon:x.icon,maxUses:x.maxUses,t:x.type,a:x.attributes,r:0,n:x.rank,rank:x.rank,range:x.range,m:x.might,h:x.hit,w:x.weight,c:x.crit,g:x.range}));
  D.equipmentItems=D.mapWeapons;D.equipmentChars=table(characters,x=>({name:x.name,a:x.attributes,con:x.con}));D.equipmentClasses=table(classes,x=>({a:x.attributes,con:x.con,avoid:x.avoid}));
  D.forecastChars=characters;D.forecastClasses=classes;D.forecastItems=items;

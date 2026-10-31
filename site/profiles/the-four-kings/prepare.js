@@ -51,6 +51,7 @@
     }
   }
   const profile=Object.freeze({
+    mapRenderOnDemand:true,
     id:'the-four-kings',code:'BE8E',crc32:0x0DDE5BEB,language:'en',decodeText:root.CompanionLatinText,
     characters:0x803D30,classes:0x807110,items:0x1C1D0F8,
     portraits:0x8ACBC4,sprites:0x8AF880,icons:0x5926F4,

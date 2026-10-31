@@ -144,7 +144,8 @@ test('FE6 EXP and level prediction use native entries, preserve disabled counter
 });
 
 test('FE6 selection rejects hidden/rescued/stale units and partial rows; idle activeUnit never owns selection', async () => {
-  assert.equal(await withLua({source:'runtime/fe6-english/game.units.lua',profileSource:'runtime/fe6-english/game.profile.lua'}, `
+  assert.equal(await withLua({source:'runtime/fe6-english/game.units.lua',profileSource:'runtime/fe6-english/game.profile.lua',
+    selectionSource:'runtime/shared/game.companion-selection.lua'}, `
     local p=assert(load(profileSource))()
     local bytes={}
     local function put(a,value,size) for n=0,size-1 do bytes[a+n]=(value>>(n*8))&255 end end
@@ -163,6 +164,7 @@ test('FE6 selection rejects hidden/rescued/stale units and partial rows; idle ac
     put(p.processPool,p.playerProcess,4);put(p.processPool+4,p.playerPcStart,4)
     pack={require=function(name)
       if name=='game.profile' then return p end
+      if name=='game.companion-selection' then return assert(load(selectionSource))() end
       if name=='presentation.unit' then return function(data,valid) return function(v,u)
         v.unitPresent=true;v.characterPointer=read(u,4);v.deployment=read(u+11,1)
       end end end

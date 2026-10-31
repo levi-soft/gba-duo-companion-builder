@@ -1,122 +1,105 @@
 # Companion Builder 1.2.0 — thirty companions at 1.0.0
 
-> **WITHDRAWN:** the 1.2.0 GitHub release and tag have been removed at the
-> maintainer's request. The public website/catalogue has returned to Builder
-> 1.1.5 and its previous fifteen profiles. The fifteen additions below are
-> undergoing renewed implementation and acceptance testing. This document is
-> a historical record, not an active release announcement.
+Released again on **2026-10-31** at the maintainer's request after the shared
+30-profile repair. Builder is **1.2.0** and every companion profile is **1.0.0**.
+This replaces the withdrawn 2026-10-29 release. The [withdrawn release record](RELEASE-1.2.0-WITHDRAWN.md)
+is retained as history; its missing-Analysis table does not describe this build.
 
-> **Verification correction:** these fifteen additions have partial feature
-> support. **Ten have no working Battle Analysis; five have only limited
-> conditional Analysis fixtures.** None has completed physical companion-app
-> acceptance testing across its full supported flow. The earlier completion
-> report overstated what the audits established. Version 1.0.0 and passing CI
-> do not establish feature completeness. See the
-> [per-profile gaps and remaining work](ANALYSIS-GAPS-1.2.0.vi.md).
-
-Builder 1.2.0 adds fifteen exact-ROM companions to the website, offline kit and
-GBA Duo Plus catalogue. All thirty companion profiles are version **1.0.0**.
-The previous fifteen templates, readers and exact ROM identities remain unchanged.
-
-## New companions
-
-| Companion | Game code / CRC32 | Version | Analysis |
-|---|---|---|---|
-| Fire Emblem: Andaron Saga | `BE8E / A3B9CD19` | 1.0.0 | Unavailable |
-| Bells of Byelen | `BE8E / 48B996CD` | 1.0.0 | Unavailable |
-| Cerulean Crescent | `BE8E / DC071CC2` | 1.0.0 | Unavailable |
-| Fire Emblem: Dark Lord and the Maiden of Light | `AE7E / C99A6D26` | 1.0.0 | Conditional-tested |
-| Fire Emblem: Dream of Five - Definitive Edition | `BE8E / B313A6F5` | 1.0.0 | Conditional-tested |
-| Fire Emblem: Eligor's Spear | `BE8E / 6E5FE3B0` | 1.0.0 | Conditional-tested |
-| Fire Emblem: Iron Emblem | `BE8E / 141FF3AA` | 1.0.0 | Conditional-tested |
-| Fire Emblem: Justice & Pride | `BE8E / AC23B461` | 1.0.0 | Unavailable |
-| Pokemblem | `BE8E / 10BDF112` | 1.0.0 | Unavailable |
-| Fire Emblem: The Dark Amulet | `BE8E / 8537CE2A` | 1.0.0 | Unavailable |
-| Fire Emblem: The Four Kings | `BE8E / 0DDE5BEB` | 1.0.0 | Unavailable |
-| Fire Emblem: The Lonely Mirror | `BE8E / A74E93C7` | 1.0.0 | Conditional-tested |
-| The Morrow's Golden Country | `BE8E / 20287E1B` | 1.0.0 | Unavailable |
-| Fire Emblem: The Shadow of Dawn | `BE8E / EB38F5F7` | 1.0.0 | Unavailable |
-| The Sun God’s Wrath | `BE8E / 566D7A9E` | 1.0.0 | Unavailable |
-
-Other revisions, translations and patches require their own profiles. The web
-Builder and Plus use the same compiler, preparers and authored runtime. Existing
-installed packs are not silently replaced: rebuild from the matching ROM, save
-the game, import/assign the new ZIP and reopen the companion.
+The release contains the authored Builder, exact-ROM profiles and source code.
+Create the companion locally from your matching ROM using the website, offline
+kit or a compatible Plus catalogue flow. Save the game, rebuild, then import and
+assign the new ZIP. Already installed packs are not updated silently.
 
 ## Changes
 
-- Follow the game-owned unit pointer when R opens the native stat screen and
-  Down changes the viewed unit. Closing with B returns to the actual Map cursor.
-  Preparations retains its player-only selection rules. Pokemblem uses its
-  separate party/free-movement reader.
-- Keep RNG observation independent of unit/Map/Growth changes and prediction
-  support. Record a new reference when Analysis opens; do not modify the seed.
-- Preserve Map pick invalidation when Dark Lord refreshes a unit's inventory.
-  Pokemblem's Map uses the current species name while retaining deployment IDs.
-- Handle ROM-specific split Str/Mag, class/cap/skill tables, avatar names,
-  affinity/support data, Leadership and Growth cardinality. Pokemblem displays
-  its five stored moves and separates held-accessory flags from remaining uses.
-- Keep conditional EXP/level-up Analysis enabled only in the five verified
-  paths below. Unsupported paths explain their gate rather than showing a
-  fabricated or stale result.
-- Add Windows/Linux Node 22/24 verification for the public Builder source.
+- Add fifteen exact-ROM profiles and retain the previous fifteen, all at 1.0.0.
+- Replace the ten originally missing Analysis implementations with bounded ROM
+  execution on copied RAM; preserve conditional EXP and hypothetical level-up
+  semantics, unsupported-path reporting and independent RNG observation.
+- Use the existing Plus native D-pad focus route for roster and Map taps. Packs
+  use format 2 and do not need game-write permission or an updated Plus APK.
+  Normal taps no longer show a status line above the chapter or move the Map.
+- Keep static Growth PNGs and show signed live growth bonuses in the left-hand
+  rate table, for example `60% (+1%)`; no separate dynamic radar is required.
+- Repair unit/context selection, paused continuation, shared Map work and
+  invalidation. Hidden Units/Growth views avoid redundant Map geometry work;
+  bounded caches preserve the live RAM inputs used to invalidate results.
+- Keep skill slots in one row and constrain Pokemblem descriptions to their
+  card. Long descriptions have a separate scrolling region.
 
-## Verification
+## New exact-ROM companions
 
-The functional candidate was audited with **193 Builder tests**, **69 Android
-host tests**, **211 visible units / 14,733 raw-field comparisons**, **241 reachable
-widget callbacks**, **15 Studio import/export/reimport cycles**, and **2,780
-standalone native Lua updates on Thor**. Native stat-screen selection was checked
-in fourteen ROMs, including real R/Down/B input and return to Map. Existing Map
-navigation evidence covers 29 arrivals and fourteen selection/preview locks.
+| Companion | Game code | CRC32 | Version |
+|---|---|---|---|
+| Fire Emblem: Andaron Saga | `BE8E` | `A3B9CD19` | 1.0.0 |
+| Bells of Byelen | `BE8E` | `48B996CD` | 1.0.0 |
+| Cerulean Crescent | `BE8E` | `DC071CC2` | 1.0.0 |
+| Fire Emblem: Dark Lord and the Maiden of Light | `AE7E` | `C99A6D26` | 1.0.0 |
+| Fire Emblem: Dream of Five - Definitive Edition | `BE8E` | `B313A6F5` | 1.0.0 |
+| Fire Emblem: Eligor's Spear | `BE8E` | `6E5FE3B0` | 1.0.0 |
+| Fire Emblem: Iron Emblem | `BE8E` | `141FF3AA` | 1.0.0 |
+| Fire Emblem: Justice & Pride | `BE8E` | `AC23B461` | 1.0.0 |
+| Pokemblem | `BE8E` | `10BDF112` | 1.0.0 |
+| Fire Emblem: The Dark Amulet | `BE8E` | `8537CE2A` | 1.0.0 |
+| Fire Emblem: The Four Kings | `BE8E` | `0DDE5BEB` | 1.0.0 |
+| Fire Emblem: The Lonely Mirror | `BE8E` | `A74E93C7` | 1.0.0 |
+| The Morrow's Golden Country | `BE8E` | `20287E1B` | 1.0.0 |
+| Fire Emblem: The Shadow of Dawn | `BE8E` | `EB38F5F7` | 1.0.0 |
+| The Sun God’s Wrath | `BE8E` | `566D7A9E` | 1.0.0 |
 
-The version finalization changes release metadata, not the audited runtime logic.
-The final source gate contains **194 tests**, including a regression for stable
-replay-evidence hashes across Lua table iteration orders. Object-key ordering
-does not alter the digest; tick/array order and field-value changes still do.
-The release gate rebuilds all fifteen new companions from the final public
-Builder bundle, checks their exact identities/ZIP hashes and compares their Lua,
-layout, assets and native cursor contracts with the audited candidate. Generated
-projects, captures, device logs and game-derived assets stay in the private
-verification workspace. This public repository contains the authored code,
-metadata, synthetic tests and validation reports.
+Other revisions, translations or patches need their own profiles. The full
+thirty-profile list is available on the [supported-games page](https://levi-soft.github.io/gba-duo-companion-builder/supported-games.html).
 
-## Retained limits
+## Verification and remaining limits
 
-- **Conditional Analysis:** Iron Emblem, The Lonely Mirror, Dream of Five,
-  Dark Lord and the Maiden of Light, and Eligor's Spear. This models conditional
-  damage/defeat EXP and hypothetical level-up gains, rather than promising the
-  hidden hit/miss/critical outcome of every battle.
-- **Analysis unavailable:** Andaron Saga, Bells of Byelen, Cerulean Crescent,
-  Justice and Pride, Pokemblem, The Dark Amulet, The Four Kings, Morrow's Golden
-  Country, Shadow of Dawn and Sun God's Wrath. Their UI reports the limitation.
-- Pokemblem supports companion-only selection and stored moves. Game-cursor
-  control and move-based movement/attack/threat overlays remain disabled.
-- Map overlays use base movement/weapon data. Custom skills, temporary modifiers
-  and alternate growth modes may require further game-specific work. Growth
-  notes identify base rates and excluded modifiers.
-- Host renderer tests, mGBA input, frozen-RAM replay and standalone Lua on Thor
-  are distinct checks. Complete campaigns, every skill/item/mode, and physical
-  companion-app input/UI acceptance for all fifteen games remain unverified.
+The repaired runtime passed **578 automated source tests**, a thirty-pack ZIP,
+Lua/layout/asset audit and a thirty-profile binding to the existing native
+navigator JVM checks. These checks do not establish all thirty Android flows.
 
-The released version numbers do not remove these limits. The maintainer's request
-to publish was not acceptance of complete Analysis support or full device QA.
-See [the detailed batch report](FE-EXPANSION-2026-10-29.vi.md) and each
-profile's linked validation history for the exact supported ROM and scope.
+The latest unchanged-APK test used **GBA Duo Plus 0.1.8-plus.4 on AYN Thor** with
+**Packs can change games off**, using Dark Lord and the Maiden of Light. Two
+native traces checked roster/Map input, actual cursor and camera arrival, no
+automatic A confirmation, unchanged unit coordinates/HP/items, and removal of
+the chapter status line. The user's current SRAM and native state were preserved
+and restored. Earlier modified-host results are historical evidence only.
+
+Known open issues are retained explicitly:
+
+- **25 ms update timeout:** earlier bounded observations still recorded Map and
+  Danger timeout episodes. Work reduction is included, but the deadline issue
+  remains open. The latest status-line test did not repeat the four 20-second
+  health observations, and no sustained frame-time guarantee is made.
+- **Storge allies 85–99:** the existing Plus native focus API excludes these
+  live green deployment IDs. Use the game D-pad for them; the companion does not
+  write RAM to bypass the host limit.
+- **Stock GBA Duo v0.1.8:** it lacks `input.focusUnit`. Pack loading and data
+  display do not establish native cursor control on that host.
+- **ANDROID-BLANK-01:** an earlier stock-host blank-data/unknown-script-error
+  observation remains unresolved. A recovery probe did not establish its cause.
+- All-thirty physical Android acceptance, complete campaigns, every skill/item,
+  mode and device layout remain unverified. The Pokemblem long-description
+  layout was viewed, but manual scrolling beyond the visible region was not
+  separately accepted. A 1.0.0 version is not a claim of complete feature QA.
+
+The maintainer has requested public release with these known limits. This does
+not relabel the earlier private test gate as full Android acceptance. See the
+[current repair report](OFFICIAL-30-COMPANION-FIX-2026-10-30.vi.md) and the
+[historical modified-host report](FULL-FE-RECHECK-2026-10-30.vi.md).
 
 ## Distribution and credits
 
-The GitHub download is **GBA-Duo-Companion-Builder-1.2.0.zip**, with SHA-256 checksums.
-The website retains previous content-addressed bundles so cached Plus versions
-can continue to use them. No APK or Studio release is required by this batch.
+Download **GBA-Duo-Companion-Builder-1.2.0.zip** and **SHA256SUMS.txt** from this
+release. The website and Plus catalogue use the same SHA-256-addressed bundle;
+older published bundle paths remain available. Existing Plus and Studio APKs
+are unchanged by this release.
 
-The public release contains the Builder and profiles that extract images/text
-locally from the user's own ROM. ROMs, saves, snapshots, prepared projects and
-ROM-derived Local ZIPs are not release attachments.
+The public files contain authored code/UI and licensed resources. ROMs, SRAM,
+native states, captures, private device reports, prepared projects, extracted
+game assets and ROM-derived Local companion ZIPs are not release attachments.
 
 Thanks to **khumam and the GBA Duo contributors**, **levi-soft**, the original
-hack authors and their art/music/writing/engine contributors, FEBuilderGBA,
-FireEmblemUniverse, Skill System, mGBA/endrift, Lua, Inter and JSZip contributors.
-See [complete credits and project sources](../CREDITS.md). Original notices remain
-authoritative. Nintendo and Intelligent Systems retain their respective rights;
-this independent tool is not an official or endorsed product.
+hack/translation authors and their art, music, writing, map and engine
+contributors, FEBuilderGBA, FireEmblemUniverse, Skill System, mGBA/endrift, Lua,
+Inter and JSZip. See [complete credits and project sources](../CREDITS.md).
+Original notices remain authoritative. Nintendo and Intelligent Systems retain
+their respective rights; this is an independent, unofficial tool.

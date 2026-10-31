@@ -3,9 +3,13 @@
   // Compact species names use UTF-8 modifier letters mixed with FE controls.
   // NFKC recovers readable letters without storing any game-specific strings.
   const utf8=new TextDecoder('utf-8',{fatal:true});
-  // The author's [PI]/[SI] UTF-8 sequences select custom font icons, not letters.
+  // The author's UTF-8 sequences select custom font icons, not letters.
   // Keep their meaning readable when the companion uses its own text font.
-  const iconLabels={'\u18BB':'Physical:','\u18BC':'Special:'};
+  const iconLabels={'\u18BB':'Physical:','\u18BC':'Special:',
+    '\u0785':' [Lock] ','\u18B0':' [Water] ','\u18B1':' [Bug] ','\u18B2':' [Dragon] ',
+    '\u18B3':' [Electric] ','\u18B4':' [Fighting] ','\u18B5':' [Fire] ','\u18B6':' [Ghost] ',
+    '\u18B7':' [Grass] ','\u18B8':' [Ground] ','\u18B9':' [Ice] ','\u18BA':' [Normal] ',
+    '\u18BE':' [Poison] ','\u18BF':' [Psychic] ','\u18C0':' [Rock] ','\u18C1':' [Flying] ','\u18C2':' [Steel] '};
   const capitals={'\u1D00':'A','\u0299':'B','\u1D04':'C','\u1D05':'D','\u1D07':'E','\uA730':'F','\u0262':'G','\u029C':'H','\u026A':'I','\u1D0A':'J','\u1D0B':'K','\u029F':'L','\u1D0D':'M','\u0274':'N','\u1D0F':'O','\u1D18':'P','\u0280':'R','\uA731':'S','\u1D1B':'T','\u1D1C':'U','\u1D20':'V','\u1D21':'W','\u028F':'Y','\u1D22':'Z'};
   function decodeText(bytes){
     let text='';
@@ -21,7 +25,7 @@
   }
   async function prepareExtra({reader:r,bytes,data:D,project,options,image}) {
     D.levelCaps=Array.from({length:255},(_,id)=>r.u8(0x13093B0+id));
-    D.customProfile={id:"pokemblem",split:true,supports:false,growthNote:"Character + species growths and base stat caps from the ROM. Held items, gym EXP restrictions and optional growth/cap modifiers are not included.",limitations:"Species moves, capture, held items and gym EXP restrictions are not ordinary FE8 weapon/rank mechanics. Tactical range and prediction are not verified for these systems."};
+    D.customProfile={id:"pokemblem",split:true,supports:false,growthNote:"Current native growth rates include active bonuses. Analysis follows the current growth mode.",limitations:"Species moves, capture, held items and gym EXP restrictions are not ordinary FE8 weapon/rank mechanics. Tactical range and prediction are not verified for these systems."};
     D.customProfile.promotedExpBonus=r.u8(0x2C35E);
     D.skillConfig={entry:0x964CF40,buffer:0x02026B90,cache:0x02026BB0,limit:6};
     D.skillData={};
@@ -67,7 +71,8 @@
       D.growthRadarCombinations[baseKey+':'+pointer]='asset:'+name.slice(7);
     }
   }
-  const profile=Object.freeze({...{
+  const profile=Object.freeze({
+    mapRenderOnDemand:true,...{
     id:"pokemblem",
     allowEmptyPortraits:true,
     code:"BE8E",

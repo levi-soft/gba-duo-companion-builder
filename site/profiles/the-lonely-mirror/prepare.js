@@ -52,6 +52,7 @@
     }
   }
   const profile=Object.freeze({
+    mapRenderOnDemand:true,
     id:'the-lonely-mirror',code:'BE8E',crc32:0xA74E93C7,language:'en',decodeText:root.CompanionLatinText,
     characters:0x803D30,classes:0x807110,items:0x125D334,
     portraits:0x1A11C80,sprites:0x11DE368,icons:0x1001800,

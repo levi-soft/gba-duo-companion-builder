@@ -20,7 +20,8 @@ for(const id of ['fe6-remastered','fe8-vietnamese']){
 local map=pack.require('game.map')(D)
 function update()local v={};map.apply(v);return {mapPresent=v.mapPresent,cells=#v.mapCells}end`),
       'game.map.lua':source(id,'game.map'),'game.fe8-map.lua':source('shared','game.fe8-map'),'game.profile.lua':encode(profile),
-      'presentation.chapter.lua':source('shared','presentation.chapter')
+      'presentation.chapter.lua':source('shared','presentation.chapter'),
+      'presentation.map-picks.lua':source('shared','presentation.map-picks')
     }};
     const result=await executeProject(project,{ranges:[{address:base,bytes:ram}],steps:[
       {expect:{mapPresent:true,cells:1}},
@@ -43,6 +44,8 @@ local read=pack.require('game.units')(D,map,{truth=function(v)return v==true end
 function update()return read()end`),
       'game.units.lua':source(id,'game.units'),'game.profile.lua':encode(profile),
       'game.preparations.lua':encode(fs.readFileSync('runtime/shared/game.preparations.lua')),
+      'game.native-selection.lua':encode(fs.readFileSync('runtime/shared/game.native-selection.lua')),
+      'game.companion-selection.lua':encode(fs.readFileSync('runtime/shared/game.companion-selection.lua')),
       'presentation.defaults.lua':encode('return function()return function()return {unitPresent=false}end end'),
       'game.bindings.lua':encode('return function()return function(v)return v end end'),
       'game.items.lua':encode('return function()return function()end end'),
@@ -71,7 +74,8 @@ function update()return read()end`),
 local map=pack.require('game.map')(D)
 function update()local v={};map.apply(v);return {marker=v.mapCells[1].marker,color=v.mapCells[1].color}end`),
       'game.map.lua':source(id,'game.map'),'game.fe8-map.lua':source('shared','game.fe8-map'),'game.profile.lua':encode(profile),
-      'presentation.chapter.lua':source('shared','presentation.chapter')
+      'presentation.chapter.lua':source('shared','presentation.chapter'),
+      'presentation.map-picks.lua':source('shared','presentation.map-picks')
     }};
     const result=await executeProject(project,{ranges:[{address:base,bytes:ram}],steps:[
       {expect:{marker:false,color:'transparent'}},

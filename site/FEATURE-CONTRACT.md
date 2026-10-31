@@ -1,4 +1,55 @@
-# Public scope — Builder 1.1.0
+# Public scope — Builder 1.2.0, companions 1.0.0
+
+The 2026-10-31 public release contains thirty exact-ROM profiles. Use the
+[current release notes](https://github.com/levi-soft/gba-duo-companion-builder/blob/v1.2.0/docs/RELEASE-1.2.0.md) for changes and known limits. The
+sections after the profile table below are historical validation records.
+
+The current shared format-2 route uses the existing Plus 0.1.8-plus.4 native
+D-pad API with game-write permission off. Stock GBA Duo v0.1.8 has no native
+focus API. Static Growth PNGs remain in use; live signed bonuses are shown in
+the rate table. Normal unit taps do not render a log above the chapter.
+
+The repaired runtime passed 578 automated source tests and a thirty-pack
+artifact/native-profile audit. The latest unchanged-APK Thor pilot checked
+Maiden roster and Map taps. All-thirty Android acceptance remains incomplete.
+Update timeouts at 25 ms, Storge ally IDs 85–99 and an earlier stock-host
+blank-data observation remain open. Earlier modified-host and fixture checks
+do not establish full compatibility or complete-game accuracy.
+
+| Companion | Game code | CRC32 | Version |
+|---|---|---|---|
+| FE7 Vietnamese | `AE7E` | `32CD990D` | 1.0.0 |
+| FE6 Vietnamese | `BE8E` | `BD53D5F3` | 1.0.0 |
+| FE8 Vietnamese | `BE8E` | `3CD932D7` | 1.0.0 |
+| FE7 English | `AE7E` | `2A524221` | 1.0.0 |
+| FE8 Europe | `BE8P` | `B3005195` | 1.0.0 |
+| FE8 English - USA/Australia | `BE8E` | `A47246AE` | 1.0.0 |
+| FE6 T-EN | `AFEJ` | `197DE10B` | 1.0.0 |
+| Project Ember | `AFEJ` | `636F7B05` | 1.0.0 |
+| Project Ember Reverse Recruitment | `AFEJ` | `29BC2257` | 1.0.0 |
+| Void's Blitzarre Adventure | `BE8E` | `9D22107C` | 1.0.0 |
+| Fire Emblem: Storge | `BE8E` | `079106D8` | 1.0.0 |
+| The Hag in White | `BE8E` | `7479D7E2` | 1.0.0 |
+| Fire Emblem: Sacred Echoes | `BE8E` | `13F15F23` | 1.0.0 |
+| Fire Emblem: Vision Quest | `BE8E` | `2BCFEC83` | 1.0.0 |
+| Fire Emblem: The Last Promise | `AE7E` | `D1C6E5D5` | 1.0.0 |
+| Fire Emblem: Andaron Saga | `BE8E` | `A3B9CD19` | 1.0.0 |
+| Bells of Byelen | `BE8E` | `48B996CD` | 1.0.0 |
+| Cerulean Crescent | `BE8E` | `DC071CC2` | 1.0.0 |
+| Fire Emblem: Dark Lord and the Maiden of Light | `AE7E` | `C99A6D26` | 1.0.0 |
+| Fire Emblem: Dream of Five - Definitive Edition | `BE8E` | `B313A6F5` | 1.0.0 |
+| Fire Emblem: Eligor's Spear | `BE8E` | `6E5FE3B0` | 1.0.0 |
+| Fire Emblem: Iron Emblem | `BE8E` | `141FF3AA` | 1.0.0 |
+| Fire Emblem: Justice & Pride | `BE8E` | `AC23B461` | 1.0.0 |
+| Pokemblem | `BE8E` | `10BDF112` | 1.0.0 |
+| Fire Emblem: The Dark Amulet | `BE8E` | `8537CE2A` | 1.0.0 |
+| Fire Emblem: The Four Kings | `BE8E` | `0DDE5BEB` | 1.0.0 |
+| Fire Emblem: The Lonely Mirror | `BE8E` | `A74E93C7` | 1.0.0 |
+| The Morrow's Golden Country | `BE8E` | `20287E1B` | 1.0.0 |
+| Fire Emblem: The Shadow of Dawn | `BE8E` | `EB38F5F7` | 1.0.0 |
+| The Sun God’s Wrath | `BE8E` | `566D7A9E` | 1.0.0 |
+
+# Historical scope — Builder 1.1.0
 
 | Profile | Game code | CRC32 | Companion |
 |---|---|---|---|

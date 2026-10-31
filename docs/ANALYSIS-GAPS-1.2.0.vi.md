@@ -1,5 +1,7 @@
 # Đính chính kiểm chứng 15 companion mới trong Builder 1.2.0
 
+> Hồ sơ của bản 1.2.0 đã gỡ. Xem [triển khai và nghiệm thu hiện tại](FULL-FE-RECHECK-2026-10-30.vi.md).
+
 Kết luận đã hoàn tất rà soát toàn bộ 15 companion là quá mức. Có kiểm tra thực
 tế cho các bộ đọc và một số luồng chọn unit/Map/RNG, nhưng **10 bản chưa có
 Battle Analysis hoạt động**, còn **5 bản chỉ mới kiểm chứng Analysis trong một

@@ -47,6 +47,7 @@
     }
   }
   const profile=Object.freeze({
+    mapRenderOnDemand:true,
     id:'dream-of-five',code:'BE8E',crc32:0xB313A6F5,language:'en',decodeText:root.CompanionLatinText,
     characters:0x803D30,classes:0x807110,items:0x1B00150,
     portraits:0x1B49874,sprites:0x10F084C,icons:0x14381A4,

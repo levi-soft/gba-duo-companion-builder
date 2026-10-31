@@ -9,7 +9,7 @@
       D['lookup'+(27+stat)]=table;
     }
     D.levelCaps=Array.from({length:256},(_,id)=>r.u8(0x1EC9BBC+id));
-    D.customProfile={id:"sun-gods-wrath",split:false,supports:true,growthNote:"Base ROM growths. Skill/item bonuses and alternate growth modes are not included. The chart shows seven core stats.",limitations:"PCC, fatigue variants, weapon-rank bonuses and Mov/Con growths need custom calculations. Range overlays use base movement and weapon ranges."};
+    D.customProfile={id:"sun-gods-wrath",split:true,supports:true,growthNote:"Current native growth rates include active bonuses. Analysis follows the current growth mode.",limitations:"PCC, fatigue variants, weapon-rank bonuses and Mov/Con growths need custom calculations. Range overlays use base movement and weapon ranges."};
     D.customProfile.hpEnemyCap=120;
     D.customProfile.promotedExpBonus=r.u8(0x2C35E);
     for(const [pointer,c]of Object.entries(D.growthCharacters)){const at=+pointer-0x08000000;c.conGrowth=r.u8(at+0x23);c.movGrowth=r.u8(at+0x24);}
@@ -33,10 +33,26 @@
     });
     // Active level-up HP clamp is 60; the other core caps come from class records.
     for(const [pointer,c]of Object.entries(D.growthClasses)){const at=+pointer-0x08000000;c.caps=[60,r.u8(at+20),r.u8(at+21),r.u8(at+22),r.u8(at+23),r.u8(at+24),r.u8(0x2C016)];}
+    // Active native magic attacks read Unit/BattleUnit +0x3A. These are the
+    // exact tables referenced by this ROM's Mag getter and level-up cap path.
+    D.equipmentConfig={...(D.equipmentConfig||{}),magicOffset:0x3A};
+    for(const c of Object.values(D.growthCharacters))for(const asset of c.radars)delete project.files['assets/'+asset.slice(6)];
+    const charts=new Set();
+    for(const [pointer,c]of Object.entries(D.growthCharacters)){
+      const pid=D.chars[pointer].id,g=c.growth;
+      c.rates=[g[0],g[1],r.u8(0x1ED2DC8+pid*2+1),g[2],g[3],g[6],g[4],g[5]];
+      const name='assets/images/growth/'+c.rates.join('-')+'.png';c.radar='asset:'+name.slice(7);c.radars=[c.radar,c.radar];
+      if(!charts.has(name)){project.files[name]=root.CompanionRom.b64(await options.renderRadar(c.rates,0,100,project.files));charts.add(name);}
+    }
+    for(const [pointer,c]of Object.entries(D.growthClasses)){
+      const at=+pointer-0x08000000,cid=D.classes[pointer].id;
+      c.caps=[60,r.u8(at+20),r.u8(0x1ED2FC8+cid*4+2),r.u8(at+21),r.u8(at+22),r.u8(0x2C016),r.u8(at+23),r.u8(at+24)];D.lookup12[pointer]='Str';
+    }
     // Use the ROM's own displayed chapter title rather than retail slot numbers.
     for(const chapter of D.fe8Chapters){chapter.label=chapter.name;chapter.name='';}
   }
-  const profile=Object.freeze({...{
+  const profile=Object.freeze({
+    mapRenderOnDemand:true,...{
     id:"sun-gods-wrath",
     code:"BE8E",
     crc32:0x566D7A9E,

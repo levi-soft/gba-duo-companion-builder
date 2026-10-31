@@ -25,9 +25,17 @@ return function(strings)
     "analysisExpSummary",
     "analysisLevelSummary",
   }
+  -- The prepared locale is immutable. Retain only each field's latest pair,
+  -- so unchanged snapshots avoid rescanning authored fragments. Live text
+  -- changes still translate immediately; no unit/game state is cached here.
+  local lastInput, lastOutput, seen = {}, {}, {}
   return function(values)
-    for _, key in ipairs(fields) do
-      values[key] = translate(values[key])
+    for index, key in ipairs(fields) do
+      local value = values[key]
+      if not seen[index] or value ~= lastInput[index] then
+        lastInput[index], lastOutput[index], seen[index] = value, translate(value), true
+      end
+      values[key] = lastOutput[index]
     end
     return values
   end

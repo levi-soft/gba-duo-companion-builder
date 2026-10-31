@@ -2,6 +2,7 @@
 -- Authored runtime module. Generated ROM tables live in data.rom_tables.lua.
 
 local profile = pack.require("game.profile")
+local selectCompanionUnit = pack.require("game.companion-selection")
 
 return function(D, map, values, abilities)
   local truth = values.truth
@@ -10,10 +11,15 @@ return function(D, map, values, abilities)
   local mapSlots = D.slots
   local mapCfg = map.config
   local applyMapSource = map.apply
-  local emptyUnitValues = pack.require("presentation.defaults")(D, map, values, abilities, state)
+  local makeEmptyUnit = pack.require("presentation.defaults")(D, map, values, abilities, state)
+  local function emptyUnitValues(menu)
+    local v = makeEmptyUnit(menu)
+    selectCompanionUnit(D, profile, nil, v, true)
+    return v
+  end
   local validSlots = D.validSlots
 
-  local readPreparations = pack.require("game.preparations")(D.slots, map.meta, profile)
+  local readPreparations = pack.require("game.native-selection")(D.slots, map.meta, profile)
   local bindFields = pack.require("game.bindings")(D, values, state)
   local readItems = pack.require("game.items")(D, map)
   local readBattle = pack.require("game.battle")(D)
@@ -63,6 +69,7 @@ return function(D, map, values, abilities)
           and mem.u8(forecastProc + 0x34) == 0
       end
     end
+    unit = selectCompanionUnit(D, profile, unit, v, preparationsActive, nil, mapCfg)
     if not unit then
       local cursorX, cursorY = mem.u16(profile.cursorX), mem.u16(profile.cursorY)
       local width, height = mem.u16(profile.mapWidth), mem.u16(profile.mapHeight)
@@ -148,7 +155,7 @@ return function(D, map, values, abilities)
     if bound ~= v then
       return bound
     end
-    applyMapSource(v, unit, preparationsActive)
+    applyMapSource(v, v.unitLocked and unit or nil, preparationsActive)
     readItems(v, unit)
     readBattle(v)
     state.pulseTick = state.pulseTick + 1
@@ -177,16 +184,10 @@ return function(D, map, values, abilities)
       tostring(v["item5Id"]),
     }, "|")
     if identity ~= state.lastIdentity then
-      v.ui = {
-        set = {
-          ["inventoryDetail"] = v["firstItemPage"],
-          ["itemSelected1"] = v["firstItemSelected1"],
-          ["itemSelected2"] = v["firstItemSelected2"],
-          ["itemSelected3"] = v["firstItemSelected3"],
-          ["itemSelected4"] = v["firstItemSelected4"],
-          ["itemSelected5"] = v["firstItemSelected5"],
-        },
-      }
+      v.ui = v.ui or {}
+      v.ui.set = v.ui.set or {}
+      v.ui.set.inventoryDetail = v.firstItemPage
+      for n = 1, 5 do v.ui.set["itemSelected" .. n] = v["firstItemSelected" .. n] end
       state.lastIdentity = identity
     end
     v.ui = v.ui or {}

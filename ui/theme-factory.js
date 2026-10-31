@@ -1,5 +1,32 @@
 // Extend the common layout only with capabilities provided by a ROM profile.
 
+globalThis.extendCompanionAnalysisStats = function(template, stats) {
+  const find = (node, predicate) => {
+    if(!node||typeof node!=='object')return null;
+    if(predicate(node))return node;
+    for(const value of Object.values(node))if(value&&typeof value==='object')
+      for(const child of Array.isArray(value)?value:[value]){const found=find(child,predicate);if(found)return found;}
+    return null;
+  };
+  const results=find(template.layout,node=>node.class==='prediction-results');
+  if(!results)throw Error('Missing shared Analysis results');
+  const base=results.children.find(node=>node.children?.some(child=>child.text==='{rngPowerResult}'));
+  for(const stat of stats){
+    if(!['Con','Mov'].includes(stat.key)||typeof stat.label!=='string'||!stat.label.trim())throw Error('Invalid extra Analysis stat');
+    if(find(results,node=>node.text===`{rng${stat.key}Result}`))throw Error('Extra Analysis stat already exists: '+stat.key);
+    const row=structuredClone(base);
+    function replace(node){
+      if(typeof node==='string')return node.replaceAll('growthPower','growth'+stat.key).replaceAll('rngPower','rng'+stat.key);
+      if(Array.isArray(node))return node.map(replace);
+      if(node&&typeof node==='object')return Object.fromEntries(Object.entries(node).map(([key,value])=>[key,key==='id'?value+'-extra-'+stat.key:replace(value)]));
+      return node;
+    }
+    const extra=replace(row);extra.children[0].text=stat.label;extra.visibleIf='$analysis'+stat.key+'Present';
+    results.children.push(extra);
+  }
+  return template;
+};
+
 globalThis.withCompanionTalk = function (extension, talkSource) {
   const result=structuredClone(extension);
   result.sprite=structuredClone(talkSource.sprite);
@@ -116,28 +143,28 @@ globalThis.makeCompanionLayout = function (extension, language = 'vi') {
   stats.children[0].children.find(node => node.class === 'value-label').text = 'Str';
   stats.children.splice(1, 0, structuredClone(extension.magRow));
   inventoryPages().pages.push(...structuredClone(extension.pages));
-  layout.children.push(sharedGrowth, sharedAnalysis);
+  // Keep recovery controls above the rebuilt modal scrims. They must remain
+  // reachable even when an official host replaces a failed script snapshot.
+  const workControls = layout.children.filter(node =>
+    node.id === 'companion-work-resume' || node.id === 'companion-error-resume');
+  layout.children = layout.children.filter(node => !workControls.includes(node));
+  layout.children.push(sharedGrowth, sharedAnalysis, ...workControls);
   return layout;
 };
 
-// Opt in per template: keep long names clear of skill buttons on narrow screens.
+// Opt in per template: reserve one horizontal header for identity, skills and RNG.
 globalThis.fitCompanionHeader = function (template, {leadership = false} = {}) {
   function visit(node) {
     if (!node || typeof node !== 'object') return;
     if (!leadership && node.children)
       node.children = node.children.filter(child => child.id !== 'remaster-leadership-stars');
     if (node.class === 'identity-line') {
-      const [sprite, identity, abilities, ...controls] = node.children;
+      const abilities = node.children[2];
       if (abilities.class !== 'remaster-skills') {
         node.class += ' companion-identity-compact';
         return;
       }
-      node.type = 'column';
-      node.class += ' companion-identity-split';
-      node.children = [
-        {type:'row', id:node.id+'-main', class:'companion-identity-main', children:[sprite,identity,...controls]},
-        {type:'row', id:node.id+'-abilities', class:'companion-identity-abilities', children:[abilities]}
-      ];
+      node.class += ' companion-identity-single';
       return;
     }
     for (const value of Object.values(node)) if (value && typeof value === 'object')
@@ -147,12 +174,10 @@ globalThis.fitCompanionHeader = function (template, {leadership = false} = {}) {
   template.css += '\n.companion-identity-compact .unit-name{font-size:4.4vmin;line-height:5vmin;}\n'
     + '.companion-identity-compact .class-name{font-size:3.1vmin;line-height:3.8vmin;}\n'
     + '.companion-identity-compact .native-ability-panel{width:30%;flex:0 0 30%;}\n'
-    + '.companion-identity-split{height:50%;flex:0 0 50%;align-items:stretch;gap:0;padding:0.35vmin 0.7vmin;}\n'
-    + '.companion-identity-main{width:100%;height:62%;flex:0 0 62%;min-height:0;align-items:center;gap:0.7vmin;}\n'
-    + '.companion-identity-main .unit-identity{padding:0;min-width:0;}\n'
-    + '.companion-identity-main .unit-name{font-size:4.6vmin;line-height:5vmin;}\n'
-    + '.companion-identity-main .class-name{font-size:3.2vmin;line-height:3.8vmin;}\n'
-    + '.companion-identity-abilities{width:100%;height:38%;flex:0 0 38%;min-height:0;align-items:center;justify-content:flex-end;}\n'
-    + '.companion-identity-abilities .remaster-skills,.companion-identity-abilities .native-ability-panel{width:100%;height:100%;flex:1 1 100%;}\n';
+    + '.companion-identity-single{flex-wrap:nowrap;gap:0.7vmin;}\n'
+    + '.companion-identity-single .unit-identity{flex:1 1 0%;min-width:0;padding:0;}\n'
+    + '.companion-identity-single .unit-name{font-size:3.5vmin;line-height:4.2vmin;white-space:nowrap;text-overflow:ellipsis;}\n'
+    + '.companion-identity-single .class-name{font-size:3.2vmin;line-height:3.8vmin;white-space:nowrap;text-overflow:ellipsis;}\n'
+    + '.companion-identity-single .remaster-skills{width:35vmin;flex:0 0 35vmin;}\n';
   return template;
 };

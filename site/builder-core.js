@@ -166,6 +166,15 @@
       if(!step()||typeof raw!=='string'||!raw||raw.startsWith('$')||/[{}]/.test(raw))return;
       if(exactFile){if(!Object.hasOwn(files,raw))add('error','missing-asset',location,{nodeId:node.id,property,detail:raw});else formatWarning(raw,node,property,location);return;}
       if(/^(?:data:|blob:|https?:|\/|#)/i.test(raw))return;
+      if(raw.startsWith('radar:')){
+        const parts=raw.split(':'),rates=(parts[3]??'').split(','),axes=(parts[4]??'').split(',');
+        const valid=raw.length<=512&&parts.length===5&&parts[1]==='1'&&['en','vi'].includes(parts[2])
+          &&[7,8].includes(rates.length)&&rates.length===axes.length
+          &&rates.every(v=>/^-?\d+$/.test(v)&&Number(v)>=-1000&&Number(v)<=2000)
+          &&axes.every(v=>/^[A-Za-z/]{1,12}$/.test(v));
+        if(!valid)add(sample||optional?'warning':'error','asset-path',location,{nodeId:node.id,property,detail:raw});
+        return;
+      }
       let name=raw.replace(/^asset:/,'').replace(/^assets\//,'').split(/[?#]/)[0];
       if(!name)return;
       if(name.includes('\\')){add('warning','unverified-asset',location,{nodeId:node.id,property,detail:raw});return;}
@@ -424,7 +433,7 @@
     }
     zip.file('manifest.json', JSON.stringify({
       ...project.manifest,
-      formatVersion: 2,
+      formatVersion: Math.max(2,project.manifest.formatVersion||2,project.manifest.requires?4:2),
       layout: 'layout.json',
       styles: ['style.css'],
     }, null, 2));

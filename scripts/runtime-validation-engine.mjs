@@ -23,6 +23,13 @@ export function projectSource(project,name){
 }
 
 export async function executeProject(project,options={}){
+ const official=options.host==='official';
+ assert(options.host===undefined||official,'Unknown characterization host');
+ assert(!official||options.busContext===undefined,'Official host cannot supply private bus context');
+ function validateBusContext(value){
+  assert(value?.version===1&&value.platform==='gba'&&Number.isInteger(value.biosPrefetch)&&value.biosPrefetch>=0&&value.biosPrefetch<=0xffffffff,'Invalid GBA bus context');
+ }
+ if(options.busContext!==undefined)validateBusContext(options.busContext);
  const factory=options.factory||luaFactory();
  const engine=await factory.createEngine();
  async function execute(code){
@@ -48,6 +55,8 @@ export async function executeProject(project,options={}){
  }
  try{
   engine.global.set('__hostMem',mem);
+  engine.global.set('__officialHost',official);
+  if(options.busContext!==undefined)engine.global.set('__busContext',structuredClone(options.busContext));
   engine.global.set('__readHex',(address,length)=>read(address,length).toString('hex'));
   engine.global.set('__packSource',name=>projectSource(project,name+'.lua'));
   engine.global.set('__log',message=>calls.push(String(message)));
@@ -60,6 +69,11 @@ export async function executeProject(project,options={}){
     function mem.read(address,length)
       return (__readHex(address,length):gsub('..',function(byte)return string.char(tonumber(byte,16))end))
     end
+    if __busContext~=nil then
+      function mem.busContext()
+        return {version=__busContext.version,platform=__busContext.platform,biosPrefetch=__busContext.biosPrefetch}
+      end
+    end
     local modules={}
     pack={require=function(name)
       assert(type(name)=='string' and name:match('^[%w_.%-]+$') and not name:find('..',1,true),'Unsafe module name')
@@ -69,11 +83,27 @@ export async function executeProject(project,options={}){
       modules[name]=value;return value
     end}
     function log(message)__log(tostring(message))end
+    gfx={radar=function(rates,axes,language)
+      assert(type(rates)=='table','gfx.radar: expected rates')
+      local n=#rates;assert(n==7 or n==8,'gfx.radar: expected 7 or 8 clockwise rates')
+      axes=axes or (n==8 and {'HP','Str','Mag','Skill','Spd','Lck','Def','Res'} or {'HP','Str/Mag','Skill','Spd','Lck','Def','Res'})
+      assert(type(axes)=='table' and #axes==n,'gfx.radar: axis count differs')
+      language=language or 'en';assert(language=='en' or language=='vi','gfx.radar: unsupported language')
+      local numbers,labels={},{}
+      for i=1,n do
+        local rate=rates[i];assert(math.type(rate)=='integer' and rate>=-1000 and rate<=2000,'gfx.radar: invalid rate')
+        local label=axes[i];assert(type(label)=='string' and #label>=1 and #label<=12 and label:match('^[A-Za-z/]+$'),'gfx.radar: invalid axis label')
+        numbers[i]=tostring(rate);labels[i]=label
+      end
+      return 'radar:1:'..language..':'..table.concat(numbers,',')..':'..table.concat(labels,',')
+    end}
+    if __officialHost then input=nil;gfx.radar=nil end
     ui={};actions={}
   `);
   await execute(projectSource(project,project.manifest.script));
   const values=[];
   for(const step of options.steps||[{ticks:1,ui:{}}]){
+   if(step.busContext!==undefined){assert(!official,'Official host cannot supply private bus context');validateBusContext(step.busContext);engine.global.set('__busContext',structuredClone(step.busContext));}
    for(const patch of step.patches||[]){
     const range=ranges.find(r=>patch.address>=r.address&&patch.address+patch.bytes.length<=r.address+r.bytes.length);
     assert(range,'Memory patch must stay in an isolated RAM fixture');

@@ -50,6 +50,7 @@
     }
   }
   const profile=Object.freeze({
+    mapRenderOnDemand:true,
     id:"shadow-of-dawn",
     code:"BE8E",
     crc32:0xEB38F5F7,

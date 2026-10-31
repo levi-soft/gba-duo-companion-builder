@@ -19,6 +19,14 @@ test('shared core builds the actual format-2 ZIP from a synthetic producer',asyn
  assert.equal(manifest.formatVersion,2);assert.equal(manifest.layout,'layout.json');assert.deepEqual(manifest.styles,['style.css']);
  assert.equal(await zip.file('scripts/fixture.lua').async('string'),'function update() return {value=7} end');assert(zip.file('preview-data.json'));
 });
+
+test('ZIP export preserves required host features instead of downgrading the manifest',async()=>{
+ const {context}=engine();context.FixtureTemplate.manifest.formatVersion=4;
+ context.FixtureTemplate.manifest.requires={features:['gba-bus-context-v1','growth-radar-v1']};
+ const {zipBytes}=await context.CompanionBuild.build(rom());
+ const zip=await JSZip.loadAsync(zipBytes),manifest=JSON.parse(await zip.file('manifest.json').async('string'));
+ assert.equal(manifest.formatVersion,4);assert.deepEqual(manifest.requires,{features:['gba-bus-context-v1','growth-radar-v1']});
+});
 test('seeded pack properties preserve arbitrary asset bytes and produce identical ZIPs for identical input',async()=>{
  let seed=0x11bbaa33;const next=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed;};
  for(let run=0;run<20;run++){

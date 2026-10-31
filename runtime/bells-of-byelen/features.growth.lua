@@ -1,6 +1,7 @@
 -- Preserve shared pulse/inventory fields; exact-ROM caps and stat cardinality.
 return function(D)
   local base=pack.require("features.base-growth")(D)
+  local native=D.execution and D.execution.nativeGrowth and pack.require("features.native-growth")(D)
   return function(v)
     v=base(v)
     if not D.customProfile.supports then
@@ -9,7 +10,7 @@ return function(D)
     end
     local cp,kp=tonumber(v.characterPointer) or 0,tonumber(v.classPointer) or 0
     local c,k=D.growthCharacters[cp],D.growthClasses[kp]
-    if not(v.unitPresent and c and k)then return v end
+    if not(v.unitPresent and c and k)then return native and native(v) or v end
     local cap=D.levelCaps[k.id+1]
     local attributes=((D.chars and D.chars[cp] and D.chars[cp].attributes) or 0)|(k.attributes or 0)
     local expBonus=(attributes&0x100)~=0 and D.customProfile.promotedExpBonus or 0
@@ -26,6 +27,6 @@ return function(D)
       v.growthRadar=ui and ui.growthPopup and c.radars[1] or ""
       for n,key in ipairs({"Hp","Power","Skill","Spd","Def","Res","Luck"})do v["growth"..key]=c.growth[n] end
     end
-    return v
+    return native and native(v) or v
   end
 end

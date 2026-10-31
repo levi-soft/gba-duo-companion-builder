@@ -72,12 +72,14 @@ return function()
     v.predictionProgressText = complete and "Hoàn tất: 100%"
       or v.predictionBusy and ("Ước tính: " .. v.predictionProgress .. "%")
       or "Chưa có kết quả"
-    for _, key in ipairs({ "Hp", "Power", "Mag", "Skill", "Spd", "Luck", "Def", "Res" }) do
+    local keys = { "Hp", "Power", "Mag", "Skill", "Spd", "Luck", "Def", "Res" }
+    for _, key in ipairs(v.analysisExtraStats or {}) do keys[#keys + 1] = key end
+    for _, key in ipairs(keys) do
       local current = tonumber(v["growth" .. key .. "Current"])
       local gain = tonumber(v["rng" .. key .. "Gain"]) or 0
       v["rng" .. key .. "Result"] = available
           and current
-          and (tostring(current + gain) .. (gain > 0 and (" (+" .. gain .. ")") or ""))
+          and (tostring(current + gain) .. (gain ~= 0 and (" (" .. (gain > 0 and "+" or "") .. gain .. ")") or ""))
         or "---"
       v["rng" .. key .. "Flash"] = available and gain > 0 and predictionPresentationTick % 6 < 3 or false
     end

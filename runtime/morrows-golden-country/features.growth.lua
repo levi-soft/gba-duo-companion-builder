@@ -1,6 +1,7 @@
 -- Preserve shared pulse/inventory fields; exact-ROM caps and stat cardinality.
 return function(D)
   local base=pack.require("features.base-growth")(D)
+  local native=D.execution and D.execution.nativeGrowth and pack.require("features.native-growth")(D)
   return function(v)
     v=base(v)
     if not D.customProfile.supports then
@@ -9,7 +10,7 @@ return function(D)
     end
     local cp,kp=tonumber(v.characterPointer) or 0,tonumber(v.classPointer) or 0
     local c,k=D.growthCharacters[cp],D.growthClasses[kp]
-    if not(v.unitPresent and c and k)then return v end
+    if not(v.unitPresent and c and k)then return native and native(v) or v end
     local cap=D.levelCaps[k.id+1]
     local attributes=((D.chars and D.chars[cp] and D.chars[cp].attributes) or 0)|(k.attributes or 0)
     local expBonus=(attributes&0x100)~=0 and D.customProfile.promotedExpBonus or 0
@@ -28,6 +29,6 @@ return function(D)
     if D.customProfile.hpEnemyCap and ((v.deployment or 0)&0xC0)==0x80 then
       v.growthHpCap=D.customProfile.hpEnemyCap
     end
-    return v
+    return native and native(v) or v
   end
 end

@@ -8,6 +8,15 @@ const project=()=>({manifest:{id:'diagnostic-test',name:'Test',version:'1.0.0',m
 const inspect=(c,p)=>JSON.parse(JSON.stringify(c.CompanionBuild.projectDiagnostics(p)));
 const fields=r=>r.issues.filter(i=>i.field).map(i=>i.field);
 
+test('native radar keys are renderable images with bounded matching axes',()=>{
+ const c=engine(),p=project();
+ p.layout.children=[{type:'image',src:'radar:1:en:10,20,30,40,50,60,140:HP,Str/Mag,Skill,Spd,Lck,Def,Res'}];
+ assert.equal(inspect(c,p).errors,0);
+ for(const bad of ['radar:2:en:10:HP','radar:1:en:1,2,3,4,5,6,2001:HP,Str,Skl,Spd,Lck,Def,Res','radar:1:en:1,2,3,4,5,6,7:HP,Str,Skl,Spd,Lck,Def,<script>']){
+  p.layout.children[0].src=bad;assert.equal(inspect(c,p).errors,1,bad);
+ }
+});
+
 test('the standalone Builder embeds the readable shared diagnostics source without an additional runtime script',()=>{
  const source=fs.readFileSync('ui/project-diagnostics.js','utf8').replace(/\r\n/g,'\n').replace(/^export /gm,'').trimEnd().split('\n').map(line=>'  '+line).join('\n');
  const core=fs.readFileSync('site/builder-core.js','utf8').replace(/\r\n/g,'\n');assert(core.includes('// BEGIN GENERATED PROJECT DIAGNOSTICS\n'+source+'\n  // END GENERATED PROJECT DIAGNOSTICS'));

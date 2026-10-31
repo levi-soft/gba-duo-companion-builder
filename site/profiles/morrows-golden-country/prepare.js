@@ -11,7 +11,7 @@
       D.lookup10[pointer]='Avatar';
     }
     D.levelCaps=Array.from({length:128},(_,id)=>r.u8(0x17A4504+id));
-    D.customProfile={id:"morrows-golden-country",split:true,supports:true,growthNote:"Base ROM growths; growth settings, skill/item modifiers and combat arts are not included.",limitations:"Combat arts, growth settings and free-movement actions require additional runtime verification. Range overlays use base movement and weapon ranges."};
+    D.customProfile={id:"morrows-golden-country",split:true,supports:true,growthNote:"Current native growth rates include active bonuses. Analysis follows the current growth mode.",limitations:"Combat arts, growth settings and free-movement actions require additional runtime verification. Range overlays use base movement and weapon ranges."};
     // Active GetUnitExpLevel veneer targets 0985BA20; add-immediate at +0x12.
     D.customProfile.hpEnemyCap=120;
     D.customProfile.promotedExpBonus=r.u8(0x185BA32);
@@ -43,7 +43,8 @@
     for(const [pointer,c]of Object.entries(D.growthCharacters)){const pid=D.chars[pointer].id,g=c.growth;c.rates=[g[0],g[1],r.u8(0x17A4584+pid*2+1),g[2],g[3],g[6],g[4],g[5]];const name='assets/images/growth/'+c.rates.join('-')+'.png';c.radar='asset:'+name.slice(7);c.radars=[c.radar,c.radar];if(!charts.has(name)){project.files[name]=root.CompanionRom.b64(await options.renderRadar(c.rates,0,100,project.files));charts.add(name);}}
     for(const [pointer,c]of Object.entries(D.growthClasses)){const at=+pointer-0x08000000,cid=D.classes[pointer].id;c.caps=[80,r.u8(at+20),r.u8(0x17A4784+cid*4+2),r.u8(at+21),r.u8(at+22),r.u8(0x2C016),r.u8(at+23),r.u8(at+24)];D.lookup12[pointer]='Str';}
   }
-  const profile=Object.freeze({...{
+  const profile=Object.freeze({
+    mapRenderOnDemand:true,...{
     id:"morrows-golden-country",
     code:"BE8E",
     crc32:0x20287E1B,

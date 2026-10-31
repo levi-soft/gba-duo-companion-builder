@@ -2,6 +2,7 @@
 -- Authored runtime module. Generated ROM tables live in data.rom_tables.lua.
 
 local profile = pack.require("game.profile")
+local selectCompanionUnit = pack.require("game.companion-selection")
 
 return function(D, map, values, abilities)
   local truth = values.truth
@@ -9,8 +10,15 @@ return function(D, map, values, abilities)
   local mapMeta = map.meta
   local mapSlots = D.slots
   local mapCfg = map.config
+  -- This FE7 ROM displays full movement for inspected stationary enemies.
+  mapCfg.respectAiHold = false
   local applyMapSource = map.apply
-  local emptyUnitValues = pack.require("presentation.defaults")(D, map, values, abilities, state)
+  local makeEmptyUnit = pack.require("presentation.defaults")(D, map, values, abilities, state)
+  local function emptyUnitValues(menu)
+    local v = makeEmptyUnit(menu)
+    selectCompanionUnit(D, profile, nil, v, true)
+    return v
+  end
   local validSlots = D.validSlots
 
   local readPreparations = pack.require("game.native-selection")(D.slots, map.meta, profile)
@@ -23,12 +31,13 @@ return function(D, map, values, abilities)
     if preparationsActive and not unit then
       return emptyUnitValues(true)
     end
-    local playerPc, forecastProc, aiPc = 0, 0, 0
+    local playerPc, forecastProc, aiPc, playerBlocked = 0, 0, 0, 0
     for i = 0, 63 do
       local p = profile.processPool + i * 108
       local script = mem.u32(p)
       if script == profile.playerProcess then
         playerPc = mem.u32(p + 4)
+        playerBlocked = mem.u8(p + 0x28)
       elseif script == profile.forecastProcess then
         forecastProc = p
       elseif script == profile.enemyProcess then
@@ -41,19 +50,21 @@ return function(D, map, values, abilities)
     v.forecastActive = false
     local faction = mem.u8(profile.phase)
     local playerOwns = playerPc >= profile.playerPcStart and playerPc <= profile.playerPcEnd and faction == 0
+    local inspectionOwns = faction == 0 and playerBlocked == 0 and playerPc == 0x08B9352C
     local aiOwns = aiPc >= profile.enemyPcStart
       and aiPc <= profile.enemyPcEnd
       and (faction == 0x40 or faction == 0x80)
-    if not preparationsActive and (playerOwns or aiOwns) and validSlots[active] then
+    if not preparationsActive and (playerOwns or aiOwns or inspectionOwns) and validSlots[active] then
       local state = mem.u32(active + 12)
       local deployment = mem.u8(active + 11)
       if
         mem.u32(active) ~= 0
         and mem.u32(active + 4) ~= 0
         and deployment > 0
-        and (deployment & 0xc0) == faction
+        and (inspectionOwns or (deployment & 0xc0) == faction)
         and deployment == validSlots[active]
         and (state & 0x1000C) == 0
+        and (not inspectionOwns or deployment < 128 or (state & 0x200) == 0)
       then
         unit = active
         v.unitLocked = true
@@ -63,6 +74,7 @@ return function(D, map, values, abilities)
           and mem.u8(forecastProc + 0x34) == 0
       end
     end
+    unit = selectCompanionUnit(D, profile, unit, v, preparationsActive, nil, mapCfg)
     if not unit then
       local cursorX, cursorY = mem.u16(profile.cursorX), mem.u16(profile.cursorY)
       local width, height = mem.u16(profile.mapWidth), mem.u16(profile.mapHeight)
@@ -148,7 +160,7 @@ return function(D, map, values, abilities)
     if bound ~= v then
       return bound
     end
-    applyMapSource(v, unit, preparationsActive)
+    applyMapSource(v, v.unitLocked and unit or nil, preparationsActive)
     readItems(v, unit)
     readBattle(v)
     state.pulseTick = state.pulseTick + 1

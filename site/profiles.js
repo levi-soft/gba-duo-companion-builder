@@ -212,7 +212,7 @@ globalThis.COMPANION_PROFILES=[
     "language": "en",
     "status": "stable",
     "runtimeParent": "fe8-english",
-    "analysisStatus": "unverified"
+    "analysisStatus": "conditional-tested"
   },
   {
     "id": "bells-of-byelen",
@@ -228,7 +228,7 @@ globalThis.COMPANION_PROFILES=[
     "output": "Bells-of-Byelen-Companion-1.0.0",
     "language": "en",
     "status": "stable",
-    "analysisStatus": "unverified"
+    "analysisStatus": "conditional-tested"
   },
   {
     "id": "cerulean-crescent",
@@ -244,7 +244,7 @@ globalThis.COMPANION_PROFILES=[
     "output": "Cerulean-Crescent-Companion-1.0.0",
     "language": "en",
     "status": "stable",
-    "analysisStatus": "unverified"
+    "analysisStatus": "conditional-tested"
   },
   {
     "id": "dark-lord-maiden-of-light",
@@ -324,7 +324,7 @@ globalThis.COMPANION_PROFILES=[
     "language": "en",
     "status": "stable",
     "runtimeParent": "fe8-english",
-    "analysisStatus": "unverified"
+    "analysisStatus": "conditional-tested"
   },
   {
     "id": "pokemblem",
@@ -341,8 +341,8 @@ globalThis.COMPANION_PROFILES=[
     "language": "en",
     "growthRasterScale": 0.3333333333333333,
     "status": "stable",
-    "cursorNavigationVerified": false,
-    "analysisStatus": "unverified"
+    "cursorNavigationVerified": true,
+    "analysisStatus": "conditional-tested"
   },
   {
     "id": "the-dark-amulet",
@@ -358,7 +358,7 @@ globalThis.COMPANION_PROFILES=[
     "language": "en",
     "status": "stable",
     "runtimeParent": "fe8-english",
-    "analysisStatus": "unverified"
+    "analysisStatus": "conditional-tested"
   },
   {
     "id": "the-four-kings",
@@ -374,7 +374,7 @@ globalThis.COMPANION_PROFILES=[
     "output": "The-Four-Kings-Companion-1.0.0",
     "language": "en",
     "status": "stable",
-    "analysisStatus": "unverified"
+    "analysisStatus": "conditional-tested"
   },
   {
     "id": "the-lonely-mirror",
@@ -406,7 +406,7 @@ globalThis.COMPANION_PROFILES=[
     "output": "Morrows-Golden-Country-Companion-1.0.0",
     "language": "en",
     "status": "stable",
-    "analysisStatus": "unverified"
+    "analysisStatus": "conditional-tested"
   },
   {
     "id": "shadow-of-dawn",
@@ -422,7 +422,7 @@ globalThis.COMPANION_PROFILES=[
     "language": "en",
     "status": "stable",
     "runtimeParent": "fe8-english",
-    "analysisStatus": "unverified"
+    "analysisStatus": "conditional-tested"
   },
   {
     "id": "sun-gods-wrath",
@@ -438,6 +438,6 @@ globalThis.COMPANION_PROFILES=[
     "output": "Sun-Gods-Wrath-Companion-1.0.0",
     "language": "en",
     "status": "stable",
-    "analysisStatus": "unverified"
+    "analysisStatus": "conditional-tested"
   }
 ];

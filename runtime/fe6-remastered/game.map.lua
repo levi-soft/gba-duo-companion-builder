@@ -6,13 +6,6 @@ local chapterTitle = pack.require("presentation.chapter")
 
 return function(D)
   local chars, classes, slots = D.chars, D.classes, D.slots
-  actions = actions or {}
-  function actions.focusMapUnit(id)
-    local n = tonumber(id)
-    if n and slots[n] and input and input.focusUnit then
-      input.focusUnit(n)
-    end
-  end
   local mapCfg, mapMeta, mapSlots, mapWeapons =
     {
       allyColor = "#54d778",
@@ -173,8 +166,9 @@ return function(D)
       local unit = units[id]
       if unit then
         parts[#parts + 1] = string.char(id)
-        for n = 0, 71 do
-          parts[#parts + 1] = string.char(mem.u8(unit.u + n))
+        for n = 0, 71, 4 do
+          local word = mem.u32(unit.u + n)
+          parts[#parts + 1] = string.char(word & 255, (word >> 8) & 255, (word >> 16) & 255, (word >> 24) & 255)
         end
         if id >= 128 and not (mapCfg.respectFog ~= false and (unit.state & 0x200) ~= 0) then
           enemies[#enemies + 1] = unit
@@ -204,6 +198,47 @@ return function(D)
       v.mapDangerCount = v.mapDangerCount + 1
     end
   end
+  -- Only numeric reach results are retained. Native/query-backed inputs must
+  -- run their dependency checks on every update and never enter this cache.
+  local selectedReachCache
+  local function selectedMapUnitReach(v, focus, grid, terrain)
+    if D.nativeMovementVerified == true or D.mapReachForUnit or D.mapMoveForUnit or D.mapMovementStatus
+      or D.mapMovementCostsForUnit or D.mapAiHoldForUnit or D.mapWeaponsForUnit
+      or D.mapRangesReady or D.mapRangeRevision then
+      selectedReachCache = nil
+      return mapUnitReach(v, focus, grid, terrain)
+    end
+    local weather = mem.u8(0x0202BD05)
+    local parts = {
+      v.mapDangerEnabled and "danger" or "selected",
+      string.char(v.mapWidth, v.mapHeight, focus.id, weather,
+        mapCfg.respectFog == false and 0 or 1, mapCfg.respectAiHold == false and 0 or 1,
+        profile.supportsBallista == false and 0 or 1, mapCfg.showRanges == false and 0 or 1),
+    }
+    if v.mapDangerEnabled and mapDangerCache.key then
+      -- This key was built from this update's complete grids and live units.
+      parts[#parts + 1] = mapDangerCache.key
+    else
+      for y = 0, v.mapHeight - 1 do
+        parts[#parts + 1] = string.char(table.unpack(terrain[y], 0, v.mapWidth - 1))
+        parts[#parts + 1] = string.char(table.unpack(grid[y], 0, v.mapWidth - 1))
+      end
+      for n = 0, 71, 4 do
+        local word = mem.u32(focus.u + n)
+        parts[#parts + 1] = string.char(word & 255, (word >> 8) & 255, (word >> 16) & 255, (word >> 24) & 255)
+      end
+    end
+    local key = table.concat(parts)
+    if selectedReachCache and selectedReachCache.key == key then
+      return selectedReachCache.distances, selectedReachCache.movement, selectedReachCache.attacks
+    end
+    local distances, movement, attacks = mapUnitReach(v, focus, grid, terrain)
+    -- Publish once, only after computation and construction both finish.
+    -- The caller reads these arrays and builds fresh cells/roster/header values.
+    selectedReachCache = { key = key, distances = distances, movement = movement, attacks = attacks }
+    return distances, movement, attacks
+  end
+
   local function applyMapTactical(v, tr, ur, cx, cy, selected)
     local w, h = v.mapWidth, v.mapHeight
     local groups = { Player = {}, Enemy = {}, Ally = {} }
@@ -227,6 +262,7 @@ return function(D)
       .. ":"
       .. tostring(cy)
     local picked = ui and tonumber(ui.mapPickedId) or 0
+    if v.ui and v.ui.set and v.ui.set.mapPickedId == 0 then picked = 0 end
     if picked and picked > 0 then
       if not selected and ui.mapPickedContext == v.mapPickContext then
         selectedId = picked
@@ -342,7 +378,7 @@ return function(D)
     then
       return
     end
-    local dist, move, attacked = mapUnitReach(v, focus, grid, terrain)
+    local dist, move, attacked = selectedMapUnitReach(v, focus, grid, terrain)
     for index = 0, w * h - 1 do
       if dist[index] and dist[index] <= move then
         v.mapCells[index + 1].move = true
@@ -447,17 +483,19 @@ return function(D)
     end)
   end
   local function applyMap(v, selected, preparationsActive)
-    local w, h = mem.u16(profile.mapWidth), mem.u16(profile.mapHeight)
-    local tr, ur = mem.u32(profile.terrainRows), mem.u32(profile.unitRows)
     v.mapPresent = false
+    v.mapRenderPending = false
     v.mapCells = {}
     v.mapRoster = {}
     v.mapPlayerCount = 0
     v.mapEnemyCount = 0
     v.mapAllyCount = 0
+    if ui and ui.mainTab ~= nil and ui.mainTab ~= "Map" then return end
     if preparationsActive then
       return
     end
+    local w, h = mem.u16(profile.mapWidth), mem.u16(profile.mapHeight)
+    local tr, ur = mem.u32(profile.terrainRows), mem.u32(profile.unitRows)
     if w < 1 or h < 1 or w > 64 or h > 64 then
       return
     end
@@ -504,6 +542,7 @@ return function(D)
         end
         v.mapCells[#v.mapCells + 1] = {
           tile = "asset:images/minimap/" .. applyMapTile(x, y, tr, w, h) .. ".png",
+          unitId = visible and id or 0,
           marker = visible,
           color = color,
           cursor = x == cx and y == cy,
@@ -525,5 +564,9 @@ return function(D)
     end
   end
 
-  return { apply = applyMap, meta = mapMeta, config = mapCfg }
+  local presentPicks = pack.require("presentation.map-picks")(D, nil, mapCfg)
+  return { apply = function(v, selected, preparationsActive)
+    applyMap(v, selected, preparationsActive)
+    presentPicks(v)
+  end, meta = mapMeta, config = mapCfg }
 end

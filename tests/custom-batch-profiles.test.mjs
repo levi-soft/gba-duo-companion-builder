@@ -23,9 +23,9 @@ test('custom hack templates retain approved release versions and exact ROM refus
     assert.deepEqual(JSON.parse(JSON.stringify(template.manifest.match)),{gameCode:[profile.code],crc32:[profile.crc32]});
     assert.equal(Object.keys(template.files).length,0,'No extracted game assets in source templates');
     if(profile.id==='pokemblem'){
-      assert.equal(profile.cursorNavigationVerified,false);
-      assert(!JSON.stringify(template.layout).includes('focusMapUnit'),'Free-movement ROM must not offer unverified game cursor actions');
-      assert(!JSON.stringify(template.layout).includes('map-danger-button'),'Move-based range controls stay unavailable');
+      assert.equal(profile.cursorNavigationVerified,true);
+      assert(JSON.stringify(template.layout).includes('focusMapUnit'),'Verified tactical cursor actions must use the guarded host contract');
+      assert(JSON.stringify(template.layout).includes('map-danger-button'),'Native threat-map controls must remain available');
       assert(!JSON.stringify(template.layout).includes('{rankSword}'),'Move IDs are never shown as FE rank letters');
     }
     const wrong=new Uint8Array(256);wrong.set(new TextEncoder().encode(profile.code),0xAC);
@@ -238,24 +238,30 @@ test('Pokemblem growth changes with species without changing the storage charact
   }finally{engine.global.close();}
 });
 
-test('unverified native prediction shows the reason on popup open and clears stale results',async()=>{
+test('custom Analysis delegates native failures and does not mask their reason',async()=>{
   const engine=await luaFactory().createEngine();
   try{
     engine.global.set('rngSource',fs.readFileSync('runtime/shared/features.rng-indicator.lua','utf8'));
-    await engine.doString(`mem={u16=function()return 0 end};pack={require=function(name)assert(name=='features.rng-indicator');return assert(load(rngSource))()end}`);
+    await engine.doString(`mem={u16=function()return 0 end};pack={require=function(name)
+      if name=='features.rng-indicator' then return assert(load(rngSource))()end
+      assert(name=='features.fe8-analysis')
+      return function()return function(v)
+        v.analysisFailed=v.forecastActive==true;v.analysisPredictionError=v.analysisFailed and 'Native CPU fixture error' or nil
+        v.predictionAvailable=false;v.predictionComplete=false;v.predictionBusy=false;v.predictionProgress=0
+        v.predictionDamageEligible=false;v.predictionKillEligible=false;v.rngExpHit=nil;v.rngExpKill=nil
+        return v
+      end end
+    end}`);
     for(const profile of profiles){
       const source=fs.readFileSync('runtime/'+profile.id+'/features.analysis.lua','utf8');
       const result=await engine.doString(`ui={predictionPopup=true};local apply=(function()${source}\nend)()({})
-        local v={forecastActive=true,forecastactorHit=72,predictionAvailable=true,predictionComplete=true,predictionBusy=true,predictionProgress=99,
-          rngAvailable=true,rngBattleActive=true,rngExpHit=10,rngExpKill=50,predictionDamageEligible=true,predictionKillEligible=true}
-        local opened=apply(v);local reason=opened.analysisPredictionError
+        local opened=apply({forecastActive=true,forecastactorHit=72,rngExpHit=10,rngExpKill=50})
         ui.predictionPopup=false;local closed=apply({forecastActive=false,analysisFailed=true,analysisPredictionError='stale'})
-        return {opened=opened,closed=closed,reason=reason}`);
-      assert.equal(result.opened.forecastActive,true);assert.equal(result.opened.forecastactorHit,72);
-      assert.equal(result.opened.analysisSupported,false);assert.equal(result.opened.analysisFailed,true);
-      assert.equal(result.opened.predictionAvailable,false);assert.equal(result.opened.predictionDamageEligible,false);assert.equal(result.opened.predictionKillEligible,false);
-      assert.equal(result.opened.rngExpHit,undefined);assert.equal(result.opened.rngExpKill,undefined);assert.equal(result.opened.predictionProgress,0);
-      assert.match(result.reason,/not been verified/);assert.equal(result.opened.predictionFailureReason,result.reason);
+        return {opened=opened,closed=closed}`);
+      assert.equal(result.opened.forecastactorHit,72);assert.equal(result.opened.analysisSupported,true);
+      assert.equal(result.opened.analysisFailed,true);assert.equal(result.opened.predictionAvailable,false);
+      assert.equal(result.opened.rngExpHit,undefined);assert.equal(result.opened.rngExpKill,undefined);
+      assert.equal(result.opened.predictionFailureReason,'Native CPU fixture error');
       assert.equal(result.closed.analysisFailed,false);assert.equal(result.closed.analysisPredictionError,undefined);
     }
   }finally{engine.global.close();}
@@ -291,7 +297,7 @@ test('Pokemblem combined-chart generation retains referenced fallbacks and UI ic
   check(data.growthCharacters);check(data.growthRadarCombinations);
 });
 
-test('Pokemblem maps current species names and suppresses unverified ranges without game writes',async()=>{
+test('Pokemblem maps current species names without inventing ranges when native map context is absent',async()=>{
   const engine=await luaFactory().createEngine();
   try{
     const source=fs.readFileSync('runtime/pokemblem/game.map.lua','utf8');
@@ -300,7 +306,10 @@ test('Pokemblem maps current species names and suppresses unverified ranges with
       mem={u32=function(address)return address==0x02001004 and 100 or 200 end}
       ui={mapDangerEnabled=true,mapPickedId=129,mapPickedContext='native-context'}
       local original=ui
-      pack={require=function(name)assert(name=='game.fe8-map');return function()return {meta={classes={[100]=species,[200]={name='--'}}},config=config,apply=function(v)
+      pack={require=function(name)
+        if name=='features.native-map-query' then return function()return {begin=function()end,step=function(budget)assert(budget==512)end,request=function()error('No selected header unit in this map-only fixture')end}end end
+        if name=='game.native-ranges' then return function()return function()return nil end end end
+        assert(name=='game.fe8-map');return function()return {meta={classes={[100]=species,[200]={name='--'}}},config=config,apply=function(v)
         assert(ui.mapDangerEnabled==false);assert(config.showRanges==false)
         assert(ui.mapPickedId==129 and ui.mapPickedContext=='native-context')
         v.mapRoster=positions;v.mapCells={{member=true,danger=true,attack=true,move=true,inRange=true,rangeColor='red'}}
@@ -310,14 +319,16 @@ test('Pokemblem maps current species names and suppresses unverified ranges with
       assert(v.mapRoster[1].name=='Bulbasaur' and v.mapRangeUnit=='Bulbasaur')
       species.name='Ivysaur';map.apply(v,nil,false)
       return v`);
-    assert.equal(result.mapRangesUnavailable,true);assert.equal(result.mapDangerReady,false);assert.equal(result.mapDangerEnabled,false);
+    assert.equal(result.mapRangesUnavailable,false);assert.equal(result.mapRangesNative,false);assert.equal(result.mapDangerReady,false);assert.equal(result.mapDangerEnabled,true);
     assert.equal(result.mapCells[0].member,true);assert.equal(result.mapCells[0].attack,false);assert.equal(result.mapCells[0].danger,false);assert.equal(result.mapCells[0].inRange,false);
-    assert.equal(result.mapRoster[0].x,1);assert.equal(result.ui.set.mapDangerEnabled,false);
+    assert.equal(result.mapRoster[0].x,1);assert.equal(result.ui?.set?.mapDangerEnabled,undefined);
     assert.equal(result.mapRoster[0].id,2);assert.equal(result.mapRoster[0].name,'Ivysaur');assert.equal(result.mapRangeUnit,'Ivysaur');assert.equal(result.mapRoster[1].name,'Oak');
   }finally{engine.global.close();}
 });
 
-test('Pokemblem companion selection honors visible picks and native selection without game writes',async()=>{
+// Injected old UI state exercises reader compatibility, not the live Map tap.
+// Reader/private calculations remain read-only; physical actions are tested separately.
+test('Pokemblem reader validates injected legacy picks and native selection without game writes',async()=>{
   const ram=Buffer.alloc(0x40000),base=0x02000000;
   const w8=(a,v)=>{ram[a-base]=v;},w16=(a,v)=>ram.writeUInt16LE(v,a-base),w32=(a,v)=>ram.writeUInt32LE(v,a-base);
   const avatar=0x02001000,creature=0x02001080,enemy=0x02001100;
@@ -331,22 +342,26 @@ test('Pokemblem companion selection honors visible picks and native selection wi
     local D={chars={[0x08000100]={}},classes={[0x08000200]={name='--'},[0x08000300]={name='Creature'},[0x08000400]={name='Enemy'}},slots={[1]=${avatar},[2]=${creature},[129]=${enemy}}}
     local profile={mapWidth=0x02003000,mapHeight=0x02003002,unitRows=0x02003004,chapter=0x02003010,turn=0x02003012,cursorX=0x02003014,cursorY=0x02003016}
     function update()local v={unitLocked=ui.locked};local u=choose(D,profile,${avatar},v,ui.preparations);return {selected=u,party=v.partyFocus==true,picked=v.companionPicked==true}end`;
-  const files={'main.lua':Buffer.from(main).toString('base64'),'game.selection.lua':fs.readFileSync('runtime/pokemblem/game.selection.lua').toString('base64')};
-  const result=await executeProject({manifest:{script:'main.lua'},files},{ranges:[{address:base,bytes:ram}],steps:[
+  const files={'main.lua':Buffer.from(main).toString('base64'),'game.selection.lua':fs.readFileSync('runtime/pokemblem/game.selection.lua').toString('base64'),
+    'game.companion-selection.lua':fs.readFileSync('runtime/shared/game.companion-selection.lua').toString('base64')};
+  const iw=Buffer.alloc(0x8000);iw[0x17A7]=1;
+  const result=await executeProject({manifest:{script:'main.lua'},files},{ranges:[{address:base,bytes:ram},{address:0x03000000,bytes:iw}],steps:[
     {ui:{},expect:{selected:creature,party:true,picked:false}},
     {ui:{mapPickedId:129,mapPickedContext:'1:2:0:0'},expect:{selected:enemy,picked:true}},
     {ui:{mapPickedId:129,mapPickedContext:'1:1:0:0'},expect:{selected:creature,picked:false}},
     {ui:{locked:true,mapPickedId:129,mapPickedContext:'1:2:0:0'},expect:{selected:avatar}},
     {ui:{preparations:true},expect:{selected:avatar}},
-    {ui:{mapPickedId:129,mapPickedContext:'1:2:0:0'},patches:[{address:enemy+12,bytes:[0,2,0,0]}],expect:{selected:creature,picked:false}}
+    {ui:{mapPickedId:129,mapPickedContext:'1:2:0:0'},patches:[{address:enemy+12,bytes:[0,2,0,0]}],expect:{selected:creature,picked:false}},
+    {patches:[{address:0x030017A7,bytes:[0]}],expect:{selected:avatar,party:false,picked:false}}
   ]});
   assert.equal(result.readOnly,true);assert.equal(result.calls.length,0);
 });
 
-test('Pokemblem lifecycle accepts a valid companion pick while the game cursor is empty',async()=>{
+test('Pokemblem reader supports injected legacy pick state while the game cursor is empty',async()=>{
   const engine=await luaFactory().createEngine();
   try{
     const units=fs.readFileSync('runtime/pokemblem/game.units.lua','utf8');
+    const movement=fs.readFileSync('runtime/shared/presentation.native-movement.lua','utf8');
     const result=await engine.doString(`
       local profile={processPool=0,activeUnit=1,phase=2,mapWidth=3,mapHeight=4,cursorX=5,cursorY=6,unitRows=7,playerPcStart=1,playerPcEnd=2,enemyPcStart=1,enemyPcEnd=2}
       local picked=0x02001000;local mem8={[picked+11]=2,[picked+19]=10};local mem32={[7]=0x02002000,[0x02002000]=0x02002100,[picked]=100,[picked+4]=200}
@@ -354,9 +369,11 @@ test('Pokemblem lifecycle accepts a valid companion pick while the game cursor i
       local empty=function()return {unitPresent=false}end
       pack={require=function(name)
         if name=='game.profile' then return profile end
+        if name=='game.companion-selection' then return (function()${fs.readFileSync('runtime/shared/game.companion-selection.lua','utf8')}\nend)() end
         if name=='game.selection' then return function(_,_,unit,v)assert(unit==nil);v.companionPicked=true;return picked end end
         if name=='presentation.defaults' then return function()return empty end end
-        if name=='game.preparations' then return function()return function()return nil,false end end end
+        if name=='presentation.native-movement' then return (function()${movement}\nend)() end
+        if name=='game.native-selection' then return function()return function()return nil,false end end end
         if name=='game.bindings' then return function()return function(v)return v end end end
         if name=='game.items' or name=='game.battle' then return function()return function()end end end
         error(name)

@@ -336,6 +336,13 @@
 .map-terrain-grid { width:100%; height:auto; max-width:100%; max-height:100%; flex:0 0 auto; min-width:0; min-height:0; }
 /* End minimap fit fix */
 
+/* The terrain and its sparse touch targets share the same fitted rectangle. */
+.map-surface { position:relative; display:stack; width:100%; height:auto; max-width:100%; max-height:100%; flex:0 0 auto; min-width:0; min-height:0; padding:0; gap:0; border:0; }
+.map-surface > .map-terrain-grid { width:100%; height:100%; padding:0; gap:0; }
+.map-pick-layer { position:absolute; left:0; top:0; width:100%; height:100%; display:stack; padding:0; gap:0; z-index:2; overflow:hidden; }
+.map-pick-target { position:absolute; min-width:0; min-height:0; padding:0; gap:0; border:0; background:transparent; }
+.map-action-status { flex:0 0 auto; padding:0.6vmin 1vmin; font-size:2.1vmin; line-height:2.7vmin; white-space:normal; }
+
 .detail-heading > .item-title { width:32%; flex:0 0 32%; white-space:normal; }
 .mod-weapon-description { flex:1 1 auto; min-width:0; max-height:100%; overflow:auto; font-size:1.70833vmin; line-height:2.13542vmin; color:#b7bac2; text-align:right; white-space:normal; }
 
@@ -557,11 +564,14 @@
 .growth-heading { font-size:3.5vmin; color:#f0d28b; font-weight:700; flex:0 0 auto; }
 .growth-note { font-size:2.1vmin; line-height:2.6vmin; color:#c8d7e1; white-space:normal; }
 .growth-chart-row { flex:1; min-height:0; align-items:center; gap:1.2vmin; }
-.growth-radar { width:60%; height:100%; flex:0 0 60%; object-fit:contain; }
+.growth-radar { width:52%; height:100%; flex:0 0 52%; object-fit:contain; }
 .growth-table { flex:1; min-width:0; height:100%; justify-content:space-between; gap:0.25vmin; }
 .growth-table-row { flex:1; align-items:center; min-height:0; padding:0.25vmin 0; border-bottom:0.1vmin solid #395068; }
-.growth-stat-name { width:25%; flex:0 0 25%; font-size:2.7vmin; font-weight:700; }
-.growth-stat-value { width:25%; flex:0 0 25%; font-size:3vmin; text-align:center; }
+.growth-stat-name { width:18%; flex:0 0 18%; font-size:2.7vmin; font-weight:700; }
+.growth-stat-value { width:18%; flex:0 0 18%; font-size:3vmin; text-align:center; }
+.growth-stat-rate { width:46%; flex:0 0 46%; font-size:2.5vmin; white-space:nowrap; }
+.companion-work-resume { position:absolute; z-index:30; right:4vmin; bottom:5vmin; width:16vmin; height:4.5vmin; padding:0.5vmin; font-size:2.4vmin; line-height:3vmin; text-align:center; background:#172e47; color:#f4e8c7; border:0.15vmin solid #d5b66f; border-radius:0.4vmin; }
+.companion-work-resume .label { font-size:2.4vmin; line-height:3vmin; color:#f4e8c7; }
 .growth-table-head { color:#e9cf8d; }
 .growth-table-head { flex:0 0 auto; }
 .growth-table-head .growth-stat-name,.growth-table-head .growth-stat-value { font-size:2.1vmin; }

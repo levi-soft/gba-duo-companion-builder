@@ -50,6 +50,7 @@
     }
   }
   const profile=Object.freeze({
+    mapRenderOnDemand:true,
     id:"the-dark-amulet",
     code:"BE8E",
     crc32:0x8537CE2A,

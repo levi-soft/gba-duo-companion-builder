@@ -51,6 +51,7 @@
     }
   }
   const profile=Object.freeze({
+    mapRenderOnDemand:true,
     id:'iron-emblem',code:'BE8E',crc32:0x141FF3AA,language:'en',decodeText:root.CompanionLatinText,
     characters:0x803D30,classes:0x807110,items:0x809B10,
     portraits:0x8ACBC4,sprites:0x8AF880,icons:0x5926F4,

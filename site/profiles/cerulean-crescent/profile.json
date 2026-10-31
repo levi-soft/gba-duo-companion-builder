@@ -8,9 +8,9 @@
   "template": "CERULEAN_CRESCENT_TEMPLATE",
   "runtime": "FE8_RUNTIME_TEMPLATE",
   "native": "FE8_NATIVE_DESIGN",
-  "runtimeParent": "fe8-english",
+  "runtimeParent": "hag-in-white",
   "output": "Cerulean-Crescent-Companion-1.0.0",
   "language": "en",
   "status": "stable",
-  "analysisStatus": "unverified"
+  "analysisStatus": "conditional-tested"
 }

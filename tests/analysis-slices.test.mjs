@@ -66,16 +66,21 @@ test('analysis retries only opted-in transient budget failures on the same froze
       ui={predictionPopup=true}
       local function scenario(retries,reason,alwaysFail)
         local launches,snapshots,slices=0,0,{}
+        local capturedRam=nil
         local frozen=function()return 0 end
+        local function sameSnapshot(ram)
+          capturedRam=capturedRam or ram
+          assert(ram==capturedRam and ram(0x02001234)==0)
+        end
         pack={require=function(name)
           if name=='game.profile' then return {activeUnit=0x03004E50} end
           if name=='game.snapshot' then return function()snapshots=snapshots+1;return frozen end end
           if name=='features.exp' then return function(kill,ram)
-            assert(ram==frozen);return function()return true,{gain=kill and 53 or 10,leveled=true}end
+            sameSnapshot(ram);return function()return true,{gain=kill and 53 or 10,leveled=true}end
           end end
           assert(name=='features.level_prediction')
           return function(ram,entries)
-            assert(ram==frozen);launches=launches+1;slices[#slices+1]=entries.cpuStepsPerTick
+            sameSnapshot(ram);launches=launches+1;slices[#slices+1]=entries.cpuStepsPerTick
             local attempt=launches
             return function()
               if alwaysFail or attempt<3 then error(reason)end

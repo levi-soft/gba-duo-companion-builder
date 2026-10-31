@@ -6,22 +6,28 @@ return function(D)
   local expQueryStart = pack.require("features.exp")
   local levelPredictionStart = pack.require("features.level_prediction")
   local profile = pack.require("game.profile")
-  local function modExpQueryStart(kill, ram)
-    return expQueryStart(kill, ram, D.execution)
-  end
-  local function modLevelPredictionStart(ram, sliceSteps)
-    if not sliceSteps then return levelPredictionStart(ram, D.execution) end
+  local function executionWithSlice(execution, sliceSteps)
+    execution = execution or D.execution
+    if not sliceSteps then return execution end
     local entries = {}
-    for key, value in pairs(D.execution or {}) do entries[key] = value end
+    for key, value in pairs(execution or {}) do entries[key] = value end
     entries.cpuStepsPerTick = sliceSteps
-    return levelPredictionStart(ram, entries)
+    return entries
+  end
+  local function modExpQueryStart(kill, ram, execution, sliceSteps)
+    return expQueryStart(kill, ram, executionWithSlice(execution, sliceSteps))
+  end
+  local function modLevelPredictionStart(ram, sliceSteps, execution)
+    return levelPredictionStart(ram, executionWithSlice(execution, sliceSteps))
+  end
+  local function transientBudgetError(message)
+    return message:find("script exceeded its per-tick time limit", 1, true)
+      or message:find("script exceeded its per-tick instruction budget", 1, true)
   end
   local function handlePredictionError(cache, message)
     message = tostring(message)
-    local transient = message:find("script exceeded its per-tick time limit", 1, true)
-      or message:find("script exceeded its per-tick instruction budget", 1, true)
-    local entries = D.execution or {}
-    if transient and (cache.budgetRetries or 0) < (entries.analysisBudgetRetries or 0) then
+    local entries = cache.execution or D.execution or {}
+    if transientBudgetError(message) and (cache.budgetRetries or 0) < (entries.analysisBudgetRetries or 0) then
       cache.budgetRetries = (cache.budgetRetries or 0) + 1
       cache.sliceSteps = math.max(128, math.floor((cache.sliceSteps or entries.cpuStepsPerTick or 2048) / 2))
       cache.predictionError, cache.predictionFailed, cache.progress = nil, false, 0
@@ -32,16 +38,52 @@ return function(D)
     end
     cache.prediction = nil
   end
+  local function handleExpQueryError(cache, message)
+    message = tostring(message)
+    cache.query = nil -- An interrupted native CPU/shadow is never resumed.
+    local entries = cache.execution or D.execution or {}
+    if transientBudgetError(message) and (cache.expBudgetRetries or 0) < (entries.analysisBudgetRetries or 0) then
+      cache.expBudgetRetries = (cache.expBudgetRetries or 0) + 1
+      cache.expSliceSteps = math.max(128, math.floor((cache.expSliceSteps or entries.cpuStepsPerTick or 2048) / 2))
+      cache.expRetryPending, cache.ok, cache.predictionError = true, nil, nil
+    else
+      cache.expRetryPending, cache.ok, cache.predictionError = false, false, message
+    end
+  end
   local modRngAnchor = nil
+  local modRngPopupOpen = false
   local modAnalysisCache = { key = nil }
   local modAnalysisTick = 0
+  local function cacheMatches(cache)
+    for address, value in pairs(cache.readDependencies or {}) do
+      if mem.u8(address) ~= value then return false end
+    end
+    return true
+  end
+  local function publish(v, cache)
+    if not cacheMatches(cache) then
+      -- A native phase can discover a dependency after an earlier slice. Its
+      -- frozen value must still match live RAM before any result is published.
+      modAnalysisCache = { key = nil }
+      for _, name in ipairs({ "analysisDamageExp", "analysisKillExp", "analysisCurrentExp",
+        "analysisExpSummary", "analysisLevelSummary", "analysisPredictionContext", "analysisPredictionTicks",
+        "analysisExtraStats", "analysisConPresent", "analysisMovPresent", "analysisPredictionError",
+        "predictionDamageEligible", "predictionKillEligible", "predictionFailureReason", "rngExpHit", "rngExpKill" }) do
+        v[name] = nil
+      end
+      v.analysisReady, v.analysisFailed, v.analysisSnapshotStale = false, false, true
+      v.predictionAvailable, v.predictionComplete, v.predictionBusy, v.predictionProgress = false, false, true, 1
+    end
+    return v
+  end
   return function(v)
     modAnalysisTick = modAnalysisTick + 1
     local key = string.format("%04X %04X %04X", mem.u16(0x03000000), mem.u16(0x03000002), mem.u16(0x03000004))
     if not modRngAnchor then
       modRngAnchor = key
     end
-    if ui and (ui.rngAck == true or ui.predictionPopup == true) then
+    local popupOpen = ui and ui.predictionPopup == true or false
+    if ui and (ui.rngAck == true or (popupOpen and not modRngPopupOpen)) then
       modRngAnchor = key
       if ui.rngAck == true then
         v.ui = v.ui or {}
@@ -49,12 +91,14 @@ return function(D)
         v.ui.set.rngAck = false
       end
     end
+    modRngPopupOpen = popupOpen
     v.rngStateChanged = key ~= modRngAnchor
     v.rngStateKey = key
     v.analysisPresent = v.forecastActive == true
     v.analysisMissing = not v.analysisPresent
     v.analysisReady = false
     v.analysisFailed = false
+    v.analysisPredictionError = nil
     v.predictionAvailable = false
     v.predictionComplete = false
     v.predictionProgress = 0
@@ -83,24 +127,49 @@ return function(D)
     -- Exclude the PlaySt clocks and BmSt cursor/camera/frame counters: those
     -- advance while a forecast is unchanged and would continually restart jobs.
     signature = signature .. mem.read(0x0202BCFE, 0x0e) .. string.char(mem.u8(0x0202BCB4))
-    if modAnalysisCache.key ~= signature then
-      local ram = modCaptureRam()
+    local context = mem.busContext and mem.busContext() or nil
+    if context then
+      assert(context.version == 1 and context.platform == "gba"
+        and math.type(context.biosPrefetch) == "integer"
+        and context.biosPrefetch >= 0 and context.biosPrefetch <= 0xffffffff, "Invalid GBA bus context")
+      signature = signature .. string.format("bus1:%08X", context.biosPrefetch)
+    end
+    if modAnalysisCache.key ~= signature or not cacheMatches(modAnalysisCache) then
+      local ram, frozenContext = modCaptureRam()
+      local frozenRam, readDependencies = ram, {}
+      ram = function(address)
+        local value = frozenRam(address)
+        readDependencies[address] = value
+        return value
+      end
+      local execution = D.execution
+      if frozenContext then
+        execution = {}
+        for name, value in pairs(D.execution or {}) do execution[name] = value end
+        execution.busContext = frozenContext
+      end
       modAnalysisCache =
-        { key = signature, ramByte = ram, query = modExpQueryStart(false, ram), queryStage = 1 }
+        { key = signature, ramByte = ram, readDependencies = readDependencies, execution = execution,
+          expRetryPending = true, queryStage = 1 }
     end
     local c = modAnalysisCache
+    if c.expRetryPending then
+      c.expRetryPending = false
+      local ok, job = pcall(modExpQueryStart, c.queryStage == 2, c.ramByte, c.execution, c.expSliceSteps)
+      if ok then c.query = job else handleExpQueryError(c, job) end
+    end
     if c.query then
       local ok, done, result = pcall(c.query)
       if not ok then
-        c.ok = false
-        c.query = nil
-        c.predictionError = tostring(done)
+        handleExpQueryError(c, done)
       elseif done then
         if c.queryStage == 1 then
           c.damageResult = result
           c.damage = result.gain
           c.queryStage = 2
-          c.query = modExpQueryStart(true, c.ramByte)
+          -- Each conditional EXP stage has its own bounded retry allowance.
+          -- Keep the completed damage result while rebuilding the kill stage.
+          c.query, c.expBudgetRetries, c.expSliceSteps, c.expRetryPending = nil, 0, nil, true
         else
           c.killResult = result
           c.kill = result.gain
@@ -109,11 +178,11 @@ return function(D)
         end
       end
     end
-    if c.query then
+    if c.query or c.expRetryPending then
       v.predictionBusy = true
       v.predictionProgress = c.queryStage == 1 and 1 or 3
       v.analysisPredictionContext = "Đang tính EXP nếu nhân vật còn sống…"
-      return v
+      return publish(v, c)
     end
     c.age = (c.age or 0) + 1
     v.analysisReady = c.ok
@@ -157,6 +226,21 @@ return function(D)
         v["growth" .. k .. "Current"] = mem.u8(actor + offsets[n])
         v["rng" .. k .. "Gain"] = 0
       end
+      local extraStats = (c.execution or D.execution or {}).extraStats
+      if extraStats then
+        v.analysisExtraStats = {}
+        for _, spec in ipairs(extraStats) do
+          assert(spec.key == "Con" or spec.key == "Mov", "Invalid extra Analysis stat")
+          local current = spec.currentValue and spec.currentValue(v, actor, c.ramByte)
+            or spec.currentField and v[spec.currentField]
+            or spec.currentOffset and c.ramByte(actor + spec.currentOffset)
+          assert(type(current) == "number", "Missing current extra stat: " .. spec.key)
+          v.analysisExtraStats[#v.analysisExtraStats + 1] = spec.key
+          v["analysis" .. spec.key .. "Present"] = true
+          v["growth" .. spec.key .. "Current"] = current
+          v["rng" .. spec.key .. "Gain"] = 0
+        end
+      end
       local kp = mem.u32(actor + 4)
       local cap = 20
       local eligible = c.damageResult.leveled or c.killResult.leveled
@@ -170,12 +254,12 @@ return function(D)
           -- Warm the result while the forecast is visible. A closed popup
           -- waits for a stable forecast before allocating its RAM snapshot.
           if c.age < 2 and not (ui and ui.predictionPopup == true) then
-            return v
+            return publish(v, c)
           end
-          local ok, job = pcall(modLevelPredictionStart, c.ramByte, c.sliceSteps)
+          local ok, job = pcall(modLevelPredictionStart, c.ramByte, c.sliceSteps, c.execution)
           if ok then
             c.prediction = job
-            return v
+            return publish(v, c)
           else
             handlePredictionError(c, job)
           end
@@ -189,7 +273,12 @@ return function(D)
           if not ok then
             handlePredictionError(c, done)
           elseif done then
-            c.gains = gains
+            local valid, message = pcall(function()
+              for _, spec in ipairs(extraStats or {}) do
+                assert(gains.extraGains and type(gains.extraGains[spec.key]) == "number", "Missing predicted extra stat: " .. spec.key)
+              end
+            end)
+            if valid then c.gains = gains else handlePredictionError(c, message) end
           end
         end
         v.analysisPredictionTicks = c.workTicks or 0
@@ -201,6 +290,9 @@ return function(D)
           for n, k in ipairs(keys) do
             v["rng" .. k .. "Gain"] = c.gains[n]
           end
+          for _, k in ipairs(v.analysisExtraStats or {}) do
+            v["rng" .. k .. "Gain"] = c.gains.extraGains[k]
+          end
         elseif c.predictionFailed then
           v.predictionBusy = false
           v.analysisPredictionContext = "Chưa hỗ trợ dự đoán tình huống này"
@@ -208,6 +300,6 @@ return function(D)
         end
       end
     end
-    return v
+    return publish(v, c)
   end
 end

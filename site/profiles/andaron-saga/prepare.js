@@ -55,6 +55,7 @@
     }
   }
   const profile=Object.freeze({
+    mapRenderOnDemand:true,
     id:"andaron-saga",
     code:"BE8E",
     crc32:0xA3B9CD19,

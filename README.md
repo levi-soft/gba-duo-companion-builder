@@ -1,10 +1,19 @@
 # GBA Duo Companion Builder
 
-**Release 1.2.0 is withdrawn.** The public website and catalogue have returned to **Builder 1.1.5 with fifteen profiles**. The fifteen additions in this source checkout are under renewed feature implementation and acceptance testing; they are not an approved release. See the [open feature gaps](docs/ANALYSIS-GAPS-1.2.0.vi.md).
+**Builder 1.2.0 — thirty companions at 1.0.0.** The 2026-10-31 release includes
+the shared 30-profile repair and replaces the withdrawn 2026-10-29 build.
+See [changes, exact ROM identities and known limits](docs/RELEASE-1.2.0.md).
 
-**Verification correction for the fifteen new profiles:** ten have no working Battle Analysis; five have only limited conditional Analysis tests. Full companion-app acceptance remains incomplete. Passing CI and version 1.0.0 do not establish complete feature support. See [the gaps and remaining work](docs/ANALYSIS-GAPS-1.2.0.vi.md).
+Map and roster taps use the existing native D-pad API of **GBA Duo Plus
+0.1.8-plus.4**, with **Packs can change games off** and no APK replacement.
+Growth keeps its base PNG and displays signed bonuses such as `60% (+1%)` in
+the rate table. Normal unit taps no longer add a log above the chapter.
 
-**Builder 1.2.0** adds fifteen released companions, bringing the catalogue to **30 profiles at companion 1.0.0**. The new batch includes stat-screen unit tracking, RNG/Map selection fixes and ROM-specific readers. The previous fifteen readers are unchanged. See the [release notes and exact-ROM list](docs/RELEASE-1.2.0.md) for the ten gated Analysis paths, Pokemblem limits and validation scope.
+Full Android acceptance for all thirty profiles is incomplete. The 25 ms
+timeout issue, Storge ally IDs 85–99 and an earlier stock-host blank-data
+observation remain open. Stock GBA Duo v0.1.8 has no native focus API; loading a
+pack there does not establish game-cursor control. Read the
+[current verification scope](docs/OFFICIAL-30-COMPANION-FIX-2026-10-30.vi.md).
 
 [Tiếng Việt](README.vi.md)
 
@@ -108,7 +117,7 @@ companion to receive the updated layout. No Plus APK update is required.
 
 ## Supported ROMs
 
-The fifteen exact identities are listed above and on the [supported-games page](https://levi-soft.github.io/gba-duo-companion-builder/supported-games.html). Other ROM revisions require their own profile.
+All thirty exact identities are listed in the [release notes](docs/RELEASE-1.2.0.md) and on the [supported-games page](https://levi-soft.github.io/gba-duo-companion-builder/supported-games.html). Other ROM revisions require their own profile.
 
 ## GBA Duo Plus integration
 

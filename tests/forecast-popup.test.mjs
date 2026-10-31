@@ -37,6 +37,7 @@ test('all profile entry points apply popup lifecycle even when no unit remains a
     const engine=await luaFactory().createEngine();
     try {
       engine.global.set('mainSource',modules['main.lua']);
+      engine.global.set('snapshotSource',modules['game.snapshot.lua']);
       engine.global.set('flowSource',fs.readFileSync('runtime/shared/presentation.forecast.lua','utf8'));
       assert.equal(await engine.doString(`
         local forecast=false
@@ -45,12 +46,13 @@ test('all profile entry points apply popup lifecycle even when no unit remains a
           if name=='data.rom_tables' then return {uiStrings={},mapMeta={chars={}},slots={}} end
           if name=='shared.values' then return {} end
           if name=='game.execution' then return {} end
+          if name=='game.snapshot' then return assert(load(snapshotSource))() end
           if name=='game.memory' or name=='game.map' or name=='game.abilities' then return function()return {}end end
           if name=='game.tiles' then return function()return function()return 0 end end end
           if name=='game.units' then return function() return function()
             return {forecastActive=forecast,unitPresent=false,ui={set={mainTab='Map'}}}
           end end end
-          if name=='presentation.inventory' or name=='presentation.growth' then return identity end
+          if name=='presentation.inventory' or name=='presentation.growth' or name=='presentation.pokemblem-text' then return identity end
           if name=='presentation.forecast' then return assert(load(flowSource))() end
           return function()return identity end
         end}

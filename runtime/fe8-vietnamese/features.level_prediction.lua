@@ -5,16 +5,29 @@ local modThumbStart = pack.require("features.thumb").start
 local modCaptureRam = pack.require("game.snapshot")
 local function modLevelPredictionStart(sharedRam, profileOptions)
   local entries = profileOptions and profileOptions.entries or {}
+  assert(entries.signedGains == nil or type(entries.signedGains) == "boolean", "Invalid signed gain option")
+  assert(entries.transformGains == nil or type(entries.transformGains) == "function", "Invalid gain transform")
   local sliceSteps = entries.cpuStepsPerTick or 2048
   assert(sliceSteps >= 128 and sliceSteps <= 2048 and sliceSteps % 1 == 0, "Invalid analysis work slice")
   local actor, target = 0x0203A4EC, 0x0203A56C
   local config = mem.u16(0x0203A4D4)
-  if config ~= 1 and config ~= 2 then
+  local allowed = entries.allowedBattleConfigs
+  if allowed ~= nil then
+    assert(type(allowed) == "table", "Invalid allowed battle configurations")
+    for value, enabled in pairs(allowed) do
+      assert(math.type(value) == "integer" and value >= 0 and value <= 0xffff
+        and type(enabled) == "boolean", "Invalid allowed battle configurations")
+    end
+  end
+  if allowed and allowed[config] ~= true or not allowed and config ~= 1 and config ~= 2 then
     error(string.format("Unverified battle configuration: %04X", config))
   end
   -- A job spans emulator frames. Freeze its entire RAM baseline once;
   -- live stack/global reads between slices can corrupt the private CPU.
-  local ramByte = sharedRam or modCaptureRam()
+  local ramByte, capturedContext = sharedRam
+  if not ramByte then ramByte, capturedContext = modCaptureRam() end
+  local busContext = entries.busContext
+  if busContext == nil then busContext = capturedContext end
   local function input(a, n)
     n = n or 1
     local v = 0
@@ -72,6 +85,7 @@ local function modLevelPredictionStart(sharedRam, profileOptions)
       maxSteps = phase.limit,
       ramByte = ramByte,
       strictStack = true,
+      busContext = busContext,
       registers = { [4] = target, [5] = actor, [6] = targetUnit, [7] = targetUnit },
     }
     if entries.beforeEntry then
@@ -122,7 +136,8 @@ local function modLevelPredictionStart(sharedRam, profileOptions)
   return function()
     local remaining = sliceSteps
     while remaining > 0 do
-      local done, _, shadow, steps = run(remaining)
+      local done, _, shadow, steps, context = run(remaining)
+      busContext = context
       remaining = remaining - (steps - previousSteps)
       previousSteps = steps
       if not done then
@@ -131,7 +146,55 @@ local function modLevelPredictionStart(sharedRam, profileOptions)
       if stage == #phases then
         local result = {}
         for n, offset in ipairs({ 0x73, 0x74, 0x7a, 0x75, 0x76, 0x79, 0x77, 0x78 }) do
-          result[n] = shadow[actor + offset] or input(actor + offset)
+          local value = shadow[actor + offset] or input(actor + offset)
+          result[n] = entries.signedGains and value >= 128 and value - 256 or value
+        end
+        local extraKeys = {}
+        if entries.extraGains then
+          result.extraGains = {}
+          for _, gain in ipairs(entries.extraGains) do
+            assert(type(gain.key) == "string" and math.type(gain.offset) == "integer"
+              and gain.offset >= 0 and gain.offset < 128
+              and math.type(gain.shift or 0) == "integer" and (gain.shift or 0) >= 0
+              and (gain.shift or 0) <= 7 and math.type(gain.mask or 255) == "integer"
+              and (gain.mask or 255) >= 0 and (gain.mask or 255) <= 255
+              and (gain.signBits == nil or math.type(gain.signBits) == "integer"
+                and gain.signBits >= 1 and gain.signBits <= 8),
+              "Invalid extra level-up gain recipe")
+            local value = ((shadow[actor + gain.offset] or input(actor + gain.offset))
+              >> (gain.shift or 0)) & (gain.mask or 255)
+            if gain.signBits then
+              local wrap = 1 << gain.signBits
+              value = value & (wrap - 1)
+              if value >= wrap // 2 then value = value - wrap end
+            end
+            result.extraGains[gain.key], extraKeys[gain.key] = value, true
+          end
+        end
+        if entries.transformGains then
+          -- A verified profile may translate native intermediate changes to
+          -- persistent stat deltas only after every combat/RNG call finishes.
+          -- The callback reads the frozen input and final private shadow;
+          -- it mutates this result in place and has no host write API here.
+          entries.transformGains(result, ramByte, shadow)
+          for key in pairs(result) do
+            assert(key == "extraGains" or math.type(key) == "integer" and key >= 1 and key <= 8,
+              "Invalid transformed level-up gains")
+          end
+          for n = 1, 8 do
+            assert(math.type(result[n]) == "integer" and result[n] >= -255 and result[n] <= 255,
+              "Invalid transformed level-up gains")
+          end
+          assert(result.extraGains == nil or type(result.extraGains) == "table",
+            "Invalid transformed level-up gains")
+          for key, value in pairs(result.extraGains or {}) do
+            assert(extraKeys[key] and math.type(value) == "integer" and value >= -255 and value <= 255,
+              "Invalid transformed level-up gains")
+          end
+          for key in pairs(extraKeys) do
+            assert(result.extraGains and math.type(result.extraGains[key]) == "integer",
+              "Invalid transformed level-up gains")
+          end
         end
         return true, result, 100
       end

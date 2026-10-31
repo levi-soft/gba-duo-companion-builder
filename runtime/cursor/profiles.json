@@ -37,6 +37,14 @@
       "extends": "fe8-us",
       "green": "0x02026E30"
     },
+    "pokemblem": {
+      "extends": "fe8-us",
+      "modeGuard": {
+        "address": "0x030017A7",
+        "mask": "0x01",
+        "expected": "0x00"
+      }
+    },
     "fe8-europe": {
       "extends": "fe8-us",
       "playerScript": "0x087ABDB8",
@@ -85,6 +93,7 @@
     "andaron-saga": "fe8-us",
     "bells-of-byelen": "fe8-us",
     "cerulean-crescent": "fe8-us",
+    "pokemblem": "pokemblem",
     "dark-lord-maiden-of-light": "fe7",
     "dream-of-five": "fe8-us",
     "eligors-spear": "fe8-us",

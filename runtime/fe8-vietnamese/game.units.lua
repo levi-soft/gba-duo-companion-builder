@@ -2,6 +2,7 @@
 -- Authored runtime module. Generated ROM tables live in data.rom_tables.lua.
 
 local profile = pack.require("game.profile")
+local selectCompanionUnit = pack.require("game.companion-selection")
 
 return function(D, map, values, abilities)
   local truth = values.truth
@@ -10,8 +11,13 @@ return function(D, map, values, abilities)
   local chars, classes, slots = D.chars, D.classes, D.slots
   local mapCfg = map.config or {}
   local applyNativeAbilities = abilities.apply
-  local emptyUnitValues = pack.require("presentation.defaults")(D, map, values, abilities, state)
-  local readPreparations = pack.require("game.preparations")(D.slots, map.meta, profile)
+  local makeEmptyUnit = pack.require("presentation.defaults")(D, map, values, abilities, state)
+  local function emptyUnitValues(menu)
+    local v = makeEmptyUnit(menu)
+    selectCompanionUnit(D, profile, nil, v, true)
+    return v
+  end
+  local readPreparations = pack.require("game.native-selection")(D.slots, map.meta, profile)
   local bindFields = pack.require("game.bindings")(D, values, state)
   local readItems = pack.require("game.items")(D, map)
   local readBattle = pack.require("game.battle")(D)
@@ -57,6 +63,7 @@ return function(D, map, values, abilities)
       end
     end
 
+    unit = selectCompanionUnit(D, profile, unit, v, preparationsActive, nil, mapCfg)
     if not unit then
       local cursorX, cursorY = mem.u16(profile.cursorX), mem.u16(profile.cursorY)
       local width, height = mem.u16(profile.mapWidth), mem.u16(profile.mapHeight)

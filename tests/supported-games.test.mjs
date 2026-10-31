@@ -26,13 +26,13 @@ test('supported games follow the profile registry, including future entries and 
   assert.equal(element('start').href,'index.html?lang=en');
   assert.equal(document.documentElement.lang,'en');
   for(const [lang,unavailable,conditional] of [
-    ['vi','Battle Analysis: chưa khả dụng (chưa hoàn thiện).','Battle Analysis: mới kiểm chứng các ca có điều kiện; chưa nghiệm thu đầy đủ trong app.'],
-    ['en','Battle Analysis: unavailable (feature incomplete).','Battle Analysis: limited conditional tests; app acceptance incomplete.']
+    ['vi','Battle Analysis: chưa khả dụng (chưa hoàn thiện).','Battle Analysis: phân tích EXP và lên cấp theo điều kiện.'],
+    ['en','Battle Analysis: unavailable (feature incomplete).','Battle Analysis: conditional EXP and level-up analysis.']
   ]){
     element('language').value=lang;element('language').events.change();
     const cards=element('gameList').children;
-    assert.equal(cards.filter(card=>card.children.some(child=>child.textContent===unavailable)).length,10);
-    assert.equal(cards.filter(card=>card.children.some(child=>child.textContent===conditional)).length,5);
+    assert.equal(cards.filter(card=>card.children.some(child=>child.textContent===unavailable)).length,0);
+    assert.equal(cards.filter(card=>card.children.some(child=>child.textContent===conditional)).length,15);
     assert(!cards.at(-1).children.some(child=>/analysis-/.test(child.className||'')),'Unclassified future profiles must not inherit a feature claim');
   }
 });

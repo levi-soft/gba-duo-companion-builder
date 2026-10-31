@@ -33,6 +33,7 @@
     for(const [pointer,c]of Object.entries(D.growthClasses))c.caps[0]=r.u8(+pointer-0x08000000+19);
   }
   const profile=Object.freeze({
+    mapRenderOnDemand:true,
     id:"eligors-spear",
     code:"BE8E",
     crc32:0x6E5FE3B0,

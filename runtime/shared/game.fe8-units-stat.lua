@@ -2,32 +2,40 @@
 -- Authored runtime module. Generated ROM tables live in data.rom_tables.lua.
 
 local profile = pack.require("game.profile")
+local selectCompanionUnit = pack.require("game.companion-selection")
 
-return function(D, map, values, abilities)
+return function(D, map, values, abilities, selectionOptions)
   local truth = values.truth
   local state = { pulseTick = 0, lastIdentity = nil }
   local applyMap = map.apply
   local chars, classes, slots = D.chars, D.classes, D.slots
   local mapCfg = map.config or {}
   local applyNativeAbilities = abilities.apply
-  local emptyUnitValues = pack.require("presentation.defaults")(D, map, values, abilities, state)
+  local makeEmptyUnit = pack.require("presentation.defaults")(D, map, values, abilities, state)
+  local function emptyUnitValues(menu)
+    local v = makeEmptyUnit(menu)
+    selectCompanionUnit(D, profile, nil, v, true)
+    return v
+  end
   local readPreparations = pack.require("game.native-selection")(D.slots, map.meta, profile)
   local bindFields = pack.require("game.bindings")(D, values, state)
   local readItems = pack.require("game.items")(D, map)
   local readBattle = pack.require("game.battle")(D)
-  return function()
+  local presentMovement=pack.require("presentation.native-movement")(D)
+  local function readUnits()
     local v = {}
     local unit, preparationsActive = readPreparations()
     if preparationsActive and not unit then
       return emptyUnitValues(true)
     end
 
-    local playerPc, forecastProc, aiPc = 0, 0, 0
+    local playerPc, forecastProc, aiPc, playerBlocked = 0, 0, 0, 0
     for n = 0, 63 do
       local q = profile.processPool + n * 108
       local s = mem.u32(q)
       if s == profile.playerProcess then
         playerPc = mem.u32(q + 4)
+        playerBlocked = mem.u8(q + 0x28)
       elseif s == profile.forecastProcess then
         forecastProc = q
       elseif s == profile.enemyProcess then
@@ -39,17 +47,20 @@ return function(D, map, values, abilities)
     v.forecastActive = false
     local phase = mem.u8(profile.phase)
     local playerOwns = playerPc >= profile.playerPcStart and playerPc <= profile.playerPcEnd and phase == 0
+    local inspectionOwns = phase == 0 and playerBlocked == 0 and selectionOptions and selectionOptions.inspectionPc
+      and playerPc == selectionOptions.inspectionPc
     local aiOwns = aiPc >= profile.enemyPcStart
       and aiPc <= profile.enemyPcEnd
       and (phase == 0x80 or phase == 0x40)
-    if not preparationsActive and (playerOwns or aiOwns) then
-      local id = active >= 0x02000000 and active < 0x02040000 and mem.u8(active + 11) or 0
+    if not preparationsActive and (playerOwns or aiOwns or inspectionOwns) then
+      local id = active >= 0x02000000 and active + 0x48 <= 0x02040000 and mem.u8(active + 11) or 0
       if
         slots[id] == active
-        and (id & 0xc0) == phase
+        and (inspectionOwns or (id & 0xc0) == phase)
         and chars[mem.u32(active)]
         and classes[mem.u32(active + 4)]
         and (mem.u32(active + 12) & 0x1000c) == 0
+        and (not inspectionOwns or id < 128 or (mem.u32(active + 12) & 0x200) == 0)
       then
         unit = active
         v.unitLocked = true
@@ -57,6 +68,7 @@ return function(D, map, values, abilities)
       end
     end
 
+    unit = selectCompanionUnit(D, profile, unit, v, preparationsActive, nil, mapCfg)
     if not unit then
       local cursorX, cursorY = mem.u16(profile.cursorX), mem.u16(profile.cursorY)
       local width, height = mem.u16(profile.mapWidth), mem.u16(profile.mapHeight)
@@ -164,4 +176,5 @@ return function(D, map, values, abilities)
     applyNativeAbilities(v, unit)
     return v
   end
+  return function()return presentMovement(readUnits())end
 end

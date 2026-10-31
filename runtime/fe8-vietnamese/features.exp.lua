@@ -21,18 +21,21 @@ local function modExpQueryStart(kill, ramByte, entries)
     { entries.restoreWeapon or 0x0802C6EC, { target } },
     { entries.expApply or 0x0802B92C, {} },
   }
-  local stage, run = 1, nil
+  local stage, run, busContext = 1, nil, entries.busContext
   local function begin(shadow)
     return modThumbStart(
       phases[stage][1],
       phases[stage][2],
       shadow,
-      { ramByte = ramByte, strictStack = true, maxSteps = 200000, registers = { [4] = target, [5] = actor } }
+      { ramByte = ramByte, strictStack = true, maxSteps = 200000,
+        busContext = busContext, beforeEntry = entries.beforeEntry,
+        registers = { [4] = target, [5] = actor } }
     )
   end
   run = begin(initial)
   return function()
-    local done, _, shadow = run(sliceSteps)
+    local done, _, shadow, _, context = run(sliceSteps)
+    busContext = context
     if not done then
       return false
     end

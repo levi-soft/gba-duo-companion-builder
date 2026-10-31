@@ -1,5 +1,7 @@
 # 15 companion Fire Emblem mới — phát hành 1.0.0
 
+> Hồ sơ của bản 1.2.0 đã gỡ. Xem [triển khai và nghiệm thu hiện tại](FULL-FE-RECHECK-2026-10-30.vi.md).
+
 **Đính chính:** kết luận hoàn tất trước đây quá rộng. Mười bản chưa có Analysis
 hoạt động; năm bản chỉ có ca kiểm chứng Analysis có điều kiện. Chưa nghiệm thu
 đầy đủ thao tác companion trong app trên thiết bị thật cho cả 15 game. Xem

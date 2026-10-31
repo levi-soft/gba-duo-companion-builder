@@ -120,17 +120,21 @@ test('DLATMOL earned support cards follow the avatar name after initialization a
  assert.equal(result.readOnly,true);
 });
 
-test('Four Kings explicitly withholds unsupported predictions and clears the state on exit',async()=>{
+test('Four Kings popup without a forecast clears results and waits for game-owned battle data',async()=>{
  const project={manifest:{script:'main.lua'},files:{
   'features.analysis.lua':encoded(fs.readFileSync('runtime/the-four-kings/features.analysis.lua','utf8')),
+  'features.fe8-analysis.lua':encoded(fs.readFileSync('runtime/fe8-vietnamese/features.analysis.lua','utf8')),
+  'game.profile.lua':encoded('return{}'),
+  'game.snapshot.lua':encoded('return function()error("No inactive-forecast snapshot")end'),
+  'features.exp.lua':encoded('return function()error("No inactive-forecast EXP job")end'),
+  'features.level_prediction.lua':encoded('return function()error("No inactive-forecast level job")end'),
   'presentation.prediction.lua':encoded(fs.readFileSync('runtime/shared/presentation.prediction.lua','utf8')),
   'main.lua':encoded(`local apply=pack.require('features.analysis')({});local present=pack.require('presentation.prediction')()
    function update()return present(apply({forecastActive=mem.u8(0x02000000)==1,exp=99,level=1,deployment=1}))end`)
  }};
- const result=await executeProject(project,{ranges:[{address:0x02000000,bytes:[1]},{address:0x03000000,bytes:Buffer.alloc(6)}],steps:[
-  {ticks:3,expect:{analysisSupported:false,analysisFailed:true,analysisReady:false,predictionAvailable:false,predictionComplete:false,predictionBusy:false,predictionContext:'Conditional EXP and level-up prediction are unavailable for this ROM revision.'}},
-  {ticks:1,patches:[{address:0x02000000,bytes:[0]}],expect:{analysisFailed:false,analysisPresent:false,predictionAvailable:false,predictionComplete:false}},
-  {ticks:1,ui:{predictionPopup:true},expect:{analysisFailed:true,analysisPresent:false,predictionAvailable:false,predictionContext:'Conditional EXP and level-up prediction are unavailable for this ROM revision.'}},
+ const result=await executeProject(project,{ranges:[{address:0x02000000,bytes:[0]},{address:0x03000000,bytes:Buffer.alloc(6)}],steps:[
+  {ticks:3,expect:{analysisFailed:false,analysisReady:false,predictionAvailable:false,predictionComplete:false,predictionBusy:false}},
+  {ticks:1,ui:{predictionPopup:true},expect:{analysisFailed:false,analysisPresent:false,predictionAvailable:false,rngExpHit:undefined}},
   {ticks:1,expect:{analysisFailed:false,analysisPredictionError:undefined}}
  ]});
  assert.equal(result.readOnly,true);

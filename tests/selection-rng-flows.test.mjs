@@ -15,6 +15,7 @@ test('Dark Lord preserves Map pick invalidation while refreshing a new unit inve
    local generation=0
    pack={require=function(name)
     if name=='game.profile' then return profile end
+    if name=='game.companion-selection' then return (function()${fs.readFileSync('runtime/shared/game.companion-selection.lua','utf8')}\nend)() end
     if name=='presentation.defaults' then return function()return function()error('Unexpected empty unit')end end end
     if name=='game.native-selection' then return function()return function()return nil,false end end end
     if name=='game.bindings' then return function()return function(v)generation=generation+1;v.firstItemPage='item'..generation;v.firstItemSelected1=true;v.item1Id=generation;return v end end end
@@ -34,14 +35,21 @@ test('Dark Lord preserves Map pick invalidation while refreshing a new unit inve
  }finally{engine.global.close();}
 });
 
-test('RNG observation survives unit/map changes and works without verified prediction',async()=>{
+test('RNG observation survives unit/map changes and works outside Forecast without executing native analysis',async()=>{
  const encode=s=>Buffer.from(s).toString('base64');
  for(const id of ['bells-of-byelen','cerulean-crescent','pokemblem','morrows-golden-country','sun-gods-wrath','dark-lord-maiden-of-light']){
   const main=id==='dark-lord-maiden-of-light'
    ? `local observe=pack.require('features.rng-indicator')();function update()return observe({unitPresent=ui.present,unitName=ui.name})end`
    : `local apply=pack.require('features.analysis')({});function update()return apply({unitPresent=ui.present,unitName=ui.name,forecastActive=false})end`;
   const files={'main.lua':encode(main),'features.rng-indicator.lua':encode(fs.readFileSync('runtime/shared/features.rng-indicator.lua','utf8'))};
-  if(id!=='dark-lord-maiden-of-light')files['features.analysis.lua']=encode(fs.readFileSync('runtime/'+id+'/features.analysis.lua','utf8'));
+  if(id!=='dark-lord-maiden-of-light')Object.assign(files,{
+   'features.analysis.lua':encode(fs.readFileSync('runtime/'+id+'/features.analysis.lua','utf8')),
+   'features.fe8-analysis.lua':encode(fs.readFileSync('runtime/fe8-vietnamese/features.analysis.lua','utf8')),
+   'game.profile.lua':encode('return{}'),
+   'game.snapshot.lua':encode('return function()error("Inactive Forecast must not snapshot")end'),
+   'features.exp.lua':encode('return function()error("Inactive Forecast must not start EXP")end'),
+   'features.level_prediction.lua':encode('return function()error("Inactive Forecast must not start a level job")end'),
+  });
   const run=await executeProject({manifest:{script:'main.lua'},files},{ranges:[{address:0x03000000,bytes:Buffer.alloc(6)}],steps:[
    {ui:{mainTab:'Units',name:'First',present:true},expect:{rngStateChanged:false,rngStateTracking:true}},
    {ui:{mainTab:'Units',name:'First',present:true},patches:[{address:0x03000000,bytes:[1,0]}],expect:{rngStateChanged:true}},
@@ -56,7 +64,7 @@ test('RNG observation survives unit/map changes and works without verified predi
   ]});
   assert.equal(run.values[5].ui.set.rngAck,false,id+' acknowledgement consumed');
   assert.equal(run.values.at(-1).rngStateKey,'0001 0002 0003');
-  if(id!=='dark-lord-maiden-of-light')for(const v of run.values){assert.equal(v.analysisSupported,false);assert.equal(v.predictionAvailable,false);assert.equal(v.rngExpHit,undefined);}
+  if(id!=='dark-lord-maiden-of-light')for(const v of run.values){assert.equal(v.analysisSupported,true);assert.equal(v.predictionAvailable,false);assert.equal(v.rngExpHit,undefined);}
   assert.equal(run.readOnly,true);assert.equal(run.calls.length,0);
  }
 });

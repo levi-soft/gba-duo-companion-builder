@@ -58,9 +58,11 @@
     }
 
     const cursor = root.COMPANION_CURSOR_PROFILES?.[profileId];
+    const features = root.COMPANION_HOST_REQUIREMENTS?.[profileId];
     if (cursor && (!project.manifest.match?.gameCode?.length || !project.manifest.match?.crc32?.length)) {
       throw Error('Cursor navigation requires an exact ROM match.');
     }
+    if (cursor && features?.length) throw Error('Native cursor companions must not require new host features.');
     const files = project.files;
     const previousScript = project.manifest.script;
     if (previousScript && previousScript !== 'main.lua') delete files[previousScript];
@@ -71,7 +73,20 @@
       'return ' + formatData(dataLiteral) + '\n'
     );
     project.manifest.script = 'main.lua';
-    if (cursor) project.manifest.cursorNavigation = JSON.parse(JSON.stringify(cursor));
+    if(features?.length){
+      project.manifest.formatVersion=4;
+      project.manifest.requires={features:[...features]};
+    }
+    if (cursor) {
+      // Existing Plus code17 accepts exactly this original flat D-pad schema.
+      // Lua-only mode guards never enter its strict manifest parser.
+      const fields = ['version', 'kind', 'cursor', 'size', 'chapter', 'turn', 'bm', 'procs',
+        'playerScript', 'idlePc', 'blue', 'green', 'red', 'unitPosition', 'unitHp', 'unitStateBytes', 'unavailableMask'];
+      project.manifest.cursorNavigation = Object.fromEntries(fields.map(name => [name, cursor[name]]));
+      delete project.manifest.requires;
+      delete project.manifest.permissions;
+      project.manifest.formatVersion = 2;
+    }
     return project;
   }
 

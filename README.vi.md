@@ -1,10 +1,17 @@
 # GBA Duo Companion Builder
 
-**Đã gỡ phát hành 1.2.0.** Website và catalog công khai trở về **Builder 1.1.5 với 15 profile**. Mười lăm bản mới trong mã nguồn đang được triển khai và nghiệm thu lại đầy đủ tính năng, chưa phải bản được chấp nhận để phát hành. Xem [các phần còn thiếu](docs/ANALYSIS-GAPS-1.2.0.vi.md).
+**Builder 1.2.0 — 30 companion ở phiên bản 1.0.0.** Bản phát hành lại ngày
+31/10/2026 chứa các bản sửa chung cho cả 30 profile và thay bản đã gỡ ngày 29/10.
+Xem [thay đổi, danh tính ROM và giới hạn còn lại](docs/RELEASE-1.2.0.md).
 
-**Đính chính về 15 bản mới:** 10 bản chưa có Battle Analysis hoạt động; 5 bản chỉ kiểm chứng Analysis trong một số ca có điều kiện. Chưa nghiệm thu đầy đủ thao tác trong app companion trên thiết bị thật. CI đạt và số phiên bản 1.0.0 không chứng minh đã hoàn thiện tính năng. Xem [phần còn thiếu và công việc cần làm](docs/ANALYSIS-GAPS-1.2.0.vi.md).
+Chạm unit ở roster/Map dùng API D-pad sẵn có của **GBA Duo Plus 0.1.8-plus.4**,
+với **Packs can change games tắt**, không thay APK. Growth giữ PNG gốc, thêm
+bonus có dấu trong bảng như `60% (+1%)`. Không còn dòng log phía trên tên chương.
 
-**Builder 1.2.0** phát hành thêm 15 companion, nâng catalogue lên **30 profile, đều ở companion 1.0.0**. Đợt mới sửa theo dõi unit trong màn chỉ số, RNG và chọn trên Map, cùng các bộ đọc riêng cho từng ROM. Mười lăm bộ đọc cũ được giữ nguyên. Xem [ghi chú phát hành và danh sách ROM](docs/RELEASE-1.2.0.md), gồm 10 Analysis còn khóa, giới hạn Pokemblem và phạm vi kiểm chứng.
+Chưa nghiệm thu trực tiếp đủ 30 profile trên Android. Timeout 25 ms, ally Storge
+ID 85–99 và lần dữ liệu trống trên host gốc trước đó vẫn còn mở. GBA Duo gốc
+v0.1.8 không có API focus; nạp và đọc pack không chứng minh điều khiển con trỏ.
+Xem [phạm vi kiểm chứng hiện tại](docs/OFFICIAL-30-COMPANION-FIX-2026-10-30.vi.md).
 
 Đợt cập nhật ngày **28/10/2026** giữ Builder **1.1.5** và phiên bản các companion:
 đóng gói dự án Studio theo đúng ROM, chọn mẫu từ bộ đọc có sẵn và báo lỗi tham
@@ -105,7 +112,7 @@ npm run build
 npm test
 ```
 
-`site/` chứa website tĩnh. Build tạo `site/catalog.json` và bundle theo nội dung `site/releases/builder-1.1.5-<sha256>.zip` từ mã trong `site/`, không đọc ROM hay sửa các gói 0.9.6 đã chốt trước đây.
+`site/` chứa website tĩnh. Build tạo `site/catalog.json` và bundle theo nội dung `site/releases/builder-1.2.0-<sha256>.zip` từ mã trong `site/`, không đọc ROM hay sửa các gói 0.9.6 đã chốt trước đây.
 
 Kiểm tra tự động bao gồm hash catalog, phiên bản ROM, nguồn asset cục bộ, template không chứa dữ liệu game đã xuất, đóng ZIP format 2 với dữ liệu giả lập phục vụ kiểm thử, hủy tác vụ và truyền ZIP theo khối. Các kiểm tra này không thay thế việc thử chọn tệp trên trình duyệt và chạy Plus trên máy thật.
 

@@ -1,0 +1,245 @@
+{
+  "version": 1,
+  "profiles": {
+    "fe7-vietnamese": {
+      "muScript": "0x8C9D00C",
+      "muEndCallback": "0x806CC91",
+      "muRepeatCallback": "0x806CC0D",
+      "hoverTimer": "0x203A3D4",
+      "smsUnitOffset": 60,
+      "smsFlagsOffset": 11
+    },
+    "fe6-remastered": {
+      "muScript": "0x89A2C48",
+      "muEndCallback": "0x8079091",
+      "muRepeatCallback": "0x8079031",
+      "hoverTimer": "0x203A4D0",
+      "smsUnitOffset": 60,
+      "smsFlagsOffset": 11
+    },
+    "fe8-vietnamese": {
+      "muScript": "0x89A2C48",
+      "muEndCallback": "0x8079091",
+      "muRepeatCallback": "0x8079031",
+      "hoverTimer": "0x203A4D0",
+      "smsUnitOffset": 60,
+      "smsFlagsOffset": 11
+    },
+    "fe7-english": {
+      "muScript": "0x8C9D00C",
+      "muEndCallback": "0x806CC91",
+      "muRepeatCallback": "0x806CC0D",
+      "hoverTimer": "0x203A3D4",
+      "smsUnitOffset": 60,
+      "smsFlagsOffset": 11
+    },
+    "fe8-europe": {
+      "muScript": "0x8A4594C",
+      "muEndCallback": "0x8079319",
+      "muRepeatCallback": "0x80792B9",
+      "hoverTimer": "0x203A4D0",
+      "smsUnitOffset": 60,
+      "smsFlagsOffset": 11
+    },
+    "fe8-english": {
+      "muScript": "0x89A2C48",
+      "muEndCallback": "0x8079091",
+      "muRepeatCallback": "0x8079031",
+      "hoverTimer": "0x203A4D0",
+      "smsUnitOffset": 60,
+      "smsFlagsOffset": 11
+    },
+    "fe6-english": {
+      "muScript": "0x86648B4",
+      "muEndCallback": "0x80608AD",
+      "muRepeatCallback": "0x8060841",
+      "hoverTimer": "0x20391FC",
+      "smsUnitOffset": 60,
+      "smsFlagsOffset": 11
+    },
+    "fe6-project-ember": {
+      "muScript": "0x86648B4",
+      "muEndCallback": "0x80608AD",
+      "muRepeatCallback": "0x8060841",
+      "hoverTimer": "0x20391FC",
+      "smsUnitOffset": 60,
+      "smsFlagsOffset": 11
+    },
+    "fe6-project-ember-rr": {
+      "muScript": "0x86648B4",
+      "muEndCallback": "0x80608AD",
+      "muRepeatCallback": "0x8060841",
+      "hoverTimer": "0x20391FC",
+      "smsUnitOffset": 60,
+      "smsFlagsOffset": 11
+    },
+    "voids-blitzarre": {
+      "muScript": "0x89A2C48",
+      "muEndCallback": "0x8079091",
+      "muRepeatCallback": "0x8079031",
+      "hoverTimer": "0x203A4D0",
+      "smsUnitOffset": 60,
+      "smsFlagsOffset": 11
+    },
+    "storge": {
+      "muScript": "0x89A2C48",
+      "muEndCallback": "0x8079091",
+      "muRepeatCallback": "0x8079031",
+      "hoverTimer": "0x203A4D0",
+      "smsUnitOffset": 60,
+      "smsFlagsOffset": 11
+    },
+    "hag-in-white": {
+      "muScript": "0x89A2C48",
+      "muEndCallback": "0x8079091",
+      "muRepeatCallback": "0x8079031",
+      "hoverTimer": "0x203A4D0",
+      "smsUnitOffset": 60,
+      "smsFlagsOffset": 11
+    },
+    "sacred-echoes": {
+      "muScript": "0x89A2C48",
+      "muEndCallback": "0x8079091",
+      "muRepeatCallback": "0x8079031",
+      "hoverTimer": "0x203A4D0",
+      "smsUnitOffset": 60,
+      "smsFlagsOffset": 11
+    },
+    "vision-quest": {
+      "muScript": "0x89A2C48",
+      "muEndCallback": "0x8079091",
+      "muRepeatCallback": "0x8079031",
+      "hoverTimer": "0x203A4D0",
+      "smsUnitOffset": 60,
+      "smsFlagsOffset": 11
+    },
+    "the-last-promise": {
+      "muScript": "0x8C9D00C",
+      "muEndCallback": "0x806CC91",
+      "muRepeatCallback": "0x806CC0D",
+      "hoverTimer": "0x203A3D4",
+      "smsUnitOffset": 60,
+      "smsFlagsOffset": 11
+    },
+    "andaron-saga": {
+      "muScript": "0x89A2C48",
+      "muEndCallback": "0x8079091",
+      "muRepeatCallback": "0x8079031",
+      "hoverTimer": "0x203A4D0",
+      "smsUnitOffset": 60,
+      "smsFlagsOffset": 11
+    },
+    "bells-of-byelen": {
+      "muScript": "0x89A2C48",
+      "muEndCallback": "0x8079091",
+      "muRepeatCallback": "0x8079031",
+      "hoverTimer": "0x203A4D0",
+      "smsUnitOffset": 60,
+      "smsFlagsOffset": 11
+    },
+    "cerulean-crescent": {
+      "muScript": "0x89A2C48",
+      "muEndCallback": "0x8079091",
+      "muRepeatCallback": "0x8079031",
+      "hoverTimer": "0x203A4D0",
+      "smsUnitOffset": 60,
+      "smsFlagsOffset": 11
+    },
+    "dark-lord-maiden-of-light": {
+      "muScript": "0x8C9D00C",
+      "muEndCallback": "0x806CC91",
+      "muRepeatCallback": "0x806CC0D",
+      "hoverTimer": "0x203A3D4",
+      "smsUnitOffset": 60,
+      "smsFlagsOffset": 11
+    },
+    "dream-of-five": {
+      "muScript": "0x89A2C48",
+      "muEndCallback": "0x8079091",
+      "muRepeatCallback": "0x8079031",
+      "hoverTimer": "0x203A4D0",
+      "smsUnitOffset": 60,
+      "smsFlagsOffset": 11
+    },
+    "eligors-spear": {
+      "muScript": "0x89A2C48",
+      "muEndCallback": "0x8079091",
+      "muRepeatCallback": "0x8079031",
+      "hoverTimer": "0x203A4D0",
+      "smsUnitOffset": 60,
+      "smsFlagsOffset": 11
+    },
+    "iron-emblem": {
+      "muScript": "0x89A2C48",
+      "muEndCallback": "0x8079091",
+      "muRepeatCallback": "0x8079031",
+      "hoverTimer": "0x203A4D0",
+      "smsUnitOffset": 60,
+      "smsFlagsOffset": 11
+    },
+    "justice-and-pride": {
+      "muScript": "0x89A2C48",
+      "muEndCallback": "0x8079091",
+      "muRepeatCallback": "0x8079031",
+      "hoverTimer": "0x203A4D0",
+      "smsUnitOffset": 60,
+      "smsFlagsOffset": 11
+    },
+    "pokemblem": {
+      "muScript": "0x89A2C48",
+      "muEndCallback": "0x8079091",
+      "muRepeatCallback": "0x8079031",
+      "hoverTimer": "0x203A4D0",
+      "smsUnitOffset": 60,
+      "smsFlagsOffset": 11
+    },
+    "the-dark-amulet": {
+      "muScript": "0x89A2C48",
+      "muEndCallback": "0x8079091",
+      "muRepeatCallback": "0x8079031",
+      "hoverTimer": "0x203A4D0",
+      "smsUnitOffset": 60,
+      "smsFlagsOffset": 11
+    },
+    "the-four-kings": {
+      "muScript": "0x89A2C48",
+      "muEndCallback": "0x8079091",
+      "muRepeatCallback": "0x8079031",
+      "hoverTimer": "0x203A4D0",
+      "smsUnitOffset": 60,
+      "smsFlagsOffset": 11
+    },
+    "the-lonely-mirror": {
+      "muScript": "0x89A2C48",
+      "muEndCallback": "0x8079091",
+      "muRepeatCallback": "0x8079031",
+      "hoverTimer": "0x203A4D0",
+      "smsUnitOffset": 60,
+      "smsFlagsOffset": 11
+    },
+    "morrows-golden-country": {
+      "muScript": "0x89A2C48",
+      "muEndCallback": "0x8079091",
+      "muRepeatCallback": "0x8079031",
+      "hoverTimer": "0x203A4D0",
+      "smsUnitOffset": 60,
+      "smsFlagsOffset": 11
+    },
+    "shadow-of-dawn": {
+      "muScript": "0x89A2C48",
+      "muEndCallback": "0x8079091",
+      "muRepeatCallback": "0x8079031",
+      "hoverTimer": "0x203A4D0",
+      "smsUnitOffset": 60,
+      "smsFlagsOffset": 11
+    },
+    "sun-gods-wrath": {
+      "muScript": "0x89A2C48",
+      "muEndCallback": "0x8079091",
+      "muRepeatCallback": "0x8079031",
+      "hoverTimer": "0x203A4D0",
+      "smsUnitOffset": 60,
+      "smsFlagsOffset": 11
+    }
+  }
+}
